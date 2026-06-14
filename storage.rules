@@ -1,0 +1,30 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Testimonial or other client-side uploads
+    match /testimonials/{imageId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.resource.size < 5 * 1024 * 1024 // 5MB limit
+                   && request.resource.contentType.matches('image/.*');
+    }
+    
+    // CMS Images (Inline, Headers, Authors)
+    match /content-inline/{imageId} {
+      allow read: if true;
+      allow write: if request.resource.size < 5 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
+    }
+    match /headers/{imageId} {
+      allow read: if true;
+      allow write: if request.resource.size < 5 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
+    }
+    match /authors/{imageId} {
+      allow read: if true;
+      allow write: if request.resource.size < 5 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
+    }
+    
+    // Default rule to lock down unmentioned paths
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

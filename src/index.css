@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Syne:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", sans-serif;
+  --font-mono: "Space Grotesk", monospace;
+
+  
+  --color-m3-surface: var(--m3-surface);
+  --color-m3-on-surface: var(--m3-on-surface);
+  --color-m3-primary: var(--m3-primary);
+  --color-m3-on-primary: var(--m3-on-primary);
+  --color-m3-secondary-container: var(--m3-secondary-container);
+  --color-m3-on-secondary-container: var(--m3-on-secondary-container);
+  --color-m3-tertiary: var(--m3-tertiary);
+  --color-m3-on-tertiary: var(--m3-on-tertiary);
+  --color-m3-outline: var(--m3-outline);
+}
+
+:root {
+  --m3-surface: #fef7ff;
+  --m3-on-surface: #1d1b20;
+  --m3-primary: #6750a4;
+  --m3-on-primary: #ffffff;
+  --m3-secondary-container: #e8def8;
+  --m3-on-secondary-container: #1d192b;
+  --m3-tertiary: #7d5260;
+  --m3-on-tertiary: #ffffff;
+  --m3-outline: #79747e;
+  
+  --primary: #6750a4;
+}
+
+html.dark {
+  --m3-surface: #141218;
+  --m3-on-surface: #e6e1e5;
+  --m3-primary: #d0bcff;
+  --m3-on-primary: #381e72;
+  --m3-secondary-container: #4a4458;
+  --m3-on-secondary-container: #e8def8;
+  --m3-tertiary: #efb8c8;
+  --m3-on-tertiary: #492532;
+  --m3-outline: #938f99;
+  
+  --primary: #d0bcff;
+}
+
+@layer base {
+  body {
+    @apply bg-m3-surface text-m3-on-surface antialiased selection:bg-m3-primary selection:text-m3-on-primary transition-colors duration-300;
+  }
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom scrollbar for better feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-m3-outline/20 rounded-full hover:bg-m3-outline/40 transition-colors;
+}

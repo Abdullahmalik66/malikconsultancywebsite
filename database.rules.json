@@ -1,0 +1,34 @@
+{
+  "rules": {
+    "testimonials": {
+      ".read": true,
+      ".write": "auth != null && root.child('adminUsers').child(auth.uid).exists()"
+    },
+    "testimonialSubmissions": {
+      ".read": "auth != null && root.child('adminUsers').child(auth.uid).exists()",
+      "$submissionId": {
+        ".write": "newData.hasChildren(['name', 'company', 'testimonial']) && !data.exists()"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && root.child('adminUsers').child(auth.uid).exists()"
+    },
+    "adminUsers": {
+      ".read": "auth != null && root.child('adminUsers').child(auth.uid).exists()",
+      "$userId": {
+        ".write": false
+      }
+    },
+    "content": {
+      ".read": true,
+      "$contentId": {
+        ".write": "(auth != null) || (!data.exists() && newData.child('status').val() === 'pending')"
+      }
+    },
+    "cards": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}
