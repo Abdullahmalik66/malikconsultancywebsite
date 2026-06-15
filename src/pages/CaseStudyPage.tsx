@@ -71,6 +71,7 @@ export default function CaseStudyPage() {
       image={study.headerImage || undefined}
       tags={study.tags || []}
       content={<div dangerouslySetInnerHTML={{ __html: study.content || '' }} />}
+      linkedCardIds={study.linkedCardIds}
     />
   );
 }

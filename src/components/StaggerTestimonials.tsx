@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { STATIC_TESTIMONIALS, Testimonial, shuffleArray } from '../data/testimonials';
+import { getPublishedTestimonials } from '../lib/firebase/cms';
 
 export default function StaggerTestimonials() {
   const [cardSize, setCardSize] = useState(520);
@@ -19,24 +20,27 @@ export default function StaggerTestimonials() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  // Fetch approved testimonials from server, shuffle on refresh so they vary elegantly!
+  // Fetch approved testimonials from Firebase, shuffle on refresh so they vary elegantly!
   useEffect(() => {
     async function fetchApprovedTestimonials() {
       try {
-        const res = await fetch('/api/testimonials');
-        if (res.ok) {
-          const data: Testimonial[] = await res.json();
-          // Filter to show only approved items on homepage
-          const approved = data.filter(t => t.approved);
-          const finalData = approved.length > 0 ? approved : STATIC_TESTIMONIALS.filter(t => t.approved);
-          
-          // Randomize initial ordering on page load so it feels dynamic and alive on refresh!
-          const randomized = shuffleArray(finalData);
-          setList(randomized.map(t => ({ ...t, tempId: Math.random() })));
-        } else {
-          const randomized = shuffleArray(STATIC_TESTIMONIALS.filter(t => t.approved));
-          setList(randomized.map(t => ({ ...t, tempId: Math.random() })));
-        }
+        const data = await getPublishedTestimonials();
+        const approved: Testimonial[] = data.map(item => ({
+          id: item.id,
+          name: item.name,
+          company: item.company,
+          role: item.role,
+          testimonial: item.testimonial,
+          approved: item.status === 'published',
+          featured: item.featured || false,
+          createdAt: item.createdAt,
+          imgSrc: item.avatarUrl || undefined
+        }));
+        const finalData = approved.length > 0 ? approved : STATIC_TESTIMONIALS.filter(t => t.approved);
+        
+        // Randomize initial ordering on page load so it feels dynamic and alive on refresh!
+        const randomized = shuffleArray(finalData);
+        setList(randomized.map(t => ({ ...t, tempId: Math.random() })));
       } catch (err) {
         console.error('Failed to load testimonials for home carousel:', err);
         const randomized = shuffleArray(STATIC_TESTIMONIALS.filter(t => t.approved));
@@ -45,6 +49,7 @@ export default function StaggerTestimonials() {
     }
     fetchApprovedTestimonials();
   }, []);
+
 
   const handleMove = (steps: number) => {
     if (list.length === 0) return;

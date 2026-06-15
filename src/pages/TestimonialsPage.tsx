@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, X, Check, MessageSquare, Quote, Sparkles } from 'lucide-react';
 import { STATIC_TESTIMONIALS, Testimonial, shuffleArray } from '../data/testimonials';
+import { getPublishedTestimonials, submitPublicTestimonial } from '../lib/firebase/cms';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -39,20 +40,24 @@ export default function TestimonialsPage() {
     const localSaved: Testimonial[] = saved ? JSON.parse(saved) : [];
     setLocalPending(localSaved);
 
-    // 2. Fetch from API
+    // 2. Fetch from Firebase
     async function fetchTestimonials() {
       try {
-        const res = await fetch('/api/testimonials');
-        if (res.ok) {
-          const data: Testimonial[] = await res.json();
-          // Filter out unapproved ones except if they match local pending ones we want to render
-          const approvedOnly = data.filter(t => t.approved);
-          setTestimonials(approvedOnly.length > 0 ? approvedOnly : STATIC_TESTIMONIALS.filter(t => t.approved));
-        } else {
-          setTestimonials(STATIC_TESTIMONIALS.filter(t => t.approved));
-        }
+        const data = await getPublishedTestimonials();
+        const approvedOnly: Testimonial[] = data.map(item => ({
+          id: item.id,
+          name: item.name,
+          company: item.company,
+          role: item.role,
+          testimonial: item.testimonial,
+          approved: item.status === 'published',
+          featured: item.featured || false,
+          createdAt: item.createdAt,
+          imgSrc: item.avatarUrl || undefined
+        }));
+        setTestimonials(approvedOnly.length > 0 ? approvedOnly : STATIC_TESTIMONIALS.filter(t => t.approved));
       } catch (err) {
-        console.error('Failed to fetch testimonials from backend:', err);
+        console.error('Failed to fetch testimonials from Firebase:', err);
         setTestimonials(STATIC_TESTIMONIALS.filter(t => t.approved));
       } finally {
         setLoading(false);
@@ -90,44 +95,30 @@ export default function TestimonialsPage() {
         company: company.trim(),
         role: role.trim() || undefined,
         testimonial: testimonialText.trim(),
+        consentGiven: true
       };
 
-      const res = await fetch('/api/testimonials', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      await submitPublicTestimonial(payload);
 
-      if (res.ok) {
-        const created: Testimonial = await res.json();
-        
-        // Save to local state and localStorage so the user gets instant visual confirmation in their browser
-        const updatedLocal = [created, ...localPending];
-        setLocalPending(updatedLocal);
-        localStorage.setItem('local_pending_testimonials', JSON.stringify(updatedLocal));
-        
-        setSuccess(true);
-      } else {
-        // Fallback for offline or client-only mock experience
-        const fallbackCreated: Testimonial = {
-          id: 'temp_' + Date.now(),
-          name: payload.name,
-          company: payload.company,
-          role: payload.role,
-          testimonial: payload.testimonial,
-          approved: false,
-          featured: false,
-          createdAt: new Date().toISOString()
-        };
-        const updatedLocal = [fallbackCreated, ...localPending];
-        setLocalPending(updatedLocal);
-        localStorage.setItem('local_pending_testimonials', JSON.stringify(updatedLocal));
-        setSuccess(true);
-      }
+      const created: Testimonial = {
+        id: 'temp_' + Date.now(),
+        name: payload.name,
+        company: payload.company,
+        role: payload.role,
+        testimonial: payload.testimonial,
+        approved: false,
+        featured: false,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Save to local state and localStorage so the user gets instant visual confirmation in their browser
+      const updatedLocal = [created, ...localPending];
+      setLocalPending(updatedLocal);
+      localStorage.setItem('local_pending_testimonials', JSON.stringify(updatedLocal));
+      
+      setSuccess(true);
     } catch (err) {
-      console.error('Error submitting testimonial:', err);
+      console.error('Error submitting testimonial to Firebase:', err);
       // Fallback
       const fallbackCreated: Testimonial = {
         id: 'temp_' + Date.now(),
@@ -147,6 +138,7 @@ export default function TestimonialsPage() {
       setSubmitting(false);
     }
   };
+
 
   // Reset form
   const handleCloseSuccess = () => {

@@ -8,6 +8,7 @@ import CaseWork from './CaseWork';
 import NewsletterSection from './NewsletterSection';
 import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
 import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
+import { LinkedCardsSidebar } from './cms/CardRenderer';
 
 interface ExecutiveLayoutProps {
   title: string;
@@ -17,9 +18,10 @@ interface ExecutiveLayoutProps {
   tags?: string[];
   content: React.ReactNode;
   slug?: string;
+  linkedCardIds?: string[];
 }
 
-export default function ExecutiveLayout({ title, category, date, image, tags, content, slug }: ExecutiveLayoutProps) {
+export default function ExecutiveLayout({ title, category, date, image, tags, content, slug, linkedCardIds }: ExecutiveLayoutProps) {
   const [randomCase, setRandomCase] = useState<(ContentItem & { color: string; animationType: string; tag: string }) | null>(null);
   const [randomInsight, setRandomInsight] = useState<{ title: string, text: string, link: string } | null>(null);
 
@@ -163,57 +165,64 @@ export default function ExecutiveLayout({ title, category, date, image, tags, co
               </form>
             </div>
 
-            {/* Writing Card (Growth Hacking - Purple) */}
-            {randomInsight && (
-              <Link to={randomInsight.link} className="block transform transition-transform hover:scale-[1.02]">
-                <div className="bg-[#6d55a7] rounded-[48px] p-12 text-white relative flex flex-col items-center text-center overflow-hidden min-h-[440px] justify-center">
-                  <div className="mb-6">
-                    <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-[0.2em] border border-white/20">
-                      BLOG & RESOURCES
-                    </span>
-                  </div>
-                  <h3 className="text-[28px] font-display font-bold leading-[1.1] mb-6 font-serif">
-                    {randomInsight.title}
-                  </h3>
-                  <p className="text-white/80 text-sm leading-relaxed mb-10 max-w-[280px] font-medium">
-                    {randomInsight.text}
-                  </p>
-                  <div className="px-12 py-5 bg-[#EAFF00] text-[#1a1a1a] rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-[#EAFF00]/20">
-                    Read more
-                  </div>
-                  {/* Decorative dots */}
-                  <div className="absolute bottom-4 right-4 grid grid-cols-4 gap-1 opacity-20">
-                      {[...Array(16)].map((_, i) => <div key={i} className="w-1 h-1 bg-white rounded-full" />)}
-                  </div>
-                </div>
-              </Link>
-            )}
-
-            {/* Case Study Card (Random) */}
-            {randomCase && (
-              <Link to={`/case-study/${randomCase.slug || randomCase.id}`} className="block transform transition-transform hover:scale-[1.02]">
-                <div 
-                  style={{ backgroundColor: randomCase.color }}
-                  className="rounded-[56px] p-12 text-white relative min-h-[520px] flex flex-col justify-end overflow-hidden group"
-                >
-                  <div className="absolute top-10 left-10">
-                    <span className="px-5 py-2 bg-white/10 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20">
-                      {randomCase.tag}
-                    </span>
-                  </div>
-                  <div className="relative z-10">
-                    <h3 className="text-3xl font-display font-medium leading-[1.1] mb-10">
-                      {randomCase.title}
-                    </h3>
-                    <div className="inline-flex items-center gap-3 px-10 py-5 bg-[#fbe1ff] text-[#1a1a1a] rounded-full font-bold text-sm shadow-xl shadow-black/20 group-hover:bg-[#EAFF00] transition-colors">
-                      <span>Read more</span>
-                      <ArrowRight className="w-4 h-4" />
+            {/* Linked Cards from DB */}
+            {linkedCardIds && linkedCardIds.length > 0 ? (
+              <LinkedCardsSidebar cardIds={linkedCardIds} />
+            ) : (
+              <>
+                {/* Writing Card (Growth Hacking - Purple) */}
+                {randomInsight && (
+                  <Link to={randomInsight.link} className="block transform transition-transform hover:scale-[1.02]">
+                    <div className="bg-[#6d55a7] rounded-[48px] p-12 text-white relative flex flex-col items-center text-center overflow-hidden min-h-[440px] justify-center">
+                      <div className="mb-6">
+                        <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-[0.2em] border border-white/20">
+                          BLOG & RESOURCES
+                        </span>
+                      </div>
+                      <h3 className="text-[28px] font-display font-bold leading-[1.1] mb-6 font-serif">
+                        {randomInsight.title}
+                      </h3>
+                      <p className="text-white/80 text-sm leading-relaxed mb-10 max-w-[280px] font-medium">
+                        {randomInsight.text}
+                      </p>
+                      <div className="px-12 py-5 bg-[#EAFF00] text-[#1a1a1a] rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-[#EAFF00]/20">
+                        Read more
+                      </div>
+                      {/* Decorative dots */}
+                      <div className="absolute bottom-4 right-4 grid grid-cols-4 gap-1 opacity-20">
+                          {[...Array(16)].map((_, i) => <div key={i} className="w-1 h-1 bg-white rounded-full" />)}
+                      </div>
                     </div>
-                  </div>
-                  {/* Decorative element */}
-                  <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none group-hover:bg-white/10 transition-colors" />
-                </div>
-              </Link>
+                  </Link>
+                )}
+
+                {/* Case Study Card (Random) */}
+                {randomCase && (
+                  <Link to={`/case-study/${randomCase.slug || randomCase.id}`} className="block transform transition-transform hover:scale-[1.02]">
+                    <div 
+                      style={{ backgroundColor: randomCase.color }}
+                      className="rounded-[56px] p-12 text-white relative min-h-[520px] flex flex-col justify-end overflow-hidden group"
+                    >
+                      <div className="absolute top-10 left-10">
+                        <span className="px-5 py-2 bg-white/10 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20">
+                          {randomCase.tag}
+                        </span>
+                      </div>
+                      <div className="relative z-10">
+                        <h3 className="text-3xl font-display font-medium leading-[1.1] mb-10">
+                          {randomCase.title}
+                        </h3>
+                        <div className="inline-flex items-center gap-3 px-10 py-5 bg-[#fbe1ff] text-[#1a1a1a] rounded-full font-bold text-sm shadow-xl shadow-black/20 group-hover:bg-[#EAFF00] transition-colors">
+                          <span>Read more</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </div>
+                      </div>
+                      {/* Decorative element */}
+                      <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none group-hover:bg-white/10 transition-colors" />
+                    </div>
+                  </Link>
+                )}
+              </>
             )}
 
             {/* Contact CTA Area Removed */}

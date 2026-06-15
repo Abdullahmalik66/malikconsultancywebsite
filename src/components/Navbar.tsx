@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
-import { ChevronDown, Sun, Moon } from 'lucide-react';
-import { useTheme } from '../lib/ThemeProvider';
+import { ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
@@ -27,7 +26,6 @@ const navItems = [
 ];
 
 export default function Navbar() {
-  const { theme, toggleTheme } = useTheme();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -114,34 +112,6 @@ export default function Navbar() {
 
         {/* Theme Toggle & CTA */}
         <div className="flex items-center gap-2">
-          <button 
-            onClick={toggleTheme}
-            className="w-10 h-10 rounded-full border border-m3-outline/30 hover:bg-m3-on-surface/5 flex items-center justify-center transition-all duration-500"
-            id="theme-toggle"
-          >
-            <AnimatePresence mode="wait">
-              {theme === 'dark' ? (
-                <motion.div
-                  key="moon"
-                  initial={{ scale: 0.5, opacity: 0, rotate: -45 }}
-                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                  exit={{ scale: 0.5, opacity: 0, rotate: 45 }}
-                >
-                  <Moon className="w-5 h-5 text-m3-primary" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="sun"
-                  initial={{ scale: 0.5, opacity: 0, rotate: 45 }}
-                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                  exit={{ scale: 0.5, opacity: 0, rotate: -45 }}
-                >
-                  <Sun className="w-5 h-5 text-m3-primary" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </button>
-
           <Link to="/reach-me">
             <motion.button
               whileHover={{ scale: 1.02 }}

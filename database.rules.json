@@ -2,10 +2,10 @@
   "rules": {
     "testimonials": {
       ".read": true,
-      ".write": "auth != null && root.child('adminUsers').child(auth.uid).exists()"
+      ".write": "auth != null"
     },
     "testimonialSubmissions": {
-      ".read": "auth != null && root.child('adminUsers').child(auth.uid).exists()",
+      ".read": "auth != null",
       "$submissionId": {
         ".write": "newData.hasChildren(['name', 'company', 'testimonial']) && !data.exists()"
       }

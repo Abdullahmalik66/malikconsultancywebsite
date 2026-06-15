@@ -29,9 +29,10 @@ export default function WritingsPage() {
     const fetchWritings = async () => {
       try {
         const published = await getPublishedContent();
+        const blogsOnly = published.filter(item => item.contentType === 'blog');
         
         // Map ContentItem to Writing interface
-        const mappedWritings: Writing[] = published.map(item => ({
+        const mappedWritings: Writing[] = blogsOnly.map(item => ({
           id: item.id,
           title: item.title,
           excerpt: item.excerpt || '',

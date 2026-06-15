@@ -5,12 +5,14 @@ import { ChevronLeft, Share2, Clock, User, Tag } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Writing } from '../types';
 import { getPublishedContent } from '../lib/firebase/cms';
+import { LinkedCardsSidebar } from '../components/cms/CardRenderer';
 
 // Add the content field to the type if it doesn't exist in our base interface
 interface BlogDetail extends Writing {
   content?: string;
   authorBio?: string;
   authorImage?: string;
+  linkedCardIds?: string[];
 }
 
 export default function BlogPostPage() {
@@ -43,7 +45,8 @@ export default function BlogPostPage() {
             authorBio: userBlog.authorBio,
             authorImage: userBlog.authorImage || undefined,
             tags: userBlog.tags,
-            badgeText: userBlog.badgeText || ''
+            badgeText: userBlog.badgeText || '',
+            linkedCardIds: userBlog.linkedCardIds
           });
         }
       } catch (error) {
@@ -179,6 +182,10 @@ export default function BlogPostPage() {
             {/* Author Sidebar */}
             <aside className="lg:col-span-4">
               <div className="sticky top-32 space-y-8">
+                {blog.linkedCardIds && blog.linkedCardIds.length > 0 && (
+                  <LinkedCardsSidebar cardIds={blog.linkedCardIds} />
+                )}
+
                 <div className="bg-m3-surface-container p-10 rounded-[48px] border border-m3-outline/10">
                   <div className="flex flex-col items-center text-center">
                     <div className="w-24 h-24 rounded-full overflow-hidden mb-6 bg-m3-primary/10 border-2 border-m3-primary/20">

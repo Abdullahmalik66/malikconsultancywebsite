@@ -5,6 +5,29 @@ import { storage } from "./storage";
 
 export type ContentStatus = 'draft' | 'pending' | 'approved' | 'published' | 'rejected';
 
+export type TestimonialStatus = 'draft' | 'pending' | 'approved' | 'published' | 'rejected' | 'archived';
+
+export interface TestimonialItem {
+  id: string;
+  sourceType: 'public_submission' | 'admin';
+  status: TestimonialStatus;
+  name: string;
+  company: string;
+  role?: string;
+  testimonial: string;
+  companyLogoUrl?: string | null;
+  avatarUrl?: string | null;
+  consentGiven?: boolean;
+  moderationNote?: string;
+  featured?: boolean;
+  createdAt: string;
+  updatedAt: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
+  publishedAt?: string;
+  submittedByEmail?: string;
+}
+
 export interface ContentItem {
   id: string;
   contentType: 'blog' | 'case_study' | 'testimonial' | 'text_block';
@@ -36,7 +59,7 @@ export interface CardItem {
   id: string;
   sourceId: string;
   sourceType: 'blog' | 'case_study' | 'testimonial' | 'text_block';
-  cardType: 'standard' | 'hero' | 'minimal';
+  cardType: 'standard' | 'hero' | 'minimal' | 'media_showcase' | 'quote' | 'compact' | 'case_study' | 'dual_content' | 'custom';
   titleOverride?: string;
   textOverride?: string;
   imageOverride?: string;
@@ -197,3 +220,81 @@ export const uploadImage = async (file: File | Blob, pathPrefix: string = 'uploa
   await uploadBytes(fileRef, file);
   return await getDownloadURL(fileRef);
 };
+
+// --- TESTIMONIAL OPERATIONS ---
+
+export const submitPublicTestimonial = async (item: {
+  name: string;
+  company: string;
+  role?: string;
+  testimonial: string;
+  consentGiven?: boolean;
+  submittedByEmail?: string;
+}): Promise<void> => {
+  const submissionRef = push(dbRef(db, 'testimonialSubmissions'));
+  const actualId = submissionRef.key;
+  if (!actualId) throw new Error("Failed to generate ID for submission");
+
+  const now = new Date().toISOString();
+  const payload = {
+    ...item,
+    id: actualId,
+    sourceType: 'public_submission',
+    status: 'pending',
+    createdAt: now,
+  };
+  await set(submissionRef, payload);
+};
+
+export const getPublishedTestimonials = async (): Promise<TestimonialItem[]> => {
+  const snapshot = await get(dbRef(db, 'testimonials'));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    const allItems = Object.values(data) as TestimonialItem[];
+    return allItems.filter(item => item.status === 'published');
+  }
+  return [];
+};
+
+export const getAllTestimonials = async (): Promise<TestimonialItem[]> => {
+  const snapshot = await get(dbRef(db, 'testimonials'));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return Object.values(data) as TestimonialItem[];
+  }
+  return [];
+};
+
+export const getTestimonialSubmissions = async (): Promise<TestimonialItem[]> => {
+  const snapshot = await get(dbRef(db, 'testimonialSubmissions'));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return Object.values(data) as TestimonialItem[];
+  }
+  return [];
+};
+
+export const saveTestimonial = async (
+  item: Omit<TestimonialItem, 'createdAt' | 'updatedAt'>,
+  createdAt?: string
+): Promise<TestimonialItem> => {
+  const tRef = dbRef(db, `testimonials/${item.id}`);
+  const now = new Date().toISOString();
+  
+  const payload: TestimonialItem = {
+    ...item,
+    createdAt: createdAt || now,
+    updatedAt: now,
+  };
+  await set(tRef, payload);
+  return payload;
+};
+
+export const deleteTestimonial = async (id: string): Promise<void> => {
+  await remove(dbRef(db, `testimonials/${id}`));
+};
+
+export const deleteTestimonialSubmission = async (id: string): Promise<void> => {
+  await remove(dbRef(db, `testimonialSubmissions/${id}`));
+};
+
