@@ -1,13 +1,15 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { allCaseStudies } from '../data/caseStudies';
 import { useEffect, useState, useMemo, useRef } from 'react';
+import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
+import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
 
 export default function CaseWorkPage() {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('All');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [caseStudies, setCaseStudies] = useState<(ContentItem & { color: string; animationType: string; tag: string })[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -16,18 +18,35 @@ export default function CaseWorkPage() {
       setIsScrolled(window.scrollY > window.innerHeight * 3);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    const fetchCases = async () => {
+      const published = await getPublishedContent();
+      const cases = published.filter(item => item.contentType === 'case_study');
+      const withFormatting = cases.map(item => {
+        const fmt = getDeterministicFormatting(item.id);
+        return {
+          ...item,
+          color: fmt.color,
+          animationType: fmt.animationType,
+          tag: item.badgeText || (item.tags && item.tags[0]) || 'Case Study'
+        };
+      });
+      setCaseStudies(withFormatting);
+    };
+    fetchCases();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const categories = useMemo(() => {
-    const tags = allCaseStudies.map(study => study.tag);
+    const tags = caseStudies.map(study => study.tag);
     return ['All', ...Array.from(new Set(tags))];
-  }, []);
+  }, [caseStudies]);
 
   const filteredStudies = useMemo(() => {
-    if (activeFilter === 'All') return allCaseStudies;
-    return allCaseStudies.filter(study => study.tag === activeFilter);
-  }, [activeFilter]);
+    if (activeFilter === 'All') return caseStudies;
+    return caseStudies.filter(study => study.tag === activeFilter);
+  }, [activeFilter, caseStudies]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -207,7 +226,7 @@ export default function CaseWorkPage() {
                       whileHover="hover"
                       whileTap={{ scale: 0.98 }}
                       onClick={() => {
-                        navigate('/case-study/' + work.slug);
+                        navigate('/case-study/' + (work.slug || work.id));
                       }}
                       className="group relative bg-[#fbe1ff] text-[#1a1a1a] px-8 py-4 rounded-full font-bold text-sm w-fit transition-all cursor-pointer overflow-hidden flex items-center gap-3 shadow-xl shadow-black/10"
                     >

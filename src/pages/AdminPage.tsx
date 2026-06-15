@@ -109,13 +109,6 @@ export default function AdminPage() {
             >
               <Layout className="w-4 h-4" /> Card Builder
             </button>
-            
-            <button
-              onClick={handleCreateNew}
-              className="ml-auto px-6 py-3 rounded-full bg-m3-primary text-white text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 hover:bg-m3-primary/90 shadow-lg shadow-m3-primary/20"
-            >
-              <Plus className="w-4 h-4" /> Create New
-            </button>
           </div>
         </motion.div>
 
@@ -187,7 +180,7 @@ export default function AdminPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
             >
-              <ContentList onEdit={handleEditContent} />
+              <ContentList onEdit={handleEditContent} onCreateNew={handleCreateNew} />
             </motion.div>
           )}
 

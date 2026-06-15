@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { getAllContent, updateContentStatus, ContentItem, ContentStatus } from '../../lib/firebase/cms';
-import { Check, X, Edit, Eye, Filter, Loader2, UploadCloud, Trash2 } from 'lucide-react';
+import { getAllContent, updateContentStatus, deleteContent, ContentItem, ContentStatus } from '../../lib/firebase/cms';
+import { Check, X, Edit, Eye, Filter, Loader2, UploadCloud, Trash2, FileText, Briefcase, Plus } from 'lucide-react';
 import { useAuth } from '../../lib/firebase/AuthContext';
 
 interface ContentListProps {
   onEdit: (item: ContentItem) => void;
+  onCreateNew: () => void;
 }
 
-export default function ContentList({ onEdit }: ContentListProps) {
+export default function ContentList({ onEdit, onCreateNew }: ContentListProps) {
   const { currentUser } = useAuth();
   const [content, setContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<ContentStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<ContentStatus | 'all'>('all');
+  const [typeFilter, setTypeFilter] = useState<'all' | 'blog' | 'case_study'>('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const fetchContent = async () => {
@@ -45,10 +47,27 @@ export default function ContentList({ onEdit }: ContentListProps) {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this content? This action cannot be undone.")) return;
+    
+    setActionLoading(id);
+    try {
+      await deleteContent(id);
+      await fetchContent();
+    } catch (err) {
+      console.error('Failed to delete content', err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const filteredContent = useMemo(() => {
-    if (filter === 'all') return content;
-    return content.filter((item) => item.status === filter);
-  }, [content, filter]);
+    return content.filter((item) => {
+      const statusMatch = statusFilter === 'all' || item.status === statusFilter;
+      const typeMatch = typeFilter === 'all' || item.contentType === typeFilter;
+      return statusMatch && typeMatch;
+    });
+  }, [content, statusFilter, typeFilter]);
 
   const StatusBadge = ({ status }: { status: ContentStatus }) => {
     const colors = {
@@ -68,25 +87,66 @@ export default function ContentList({ onEdit }: ContentListProps) {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 items-center bg-white dark:bg-[#1d1b20] p-4 rounded-[24px] border border-m3-outline/10 shadow-sm">
-        <Filter className="w-5 h-5 text-m3-on-surface/40 mx-2" />
-        {(['all', 'pending', 'approved', 'published', 'draft', 'rejected'] as const).map((s) => (
+      <div className="flex flex-col gap-4 bg-white dark:bg-[#1d1b20] p-6 rounded-[32px] border border-m3-outline/10 shadow-sm">
+        {/* Content Type Filter */}
+        <div className="flex flex-wrap gap-2 items-center border-b border-m3-outline/10 pb-4">
+          <FileText className="w-5 h-5 text-m3-on-surface/40 mx-2" />
           <button
-            key={s}
-            onClick={() => setFilter(s)}
-            className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
-              filter === s
-                ? 'bg-m3-primary text-white shadow-md'
-                : 'bg-transparent text-m3-on-surface/60 hover:bg-m3-surface-container'
+            onClick={() => setTypeFilter('all')}
+            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+              typeFilter === 'all' ? 'bg-m3-primary/10 text-m3-primary border border-m3-primary/20' : 'bg-transparent text-m3-on-surface/60 hover:bg-m3-surface-container'
             }`}
           >
-            {s}
+            All Types
           </button>
-        ))}
-        <div className="ml-auto flex items-center gap-2 px-4">
-          <span className="text-xs font-bold text-m3-on-surface/40 uppercase tracking-widest">
-            Total: {filteredContent.length}
-          </span>
+          <button
+            onClick={() => setTypeFilter('blog')}
+            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+              typeFilter === 'blog' ? 'bg-m3-primary/10 text-m3-primary border border-m3-primary/20' : 'bg-transparent text-m3-on-surface/60 hover:bg-m3-surface-container'
+            }`}
+          >
+            Blogs
+          </button>
+          <button
+            onClick={() => setTypeFilter('case_study')}
+            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+              typeFilter === 'case_study' ? 'bg-m3-primary/10 text-m3-primary border border-m3-primary/20' : 'bg-transparent text-m3-on-surface/60 hover:bg-m3-surface-container'
+            }`}
+          >
+            Case Studies
+          </button>
+          
+          <div className="ml-auto">
+            <button
+              onClick={onCreateNew}
+              className="px-6 py-2 rounded-full bg-m3-primary text-white text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 hover:bg-m3-primary/90 shadow-md shadow-m3-primary/20"
+            >
+              <Plus className="w-4 h-4" /> Create New
+            </button>
+          </div>
+        </div>
+
+        {/* Status Filter */}
+        <div className="flex flex-wrap gap-2 items-center">
+          <Filter className="w-5 h-5 text-m3-on-surface/40 mx-2" />
+          {(['all', 'pending', 'approved', 'published', 'draft', 'rejected'] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setStatusFilter(s)}
+              className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+                statusFilter === s
+                  ? 'bg-m3-primary text-white shadow-md'
+                  : 'bg-transparent text-m3-on-surface/60 hover:bg-m3-surface-container'
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+          <div className="ml-auto flex items-center px-4">
+            <span className="text-xs font-bold text-m3-on-surface/40 uppercase tracking-widest">
+              Total: {filteredContent.length}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -156,15 +216,17 @@ export default function ContentList({ onEdit }: ContentListProps) {
                         onClick={() => handleStatusChange(item.id, 'approved')}
                         disabled={actionLoading === item.id}
                         className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 text-green-600 hover:bg-green-500/20 text-xs font-bold uppercase tracking-widest transition-colors"
+                        title="Approve"
                       >
-                        <Check className="w-4 h-4" /> Approve
+                        <Check className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleStatusChange(item.id, 'rejected')}
                         disabled={actionLoading === item.id}
                         className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 text-red-600 hover:bg-red-500/20 text-xs font-bold uppercase tracking-widest transition-colors"
+                        title="Reject"
                       >
-                        <X className="w-4 h-4" /> Reject
+                        <X className="w-4 h-4" />
                       </button>
                     </>
                   )}
@@ -174,6 +236,7 @@ export default function ContentList({ onEdit }: ContentListProps) {
                       onClick={() => handleStatusChange(item.id, 'published')}
                       disabled={actionLoading === item.id}
                       className="flex items-center gap-2 px-4 py-2 rounded-full bg-m3-primary text-white hover:bg-m3-primary/90 text-xs font-bold uppercase tracking-widest transition-colors shadow-lg shadow-m3-primary/20"
+                      title="Publish"
                     >
                       <UploadCloud className="w-4 h-4" /> Publish
                     </button>
@@ -184,10 +247,20 @@ export default function ContentList({ onEdit }: ContentListProps) {
                       onClick={() => handleStatusChange(item.id, 'draft')}
                       disabled={actionLoading === item.id}
                       className="flex items-center gap-2 px-4 py-2 rounded-full border border-m3-outline/20 text-m3-on-surface/60 hover:bg-m3-surface-container text-xs font-bold uppercase tracking-widest transition-colors"
+                      title="Unpublish"
                     >
-                      Unpublish
+                      <X className="w-4 h-4" /> Unpublish
                     </button>
                   )}
+
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    disabled={actionLoading === item.id}
+                    className="p-3 rounded-full hover:bg-red-500/10 text-m3-on-surface/40 hover:text-red-500 transition-colors"
+                    title="Delete Content"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
                   
                   {actionLoading === item.id && (
                     <Loader2 className="w-5 h-5 text-m3-primary animate-spin ml-2" />

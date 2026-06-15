@@ -6,7 +6,8 @@ import StaggerTestimonials from './StaggerTestimonials';
 import LatestInsights from './LatestInsights';
 import CaseWork from './CaseWork';
 import NewsletterSection from './NewsletterSection';
-import { allCaseStudies, CaseStudy } from '../data/caseStudies';
+import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
+import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
 
 interface ExecutiveLayoutProps {
   title: string;
@@ -19,26 +20,45 @@ interface ExecutiveLayoutProps {
 }
 
 export default function ExecutiveLayout({ title, category, date, image, tags, content, slug }: ExecutiveLayoutProps) {
-  const [randomCase, setRandomCase] = useState<CaseStudy | null>(null);
+  const [randomCase, setRandomCase] = useState<(ContentItem & { color: string; animationType: string; tag: string }) | null>(null);
   const [randomInsight, setRandomInsight] = useState<{ title: string, text: string, link: string } | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const pickRandom = () => {
-      const filtered = allCaseStudies.filter(c => c.title !== title && c.slug !== slug); 
-      const picked = filtered[Math.floor(Math.random() * filtered.length)];
-      setRandomCase(picked);
+    const pickRandom = async () => {
+      const published = await getPublishedContent();
+      
+      const cases = published.filter(item => item.contentType === 'case_study' && item.title !== title && item.slug !== slug);
+      if (cases.length > 0) {
+        const picked = cases[Math.floor(Math.random() * cases.length)];
+        const fmt = getDeterministicFormatting(picked.id);
+        setRandomCase({
+          ...picked,
+          color: fmt.color,
+          animationType: fmt.animationType,
+          tag: picked.badgeText || (picked.tags && picked.tags[0]) || 'Case Study'
+        });
+      }
 
-      const insights = [
-        { title: "Can I say NO! To growth Hacking?", text: "What exactly is Growth hacking and how it is different from traditional digital marketing?", link: "/my-writings" },
-        { title: "The Agentic Future", text: "How AI agents are redefining the way we build and scale customer journeys.", link: "/my-writings" },
-        { title: "Commercial Velocity", text: "Why speed to market is the only competitive advantage that really matters today.", link: "/my-writings" },
-        { title: "Precision Marketing", text: "Moving away from broad strokes to data-driven individualization at scale.", link: "/my-writings" }
-      ];
-      setRandomInsight(insights[Math.floor(Math.random() * insights.length)]);
+      const blogs = published.filter(item => item.contentType === 'blog');
+      if (blogs.length > 0) {
+        const pickedBlog = blogs[Math.floor(Math.random() * blogs.length)];
+        setRandomInsight({
+          title: pickedBlog.title,
+          text: pickedBlog.excerpt || "Read more about this insight.",
+          link: `/writings/${pickedBlog.id}`
+        });
+      } else {
+        // Fallback if no blogs yet
+        const insights = [
+          { title: "Can I say NO! To growth Hacking?", text: "What exactly is Growth hacking and how it is different from traditional digital marketing?", link: "/my-writings" },
+          { title: "The Agentic Future", text: "How AI agents are redefining the way we build and scale customer journeys.", link: "/my-writings" },
+        ];
+        setRandomInsight(insights[Math.floor(Math.random() * insights.length)]);
+      }
     };
     pickRandom();
-  }, [title]);
+  }, [title, slug]);
 
   return (
     <div className="min-h-screen bg-[#fdfaff] pt-32 pb-0">
@@ -169,10 +189,13 @@ export default function ExecutiveLayout({ title, category, date, image, tags, co
               </Link>
             )}
 
-            {/* Case Study Card (Screenshot 2 Style - Random) */}
+            {/* Case Study Card (Random) */}
             {randomCase && (
-              <Link to={`/case-study/${randomCase.slug}`} className="block transform transition-transform hover:scale-[1.02]">
-                <div className="bg-[#6d55a7] rounded-[56px] p-12 text-white relative min-h-[520px] flex flex-col justify-end overflow-hidden group">
+              <Link to={`/case-study/${randomCase.slug || randomCase.id}`} className="block transform transition-transform hover:scale-[1.02]">
+                <div 
+                  style={{ backgroundColor: randomCase.color }}
+                  className="rounded-[56px] p-12 text-white relative min-h-[520px] flex flex-col justify-end overflow-hidden group"
+                >
                   <div className="absolute top-10 left-10">
                     <span className="px-5 py-2 bg-white/10 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20">
                       {randomCase.tag}

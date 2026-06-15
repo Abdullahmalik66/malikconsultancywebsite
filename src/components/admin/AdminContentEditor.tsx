@@ -4,7 +4,7 @@ import {
   Plus, X, Image as ImageIcon, ChevronLeft, Check, Quote, Save, Link2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { saveContent, generateSlug, uploadImage, ContentItem, ContentStatus } from '../../lib/firebase/cms';
+import { saveContent, generateSlug, uploadImage, getAllCards, ContentItem, ContentStatus, CardItem } from '../../lib/firebase/cms';
 import SlateEditor from './SlateEditor';
 
 interface AdminContentEditorProps {
@@ -14,10 +14,20 @@ interface AdminContentEditorProps {
 }
 
 export default function AdminContentEditor({ initialContent, onClose, onSaveComplete }: AdminContentEditorProps) {
+  const [contentType, setContentType] = useState<'blog' | 'case_study'>(initialContent?.contentType || 'blog');
   const [title, setTitle] = useState(initialContent?.title || '');
   const [tags, setTags] = useState<string[]>(initialContent?.tags || []);
   const [currentTag, setCurrentTag] = useState('');
   const [content, setContent] = useState(initialContent?.content || '');
+
+  // Pre-defined services for Case Studies
+  const SERVICE_CATEGORIES = [
+    "AI Transformation", "Data Activation", "Modern Marketing", "AI Maturity"
+  ];
+  
+  const [serviceTag, setServiceTag] = useState<string>(
+    initialContent?.contentType === 'case_study' ? (initialContent?.badgeText || SERVICE_CATEGORIES[0]) : SERVICE_CATEGORIES[0]
+  );
 
   const [authorName, setAuthorName] = useState(initialContent?.authorName || '');
   const [authorBio, setAuthorBio] = useState(initialContent?.authorBio || '');
@@ -28,6 +38,22 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
   const [headerFile, setHeaderFile] = useState<File | null>(null);
 
   const [isSaving, setIsSaving] = useState(false);
+  
+  const [linkedCardIds, setLinkedCardIds] = useState<string[]>(initialContent?.linkedCardIds || []);
+  const [availableCards, setAvailableCards] = useState<CardItem[]>([]);
+  const [isCardSelectorOpen, setIsCardSelectorOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const cards = await getAllCards();
+        setAvailableCards(cards);
+      } catch (err) {
+        console.error("Failed to load cards", err);
+      }
+    };
+    fetchCards();
+  }, []);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const authorPhotoRef = useRef<HTMLInputElement>(null);
@@ -93,8 +119,11 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
       const plainText = tempDiv.innerText || '';
       const excerpt = plainText.length > 160 ? plainText.substring(0, 160) + '...' : plainText;
 
+      const finalBadgeText = contentType === 'case_study' ? serviceTag : (tags[0] || "");
+      const finalCategory = contentType === 'case_study' ? 'Case Study' : 'Blog';
+
       await saveContent({
-        contentType: 'blog',
+        contentType: contentType,
         status,
         title,
         slug: generateSlug(title),
@@ -104,10 +133,11 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
         authorName: authorName || 'Admin',
         authorBio,
         authorImage: finalAuthorImage,
-        tags,
-        category: 'Blog',
-        badgeText: tags[0] || "",
-        submittedBy: 'admin'
+        tags: tags,
+        category: finalCategory,
+        badgeText: finalBadgeText,
+        submittedBy: 'admin',
+        linkedCardIds
       }, initialContent?.id);
       
       onSaveComplete();
@@ -176,14 +206,42 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
           </div>
           <input type="file" ref={headerPhotoRef} onChange={handleHeaderUpload} className="hidden" accept="image/*" />
 
-          {/* Title & Tags */}
+          {/* Content Type & Title */}
+          <div className="flex items-center gap-4 mb-6">
+            <select
+              value={contentType}
+              onChange={(e) => setContentType(e.target.value as 'blog' | 'case_study')}
+              className="bg-m3-surface-container border-none rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-widest text-m3-on-surface focus:ring-2 focus:ring-m3-primary"
+            >
+              <option value="blog">Blog Post</option>
+              <option value="case_study">Case Study</option>
+            </select>
+          </div>
+
           <TextareaAutosize
-            placeholder="Insight Title"
+            placeholder={contentType === 'case_study' ? "Case Study Title" : "Insight Title"}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full text-4xl md:text-5xl font-display font-medium border-none focus:ring-0 placeholder:text-m3-on-surface/20 resize-none mb-6 leading-[1.1] tracking-tight bg-transparent text-m3-on-surface"
           />
 
+          {/* Service Tag (Only for Case Studies) */}
+          {contentType === 'case_study' && (
+            <div className="mb-6">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40 mb-2">Service Tag</label>
+              <select
+                value={serviceTag}
+                onChange={(e) => setServiceTag(e.target.value)}
+                className="w-full bg-m3-surface-container border-none rounded-xl px-4 py-3 text-sm font-medium text-m3-on-surface focus:ring-2 focus:ring-m3-primary"
+              >
+                {SERVICE_CATEGORIES.map(service => (
+                  <option key={service} value={service}>{service}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Normal Tags (For both) */}
           <div className="flex flex-wrap gap-2 mb-10 items-center">
             {tags.map(tag => (
               <span key={tag} className="bg-m3-primary/10 text-m3-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 group border border-m3-primary/20">
@@ -246,6 +304,72 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
                 />
               </div>
             </div>
+
+            {/* Associated Cards Section */}
+            <div className="bg-m3-surface-container-low p-6 rounded-[32px] border border-m3-outline/10">
+              <div className="flex items-center justify-between mb-6">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40">Associated Cards</h4>
+                <button 
+                  onClick={() => setIsCardSelectorOpen(!isCardSelectorOpen)}
+                  className="text-m3-primary hover:bg-m3-primary/10 p-1.5 rounded-full transition-colors"
+                  title="Add Card"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              {isCardSelectorOpen && (
+                <div className="mb-6 p-4 bg-white dark:bg-[#1d1b20] rounded-[16px] border border-m3-outline/10 shadow-sm relative z-10">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40 mb-3">Available Cards</p>
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    {availableCards.filter(c => !linkedCardIds.includes(c.id)).map(card => (
+                      <button
+                        key={card.id}
+                        onClick={() => {
+                          setLinkedCardIds([...linkedCardIds, card.id]);
+                          setIsCardSelectorOpen(false);
+                        }}
+                        className="w-full text-left p-3 rounded-[12px] hover:bg-m3-surface-container transition-colors border border-m3-outline/5"
+                      >
+                        <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{card.titleOverride || card.sourceType + " Card"}</div>
+                        <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType} • {card.section}</div>
+                      </button>
+                    ))}
+                    {availableCards.filter(c => !linkedCardIds.includes(c.id)).length === 0 && (
+                      <p className="text-xs text-m3-on-surface/40 text-center py-4">No available cards</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {linkedCardIds.map(id => {
+                  const card = availableCards.find(c => c.id === id);
+                  if (!card) return null;
+                  return (
+                    <div key={id} className="flex items-center justify-between p-3 bg-white dark:bg-[#1d1b20] rounded-[16px] border border-m3-outline/10 shadow-sm">
+                      <div className="flex-1 min-w-0 pr-3">
+                        <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{card.titleOverride || card.sourceType + " Card"}</div>
+                        <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType}</div>
+                      </div>
+                      <button 
+                        onClick={() => setLinkedCardIds(linkedCardIds.filter(cardId => cardId !== id))}
+                        className="text-m3-on-surface/40 hover:text-m3-error transition-colors shrink-0 p-1.5 hover:bg-red-500/10 rounded-full"
+                        title="Remove Card"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })}
+                {linkedCardIds.length === 0 && !isCardSelectorOpen && (
+                  <div className="text-center p-6 border border-dashed border-m3-outline/20 rounded-[16px]">
+                    <p className="text-xs text-m3-on-surface/40">No cards assigned yet.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

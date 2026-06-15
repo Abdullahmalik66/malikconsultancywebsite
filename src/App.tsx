@@ -22,17 +22,7 @@ import NewsletterSection from './components/NewsletterSection';
 import CaseWorkPage from './pages/CaseWorkPage';
 import WritingsPage from './pages/WritingsPage';
 import BlogEditorPage from './pages/BlogEditorPage';
-import BygghemmaJourney from './pages/BygghemmaJourney';
-import IPAMCaseStudy from './pages/IPAMCaseStudy';
-import RAGEngineCaseStudy from './pages/RAGEngineCaseStudy';
-import UniversityOuluCaseStudy from './pages/UniversityOuluCaseStudy';
-import AgenticJourneyCaseStudy from './pages/AgenticJourneyCaseStudy';
-import GlobalDemandCaseStudy from './pages/GlobalDemandCaseStudy';
-import DeutscheGiganetzCaseStudy from './pages/DeutscheGiganetzCaseStudy';
-import GrowthHackingCaseStudy from './pages/GrowthHackingCaseStudy';
-import ExitStrategyCaseStudy from './pages/ExitStrategyCaseStudy';
-import EmailAutomationCaseStudy from './pages/EmailAutomationCaseStudy';
-import HOPEEngineCaseStudy from './pages/HOPEEngineCaseStudy';
+import CaseStudyPage from './pages/CaseStudyPage';
 import AboutPage from './pages/AboutPage';
 import BlogPostPage from './pages/BlogPostPage';
 import ReachMePage from './pages/ReachMePage';
@@ -91,19 +81,8 @@ function AppContent() {
             </ProtectedRoute>
           } 
         />
-        {/* ... case studies ... */}
-        <Route path="/case-study/bygghemma" element={<BygghemmaJourney />} />
-        <Route path="/case-study/ipam-brand-dominance" element={<IPAMCaseStudy />} />
-        <Route path="/case-study/rag-engine-technical-support" element={<RAGEngineCaseStudy />} />
-        <Route path="/case-study/oulu-university-data-design" element={<UniversityOuluCaseStudy />} />
-        <Route path="/case-study/agentic-customer-journey" element={<AgenticJourneyCaseStudy />} />
-        <Route path="/case-study/global-demand-persona-architecture" element={<GlobalDemandCaseStudy />} />
-        <Route path="/case-study/deutsche-giganetz-market-entry" element={<DeutscheGiganetzCaseStudy />} />
-        <Route path="/case-study/growth-hacking-retail-environment" element={<GrowthHackingCaseStudy />} />
-        <Route path="/case-study/preparing-for-exit-revenue-engines" element={<ExitStrategyCaseStudy />} />
-        <Route path="/case-study/preparing-for-exit-revenue-engines-v2" element={<ExitStrategyCaseStudy />} />
-        <Route path="/case-study/commercial-velocity-email-automation" element={<EmailAutomationCaseStudy />} />
-        <Route path="/case-study/agentic-engine-autonomous-growth" element={<HOPEEngineCaseStudy />} />
+        {/* Dynamic Case Study Route */}
+        <Route path="/case-study/:slug" element={<CaseStudyPage />} />
       </Routes>
       {!isCleanLayout && <NewsletterSection />}
       {!isCleanLayout && <Footer />}

@@ -1,16 +1,32 @@
 import { motion } from 'motion/react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
-import { getRandomCaseStudies, CaseStudy } from '../data/caseStudies';
 import { useNavigate } from 'react-router-dom';
+import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
+import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
 
 export default function CaseWork() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [randomCases, setRandomCases] = useState<CaseStudy[]>([]);
+  const [randomCases, setRandomCases] = useState<(ContentItem & { color: string; animationType: string })[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setRandomCases(getRandomCaseStudies(5));
+    const fetchCases = async () => {
+      const published = await getPublishedContent();
+      const cases = published.filter(item => item.contentType === 'case_study');
+      // shuffle and pick up to 5
+      const shuffled = cases.sort(() => 0.5 - Math.random()).slice(0, 5);
+      const withFormatting = shuffled.map(item => {
+        const fmt = getDeterministicFormatting(item.id);
+        return {
+          ...item,
+          color: fmt.color,
+          animationType: fmt.animationType
+        };
+      });
+      setRandomCases(withFormatting);
+    };
+    fetchCases();
   }, []);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -105,7 +121,7 @@ export default function CaseWork() {
                   <div className="absolute inset-0 p-12 flex flex-col justify-end">
                     <div className="absolute top-12 left-12">
                       <span className="px-5 py-2 rounded-full bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-[0.2em] border border-white/10">
-                        {work.tag}
+                        {work.badgeText || (work.tags && work.tags[0]) || 'Case Study'}
                       </span>
                     </div>
 

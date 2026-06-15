@@ -29,6 +29,7 @@ export interface ContentItem {
   publishedAt?: string;
   submittedBy?: string; // e.g., 'frontend' or admin uid
   approvedBy?: string;
+  linkedCardIds?: string[];
 }
 
 export interface CardItem {
@@ -79,6 +80,7 @@ export const saveContent = async (item: Omit<ContentItem, 'id' | 'createdAt' | '
     id: actualId,
     createdAt,
     updatedAt: now,
+    linkedCardIds: item.linkedCardIds || [],
   };
 
   await set(contentRef, payload);
