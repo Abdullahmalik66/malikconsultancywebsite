@@ -116,15 +116,24 @@ export default function ExecutiveLayout({ title, category, date, image, tags, co
             {/* Content Container with Precise Styling */}
             <div className="max-w-none 
               [&_p]:text-justify [&_p]:text-[24px] [&_p]:leading-[1.4] [&_p]:text-[#1a1a1a] [&_p]:mb-8 [&_p]:tracking-[0.01em]
+              [&_h1]:font-display [&_h1]:font-bold [&_h1]:text-[32px] [&_h1]:text-[#1a1a1a] [&_h1]:mt-16 [&_h1]:mb-6 [&_h1]:uppercase [&_h1]:tracking-wider
               [&_h2]:font-display [&_h2]:font-bold [&_h2]:text-[26px] [&_h2]:text-[#1a1a1a] [&_h2]:mt-16 [&_h2]:mb-6 [&_h2]:uppercase [&_h2]:tracking-wider
               [&_h3]:font-display [&_h3]:font-bold [&_h3]:text-[26px] [&_h3]:text-[#1a1a1a] [&_h3]:mt-12 [&_h3]:mb-5
+              [&_h4]:font-display [&_h4]:font-bold [&_h4]:text-[22px] [&_h4]:text-[#1a1a1a] [&_h4]:mt-8 [&_h4]:mb-4
               [&_strong]:font-medium [&_strong]:text-[#1a1a1a]
+              [&_u]:underline [&_em]:italic [&_i]:italic
               [&_blockquote]:relative [&_blockquote]:border-none [&_blockquote]:bg-[#f4f4f4] [&_blockquote]:px-14 [&_blockquote]:py-16 [&_blockquote]:my-16 [&_blockquote]:rounded-sm
               [&_blockquote_p]:font-bold [&_blockquote_p]:italic [&_blockquote_p]:text-[28px] [&_blockquote_p]:text-[#000] [&_blockquote_p]:mb-0 [&_blockquote_p]:text-left [&_blockquote_p]:tracking-normal [&_blockquote_p]:leading-tight
               [&_blockquote]:before:content-[''] [&_blockquote]:before:absolute [&_blockquote]:before:-top-8 [&_blockquote]:before:left-8 [&_blockquote]:before:w-16 [&_blockquote]:before:h-12
               [&_blockquote]:before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCA0MEwxMCAwSDIwTDEwIDQwSDBZMjAgNDBMMzAgMEg0MEwzMCA0MEgyMFoiIGZpbGw9IiNFQUZGMDAiLz48L3N2Zz4=')] 
               [&_blockquote]:before:bg-no-repeat [&_blockquote]:before:bg-contain
               [&_ul]:list-disc [&_ul]:pl-10 [&_ul]:space-y-6 [&_ul]:mb-12 [&_li]:text-[24px] [&_li]:text-[#1a1a1a] [&_li]:tracking-[0.01em]
+              [&_ol]:list-decimal [&_ol]:pl-10 [&_ol]:space-y-6 [&_ol]:mb-12
+              [&_table]:w-full [&_table]:border-collapse [&_table]:my-6
+              [&_td]:p-3 [&_td]:border [&_td]:border-[#1a1a1a]/10 [&_td]:text-[20px]
+              [&_th]:p-3 [&_th]:border [&_th]:border-[#1a1a1a]/10 [&_th]:bg-black/5 [&_th]:font-bold [&_th]:text-[20px]
+              [&_pre]:bg-black/5 [&_pre]:p-6 [&_pre]:rounded-xl [&_pre]:font-mono [&_pre]:my-6 [&_pre]:overflow-x-auto
+              [&_code]:font-mono [&_code]:bg-black/5 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[18px]
             ">
               {content}
             </div>

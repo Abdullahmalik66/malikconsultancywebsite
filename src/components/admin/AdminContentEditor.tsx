@@ -4,7 +4,7 @@ import {
   Plus, X, Image as ImageIcon, ChevronLeft, Check, Quote, Save, Link2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { saveContent, generateSlug, uploadImage, getAllCards, ContentItem, ContentStatus, CardItem } from '../../lib/firebase/cms';
+import { saveContent, generateSlug, uploadImage, getAllCards, getAllContent, getAllTestimonials, ContentItem, ContentStatus, CardItem } from '../../lib/firebase/cms';
 import SlateEditor from './SlateEditor';
 
 interface AdminContentEditorProps {
@@ -29,9 +29,15 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
     initialContent?.contentType === 'case_study' ? (initialContent?.badgeText || SERVICE_CATEGORIES[0]) : SERVICE_CATEGORIES[0]
   );
 
-  const [authorName, setAuthorName] = useState(initialContent?.authorName || '');
-  const [authorBio, setAuthorBio] = useState(initialContent?.authorBio || '');
-  const [authorImage, setAuthorImage] = useState<string | null>(initialContent?.authorImage || null);
+  const [authorName, setAuthorName] = useState(initialContent?.authorName || 'Abdullah Malik');
+  const [authorBio, setAuthorBio] = useState(
+    initialContent?.authorBio || 
+    'Driving AI Transformation ┊ Agentic AI Use Case Pioneer ┊ Leadership in Scalable Innovation'
+  );
+  const [authorImage, setAuthorImage] = useState<string | null>(
+    initialContent?.authorImage || 
+    '/images/472164386_10170748401095387_7067836675242530090_n.jpg'
+  );
   const [authorFile, setAuthorFile] = useState<File | null>(null);
 
   const [headerImage, setHeaderImage] = useState<string | null>(initialContent?.headerImage || null);
@@ -46,7 +52,23 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
 
   const [linkedCardIds, setLinkedCardIds] = useState<string[]>(initialContent?.linkedCardIds || []);
   const [availableCards, setAvailableCards] = useState<CardItem[]>([]);
+  const [allContent, setAllContent] = useState<ContentItem[]>([]);
   const [isCardSelectorOpen, setIsCardSelectorOpen] = useState(false);
+
+  const currentIdRef = useRef<string | undefined>(initialContent?.id);
+  const handleSaveRef = useRef<any>(null);
+  const isSavingRef = useRef(false);
+
+  // Sync currentId and its ref when initialContent changes
+  useEffect(() => {
+    currentIdRef.current = initialContent?.id;
+    setCurrentId(initialContent?.id);
+  }, [initialContent?.id]);
+
+  // Keep save handler ref pointing to the latest render's handleSave
+  useEffect(() => {
+    handleSaveRef.current = handleSave;
+  });
 
   // Auto-save effect
   useEffect(() => {
@@ -56,22 +78,41 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
 
     setAutoSaveState('idle');
     const timeoutId = setTimeout(() => {
-      handleSave('draft', true);
+      if (handleSaveRef.current) {
+        handleSaveRef.current('draft', true);
+      }
     }, 5000); // 5 seconds of inactivity
 
     return () => clearTimeout(timeoutId);
   }, [title, content, tags, contentType, serviceTag, authorName, authorBio, headerImage, authorImage, linkedCardIds]);
 
   useEffect(() => {
-    const fetchCards = async () => {
+    const fetchData = async () => {
       try {
-        const cards = await getAllCards();
+        const [cards, contentItems, testimonials] = await Promise.all([
+          getAllCards(),
+          getAllContent(),
+          getAllTestimonials()
+        ]);
         setAvailableCards(cards);
+
+        // Map testimonials to compatible ContentItem shape
+        const mappedTestimonials: ContentItem[] = testimonials.map(t => ({
+          id: t.id,
+          contentType: 'testimonial',
+          status: 'published',
+          title: `Testimonial: ${t.name} (${t.company})`,
+          content: t.testimonial,
+          createdAt: t.createdAt,
+          updatedAt: t.updatedAt,
+        }));
+
+        setAllContent([...contentItems, ...mappedTestimonials]);
       } catch (err) {
-        console.error("Failed to load cards", err);
+        console.error("Failed to load cards/content", err);
       }
     };
-    fetchCards();
+    fetchData();
   }, []);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -117,7 +158,8 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
 
 
   const handleSave = async (status: ContentStatus, isAutoSave: boolean = false) => {
-    if (!title) return;
+    if (!title || isSavingRef.current) return;
+    isSavingRef.current = true;
     setIsSaving(true);
 
     try {
@@ -163,9 +205,10 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
         badgeText: finalBadgeText,
         submittedBy: 'admin',
         linkedCardIds
-      }, currentId);
+      }, currentIdRef.current);
 
-      if (!currentId && savedItem.id) {
+      if (!currentIdRef.current && savedItem.id) {
+        currentIdRef.current = savedItem.id;
         setCurrentId(savedItem.id);
       }
 
@@ -182,6 +225,7 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
     } catch (error) {
       console.error("Saving error:", error);
     } finally {
+      isSavingRef.current = false;
       setIsSaving(false);
     }
   };
@@ -363,19 +407,23 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
                 <div className="mb-6 p-4 bg-white dark:bg-[#1d1b20] rounded-[16px] border border-m3-outline/10 shadow-sm relative z-10">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40 mb-3">Available Cards</p>
                   <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                    {availableCards.filter(c => !linkedCardIds.includes(c.id)).map(card => (
-                      <button
-                        key={card.id}
-                        onClick={() => {
-                          setLinkedCardIds([...linkedCardIds, card.id]);
-                          setIsCardSelectorOpen(false);
-                        }}
-                        className="w-full text-left p-3 rounded-[12px] hover:bg-m3-surface-container transition-colors border border-m3-outline/5"
-                      >
-                        <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{card.titleOverride || card.sourceType + " Card"}</div>
-                        <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType} • {card.section}</div>
-                      </button>
-                    ))}
+                    {availableCards.filter(c => !linkedCardIds.includes(c.id)).map(card => {
+                      const associatedContent = allContent.find(c => c.id === card.sourceId);
+                      const displayTitle = card.titleOverride || associatedContent?.title || (card.sourceType.replace('_', ' ') + " Card");
+                      return (
+                        <button
+                          key={card.id}
+                          onClick={() => {
+                            setLinkedCardIds([...linkedCardIds, card.id]);
+                            setIsCardSelectorOpen(false);
+                          }}
+                          className="w-full text-left p-3 rounded-[12px] hover:bg-m3-surface-container transition-colors border border-m3-outline/5"
+                        >
+                          <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{displayTitle}</div>
+                          <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType} • {card.section}</div>
+                        </button>
+                      );
+                    })}
                     {availableCards.filter(c => !linkedCardIds.includes(c.id)).length === 0 && (
                       <p className="text-xs text-m3-on-surface/40 text-center py-4">No available cards</p>
                     )}
@@ -387,10 +435,12 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
                 {linkedCardIds.map(id => {
                   const card = availableCards.find(c => c.id === id);
                   if (!card) return null;
+                  const associatedContent = allContent.find(c => c.id === card.sourceId);
+                  const displayTitle = card.titleOverride || associatedContent?.title || (card.sourceType.replace('_', ' ') + " Card");
                   return (
                     <div key={id} className="flex items-center justify-between p-3 bg-white dark:bg-[#1d1b20] rounded-[16px] border border-m3-outline/10 shadow-sm">
                       <div className="flex-1 min-w-0 pr-3">
-                        <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{card.titleOverride || card.sourceType + " Card"}</div>
+                        <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{displayTitle}</div>
                         <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType}</div>
                       </div>
                       <button

@@ -11,6 +11,7 @@ export default function WritingsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showExploreTags, setShowExploreTags] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -179,8 +180,8 @@ export default function WritingsPage() {
         <div className="max-w-[1440px] mx-auto space-y-8">
           
           {/* Glassmorphic Search & Settings Bar */}
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative w-full md:max-w-xl group">
+          <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+            <div className="relative w-full md:flex-1 md:max-w-5xl group">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6d55a7]/50 group-focus-within:text-[#6d55a7] transition-colors" />
               <input
                 type="text"
@@ -199,14 +200,21 @@ export default function WritingsPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6d55a7]/50">
+            <button 
+              onClick={() => setShowExploreTags(!showExploreTags)}
+              className={`flex items-center justify-center gap-2 px-5 py-3 md:py-2.5 rounded-full border text-xs font-bold uppercase tracking-widest transition-all focus:outline-none cursor-pointer w-full md:w-auto ${
+                showExploreTags 
+                  ? 'bg-[#6d55a7] text-white border-[#6d55a7] shadow-md shadow-[#6d55a7]/20 scale-105' 
+                  : 'border-[#6d55a7]/20 text-[#6d55a7]/70 hover:bg-[#6d55a7]/10'
+              }`}
+            >
               <SlidersHorizontal className="w-4 h-4" />
               <span>Explore Topics</span>
-            </div>
+            </button>
           </div>
 
-          {/* Quick Suggestions Helper - Put examples of tags from the blogs */}
-          <div className="flex items-center gap-2 flex-wrap text-xs text-m3-on-surface/50 font-sans">
+          {/* Quick Suggestions Helper - Permanently visible outside the drawer */}
+          <div className="flex items-center gap-2 flex-wrap text-xs text-m3-on-surface/50 font-sans pt-1">
             <span className="font-bold uppercase tracking-wider text-[10px] text-[#6d55a7]">Suggested Topics:</span>
             {(availableTags.length > 0 ? availableTags.slice(0, 8) : ['Artificial Intelligence', 'Leadership', 'AI transformation', 'AI governance']).map(tag => {
               const isSelected = selectedTags.includes(tag);
@@ -226,38 +234,73 @@ export default function WritingsPage() {
             })}
           </div>
 
-          {/* Dynamic Tags Cloud (Capsules) */}
-          {availableTags.length > 0 && (
-            <div className="flex flex-wrap gap-2.5 items-center">
-              <button
-                onClick={clearAllFilters}
-                className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
-                  selectedTags.length === 0 && searchQuery.trim() === ''
-                    ? 'bg-[#6d55a7] text-white shadow-md shadow-[#6d55a7]/20 scale-105'
-                    : 'bg-white dark:bg-[#1e1c24] border border-m3-outline/10 text-m3-on-surface/60 hover:border-[#6d55a7]/30 hover:text-[#6d55a7]'
-                }`}
+          <AnimatePresence>
+            {showExploreTags && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, y: -10 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -10 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden space-y-6 pt-2"
               >
-                All Topics
-              </button>
-              {availableTags.map(tag => {
-                const isSelected = selectedTags.includes(tag);
-                return (
-                  <button
-                    key={tag}
-                    onClick={() => toggleTag(tag)}
-                    className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${
-                      isSelected
-                        ? 'bg-[#6d55a7] text-white shadow-md shadow-[#6d55a7]/20 scale-105'
-                        : 'bg-white dark:bg-[#1e1c24] border border-m3-outline/10 text-m3-on-surface/60 hover:border-[#6d55a7]/30 hover:text-[#6d55a7]'
-                    }`}
+                {/* Dynamic Tags Cloud (Capsules) */}
+                {availableTags.length > 0 && (
+                  <motion.div 
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      visible: {
+                        opacity: 1,
+                        transition: {
+                          staggerChildren: 0.03
+                        }
+                      }
+                    }}
+                    className="flex flex-wrap gap-2.5 items-center"
                   >
-                    <TagIcon className="w-3.5 h-3.5 opacity-60" />
-                    {tag}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+                    <motion.button
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.9, y: 5 },
+                        visible: { opacity: 1, scale: 1, y: 0 }
+                      }}
+                      onClick={clearAllFilters}
+                      className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
+                        selectedTags.length === 0 && searchQuery.trim() === ''
+                          ? 'bg-[#6d55a7] text-white shadow-md shadow-[#6d55a7]/20 scale-105'
+                          : 'bg-white dark:bg-[#1e1c24] border border-m3-outline/10 text-m3-on-surface/60 hover:border-[#6d55a7]/30 hover:text-[#6d55a7]'
+                      }`}
+                    >
+                      All Topics
+                    </motion.button>
+                    {availableTags.map(tag => {
+                      const isSelected = selectedTags.includes(tag);
+                      return (
+                        <motion.button
+                          key={tag}
+                          variants={{
+                            hidden: { opacity: 0, scale: 0.9, y: 5 },
+                            visible: { opacity: 1, scale: 1, y: 0 }
+                          }}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => toggleTag(tag)}
+                          className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#6d55a7] text-white shadow-md shadow-[#6d55a7]/20 scale-105'
+                              : 'bg-white dark:bg-[#1e1c24] border border-m3-outline/10 text-m3-on-surface/60 hover:border-[#6d55a7]/30 hover:text-[#6d55a7]'
+                          }`}
+                        >
+                          <TagIcon className="w-3.5 h-3.5 opacity-60" />
+                          {tag}
+                        </motion.button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Active Filter indicator and summary */}
           {(selectedTags.length > 0 || searchQuery.trim() !== '') && (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
   ChevronLeft, Share2, Clock, User, Tag, 
@@ -277,10 +277,28 @@ export default function BlogPostPage() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-display font-medium leading-[0.95] tracking-[-0.03em] mb-12"
+              className={`text-5xl md:text-7xl lg:text-8xl font-display font-medium leading-[0.95] tracking-[-0.03em] ${
+                blog.tags && blog.tags.length > 0 ? 'mb-8' : 'mb-12'
+              }`}
             >
               {blog.title}
             </motion.h1>
+
+            {blog.tags && blog.tags.length > 0 && (
+              <div className="flex flex-wrap gap-3 mb-12">
+                {blog.tags.map(tag => (
+                  <motion.span 
+                    key={tag}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-m3-primary/10 dark:bg-m3-primary/20 text-m3-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-m3-primary/20 transition-all cursor-default hover:shadow-lg hover:shadow-m3-primary/15 hover:bg-m3-primary/15"
+                  >
+                    <Tag className="w-3.5 h-3.5 text-m3-primary/70" />
+                    {tag}
+                  </motion.span>
+                ))}
+              </div>
+            )}
 
             <motion.div 
               initial={{ opacity: 0, scale: 0.98 }}
@@ -308,10 +326,15 @@ export default function BlogPostPage() {
               {/* Tags */}
               <div className="mt-16 pt-8 border-t border-m3-outline/10 flex flex-wrap gap-3">
                 {blog.tags?.map(tag => (
-                  <span key={tag} className="flex items-center gap-2 px-4 py-2 bg-m3-surface-container rounded-full text-xs font-bold uppercase tracking-widest text-m3-on-surface/60 border border-m3-outline/10">
-                    <Tag className="w-3 h-3" />
+                  <motion.span 
+                    key={tag}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-m3-primary/10 dark:bg-m3-primary/20 text-m3-primary text-[10px] font-bold uppercase tracking-widest rounded-full border border-m3-primary/20 transition-all cursor-default hover:shadow-lg hover:shadow-m3-primary/15 hover:bg-m3-primary/15"
+                  >
+                    <Tag className="w-3.5 h-3.5 text-m3-primary/70" />
                     {tag}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
 
@@ -434,39 +457,42 @@ export default function BlogPostPage() {
             </div>
 
             {/* Author Sidebar */}
-            <aside className="lg:col-span-4">
-              <div className="sticky top-32 space-y-8">
-                {blog.linkedCardIds && blog.linkedCardIds.length > 0 && (
-                  <LinkedCardsSidebar cardIds={blog.linkedCardIds} />
-                )}
-
-                <div className="bg-m3-surface-container p-10 rounded-[48px] border border-m3-outline/10">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="w-24 h-24 rounded-full overflow-hidden mb-6 bg-m3-primary/10 border-2 border-m3-primary/20">
-                      <img 
-                        src={blog.authorImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"} 
-                        alt={blog.author}
-                        className="w-full h-full object-cover" 
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-m3-primary mb-2">Insight By</div>
-                    <h3 className="text-2xl font-display font-medium text-m3-on-surface mb-3">{blog.author}</h3>
-                    <p className="text-sm text-m3-on-surface/60 leading-relaxed font-sans">
-                      {blog.authorBio || "Leading strategy and innovation advisor. Focused on the structural transformation of the digital economy."}
-                    </p>
+            <aside className="lg:col-span-4 space-y-8 relative">
+              {/* 1. Name Card (static, fixed) */}
+              <div className="bg-m3-surface-container p-10 rounded-[48px] border border-m3-outline/10">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-24 h-24 rounded-full overflow-hidden mb-6 bg-m3-primary/10 border-2 border-m3-primary/20">
+                    <img 
+                      src={blog.authorImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"} 
+                      alt={blog.author}
+                      className="w-full h-full object-cover" 
+                      referrerPolicy="no-referrer"
+                    />
                   </div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-m3-primary mb-2">Insight By</div>
+                  <h3 className="text-2xl font-display font-medium text-m3-on-surface mb-3">{blog.author}</h3>
+                  <p className="text-sm text-m3-on-surface/60 leading-relaxed font-sans">
+                    {blog.authorBio || "Leading strategy and innovation advisor. Focused on the structural transformation of the digital economy."}
+                  </p>
                 </div>
+              </div>
 
-                <div className="bg-[#EAFF00] p-10 rounded-[48px] shadow-xl shadow-[#EAFF00]/10">
-                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-m3-on-surface mb-4 text-center">Interested?</h4>
-                   <p className="text-sm font-medium text-m3-on-surface/80 text-center leading-relaxed">
-                     Let's talk about how these insights can manifest in your business ecosystem.
-                   </p>
-                   <button className="w-full mt-8 py-4 bg-m3-on-surface text-[#EAFF00] rounded-full font-bold uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all">
+              {/* 2. Other Cards (static, fixed) */}
+              {blog.linkedCardIds && blog.linkedCardIds.length > 0 && (
+                <LinkedCardsSidebar cardIds={blog.linkedCardIds} />
+              )}
+
+              {/* 3. Reach Out Card (sticky, moves along with content) */}
+              <div className="sticky top-36 bg-[#EAFF00] p-10 rounded-[48px] shadow-xl shadow-[#EAFF00]/10">
+                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-m3-on-surface mb-4 text-center">Interested?</h4>
+                 <p className="text-sm font-medium text-m3-on-surface/80 text-center leading-relaxed">
+                   Let's talk about how these insights can manifest in your business ecosystem.
+                 </p>
+                 <Link to="/reach-me" className="block w-full">
+                   <button className="w-full mt-8 py-4 bg-m3-on-surface text-[#EAFF00] rounded-full font-bold uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all cursor-pointer">
                      Reach out
                    </button>
-                </div>
+                 </Link>
               </div>
             </aside>
           </div>
@@ -479,42 +505,126 @@ export default function BlogPostPage() {
           line-height: 1.8;
           color: rgba(var(--m3-on-surface-rgb, 26, 26, 26), 0.9);
         }
-        .blog-content h2 {
-          font-size: 2.5rem;
-          margin-top: 4rem;
-          margin-bottom: 2rem;
+        .blog-content h1 {
+          font-family: var(--font-display);
+          font-size: 2.75rem;
+          font-weight: 700;
+          margin-top: 3.5rem;
+          margin-bottom: 1.5rem;
           color: #1a1a1a;
           line-height: 1.1;
         }
+        .blog-content h2 {
+          font-family: var(--font-display);
+          font-size: 2.25rem;
+          font-weight: 700;
+          margin-top: 3rem;
+          margin-bottom: 1.25rem;
+          color: #1a1a1a;
+          line-height: 1.15;
+        }
+        .blog-content h3 {
+          font-family: var(--font-display);
+          font-size: 1.75rem;
+          font-weight: 700;
+          margin-top: 2.5rem;
+          margin-bottom: 1rem;
+          color: #1a1a1a;
+          line-height: 1.2;
+        }
+        .blog-content h4 {
+          font-family: var(--font-display);
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-top: 2rem;
+          margin-bottom: 0.75rem;
+          color: #1a1a1a;
+          line-height: 1.25;
+        }
         .blog-content p {
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
+          font-size: 1.25rem;
+          line-height: 1.8;
+        }
+        .blog-content ul {
+          list-style-type: disc !important;
+          padding-left: 2rem !important;
+          margin-top: 0.5rem !important;
+          margin-bottom: 1.5rem !important;
+        }
+        .blog-content ol {
+          list-style-type: decimal !important;
+          padding-left: 2rem !important;
+          margin-top: 0.5rem !important;
+          margin-bottom: 1.5rem !important;
+        }
+        .blog-content li {
+          margin-bottom: 0.5rem;
+          font-size: 1.25rem;
+          line-height: 1.8;
+          list-style: inherit !important;
+        }
+        .blog-content strong, .blog-content b {
+          font-weight: 700 !important;
+          color: #1a1a1a;
+        }
+        .blog-content em, .blog-content i {
+          font-style: italic !important;
+        }
+        .blog-content u {
+          text-decoration: underline !important;
         }
         .blog-content img {
           max-width: 100%;
           height: auto;
           border-radius: 3rem;
-          margin: 4rem 0;
+          margin: 3rem 0;
           box-shadow: 0 30px 60px -12px rgba(0,0,0,0.1);
         }
         .blog-content blockquote {
           font-family: var(--font-display);
-          font-size: 2rem;
+          font-size: 1.75rem;
           font-style: italic;
-          border-left: 0;
-          padding: 3rem 0;
-          margin: 4rem 0;
+          border-left: 4px solid var(--m3-primary);
+          padding: 1.5rem 0 1.5rem 2rem;
+          margin: 3rem 0;
           color: var(--m3-primary);
-          line-height: 1.2;
-          position: relative;
+          line-height: 1.3;
+          background-color: rgba(var(--m3-primary-rgb), 0.05);
+          border-radius: 1rem;
         }
-        .blog-content blockquote::before {
-          content: '"';
-          position: absolute;
-          top: -2rem;
-          left: -1rem;
-          font-size: 8rem;
-          opacity: 0.1;
-          pointer-events: none;
+        .blog-content table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+          margin: 2rem 0 !important;
+        }
+        .blog-content th, .blog-content td {
+          border: 1px solid rgba(0,0,0,0.1) !important;
+          padding: 0.75rem 1rem !important;
+          text-align: left;
+        }
+        .blog-content th {
+          background-color: rgba(0,0,0,0.02) !important;
+          font-weight: 700 !important;
+        }
+        .blog-content pre {
+          background-color: #f4f4f4 !important;
+          padding: 1.5rem !important;
+          border-radius: 1rem !important;
+          overflow-x: auto !important;
+          margin: 2rem 0 !important;
+        }
+        .blog-content code {
+          font-family: monospace !important;
+          font-size: 0.95em !important;
+          background-color: rgba(0,0,0,0.04);
+          padding: 0.2rem 0.4rem;
+          border-radius: 0.25rem;
+        }
+        .blog-content pre code {
+          background-color: transparent !important;
+          padding: 0 !important;
+          border-radius: 0 !important;
         }
       `}</style>
     </div>
