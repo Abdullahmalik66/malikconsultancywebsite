@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion } from 'motion/react';
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight, Plus } from 'lucide-react';
@@ -27,10 +27,14 @@ export default function LatestInsights() {
         const published = await getPublishedContent();
         const blogs = published.filter(item => item.contentType === 'blog');
         
-        // Sort newest first
-        blogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        // Shuffle randomly using Fisher-Yates algorithm on every refresh
+        const shuffled = [...blogs];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
         
-        const mapped: Insight[] = blogs.map(item => ({
+        const mapped: Insight[] = shuffled.map(item => ({
           id: item.id,
           slug: item.slug,
           date: new Date(item.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
@@ -50,10 +54,84 @@ export default function LatestInsights() {
     fetchLatest();
   }, []);
 
-  const { scrollXProgress } = useScroll({ container: scrollRef });
-  
-  // Rotation tied to scroll
-  const rotation = useTransform(scrollXProgress, [0, 1], [0, 360]);
+  // Performance-optimized 3D Scroll Rotation and Trackpad/Scrollwheel listener
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container || allInsights.length === 0) return;
+
+    const handleScroll = () => {
+      const rect = container.getBoundingClientRect();
+      const cards = container.children;
+      
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i] as HTMLElement;
+        const cardRect = card.getBoundingClientRect();
+        
+        // Calculate center of the scroll container
+        const containerCenter = rect.left + rect.width / 2;
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        
+        // Distance from center relative to container half-width
+        const distance = cardCenter - containerCenter;
+        const maxDistance = rect.width / 1.5; // range at which rotation reaches max
+        
+        const fraction = Math.max(-1, Math.min(1, distance / maxDistance));
+        
+        // Cylinder tilt on Y axis (left tilts positive, right tilts negative)
+        const rotationY = -fraction * 15; 
+        
+        // Gentle tilt on Z axis for organic dynamic feel
+        const rotationZ = -fraction * 1.5;
+
+        // Scale down cards slightly further from center
+        const scale = 1 - Math.abs(fraction) * 0.08;
+        
+        // Fade out slightly at the edges
+        const opacity = 1 - Math.abs(fraction) * 0.25;
+        
+        card.style.transform = `perspective(1000px) rotateY(${rotationY}deg) rotateZ(${rotationZ}deg) scale(${scale})`;
+        card.style.opacity = `${opacity}`;
+      }
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Convert vertical mouse scroll into horizontal scroll for the carousel
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
+      }
+    };
+
+    container.addEventListener('scroll', onScroll);
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    
+    // Initial run
+    handleScroll();
+    
+    // Trigger on resize
+    window.addEventListener('resize', handleScroll);
+
+    // Initial timeout to ensure children are rendered and laid out correctly
+    const timeoutId = setTimeout(handleScroll, 100);
+
+    return () => {
+      container.removeEventListener('scroll', onScroll);
+      container.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('resize', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [allInsights]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -108,11 +186,11 @@ export default function LatestInsights() {
         </div>
 
         {/* Carousel Container - Bleeds to edges */}
-        <div className="pl-6 md:pl-12 lg:pl-[calc(max(0px,(100vw-1440px)/2)+96px)]">
+        <div className="pl-6 md:pl-12 lg:pl-[calc(max(0px,(100vw-1440px)/2)+96px)]" style={{ perspective: '1200px' }}>
           <div 
             ref={scrollRef}
             className="flex gap-10 overflow-x-auto no-scrollbar pb-20 snap-x snap-mandatory"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            style={{ WebkitOverflowScrolling: 'touch', transformStyle: 'preserve-3d' }}
           >
             {allInsights.map((item, index) => (
               <motion.div
@@ -122,6 +200,10 @@ export default function LatestInsights() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
                 className="flex-shrink-0 w-[90vw] md:w-[580px] snap-start group cursor-pointer"
+                style={{ 
+                  transformStyle: 'preserve-3d',
+                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease-out'
+                }}
                 onClick={() => navigate(`/writings/${item.slug || item.id}`)}
               >
                 {/* Image Container */}
