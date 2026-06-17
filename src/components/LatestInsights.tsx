@@ -2,9 +2,11 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight, Plus } from 'lucide-react';
+import { getPublishedContent } from '../lib/firebase/cms';
 
 interface Insight {
   id: string;
+  slug?: string;
   date: string;
   category: string;
   author?: string;
@@ -14,68 +16,33 @@ interface Insight {
   badgeText?: string;
 }
 
-const staticInsights: Insight[] = [
-  {
-    id: '1',
-    date: "April 15, 2026",
-    category: "Blog",
-    title: "A geopolitical bottleneck: The importance of the Strait of Hormuz for businesses and markets",
-    excerpt: "The Strait of Hormuz is one of the world's most strategically important and vulnerable sea lanes. It carries about a fifth of global oil trade, and due to the Iran war, it is currently the most important geopolitical bottleneck in the international economy. ...",
-    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop", 
-  },
-  {
-    id: '2',
-    date: "April 14, 2026",
-    category: "News",
-    title: "Chief Economist's snapshot: signals that will define the economy in 2026",
-    excerpt: "Miltton's Chief Economist Pasi Kuoppamäki opens up about how geopolitical tensions, technology and the energy transition are shaping the economy – and what signals business leaders should now follow.",
-    imageUrl: "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=800&auto=format&fit=crop", 
-    badgeText: "NEWS"
-  },
-  {
-    id: '3',
-    date: "April 10, 2026",
-    category: "Blog",
-    author: "Timo Nurmi",
-    title: "Artificial intelligence in communications: the experimentation to competitive advantage",
-    excerpt: "The use of AI in communications teams is often still a experimentation by individuals. Timo Nurmi presents a communications professionals to move step by step to – and free up time for things that no one else is doing y",
-    imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop", 
-    badgeText: "BLOG"
-  },
-  {
-    id: '4',
-    date: "April 2, 2026",
-    category: "Blog",
-    author: "The Story of Taipale",
-    title: "Drones and cybercriminals are falling from the sky. Are you prepared for everything?",
-    excerpt: "The world has changed faster than many organizations can prepare, and previously unlikely risks are now entirely possible. In this blog, crisis communications expert Taru Taipale reflects on how well organizations are really prepared for expected and unexpected crises, and why communication plays a crucial role in them.",
-    imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop", 
-  },
-  {
-    id: '5',
-    date: "March 31, 2026",
-    category: "Blog",
-    author: "Evilda Nikander",
-    title: "Pride for pride's sake",
-    excerpt: "As brands retreat from visible values and difficult conversations, silence is increasingly becoming a safe strategy. Evilda Nikander reflects on how silence on issues such as Pride and sustainability erodes trust – and how clarity, courage and value-driven communication are emerging as a real competitive advantage.",
-    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop", 
-    badgeText: "PRIDE"
-  }
-];
-
 export default function LatestInsights() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const [allInsights, setAllInsights] = useState<Insight[]>(staticInsights);
+  const [allInsights, setAllInsights] = useState<Insight[]>([]);
 
   useEffect(() => {
     const fetchLatest = async () => {
       try {
-        const response = await fetch('/api/writings');
-        if (response.ok) {
-          const userInsights = await response.json();
-          setAllInsights([...userInsights, ...staticInsights]);
-        }
+        const published = await getPublishedContent();
+        const blogs = published.filter(item => item.contentType === 'blog');
+        
+        // Sort newest first
+        blogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
+        const mapped: Insight[] = blogs.map(item => ({
+          id: item.id,
+          slug: item.slug,
+          date: new Date(item.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+          category: (item.category as 'Blog' | 'News' | 'Strategy') || 'Blog',
+          author: item.authorName || 'Anonymous',
+          title: item.title,
+          excerpt: item.excerpt || '',
+          imageUrl: item.headerImage || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop',
+          badgeText: item.badgeText || '',
+        }));
+        
+        setAllInsights(mapped);
       } catch (error) {
         console.error("Latest insights fetch error:", error);
       }
@@ -155,7 +122,7 @@ export default function LatestInsights() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
                 className="flex-shrink-0 w-[90vw] md:w-[580px] snap-start group cursor-pointer"
-                onClick={() => navigate(`/writings/${item.id}`)}
+                onClick={() => navigate(`/writings/${item.slug || item.id}`)}
               >
                 {/* Image Container */}
                 <div className="relative aspect-[16/11] overflow-hidden rounded-[64px] mb-8 bg-[#f0f0f0] shadow-sm">

@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ChevronLeft, Share2, Clock, User, Tag } from 'lucide-react';
-import { motion } from 'motion/react';
+import { 
+  ChevronLeft, Share2, Clock, User, Tag, 
+  Linkedin, Facebook, Copy, Check, Send 
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Writing } from '../types';
-import { getPublishedContent } from '../lib/firebase/cms';
+import { getPublishedContent, getCommentsByBlogId, saveComment, BlogComment } from '../lib/firebase/cms';
 import { LinkedCardsSidebar } from '../components/cms/CardRenderer';
 
 // Add the content field to the type if it doesn't exist in our base interface
@@ -30,11 +33,12 @@ export default function BlogPostPage() {
       // Try the backend for user-published writings
       try {
         const published = await getPublishedContent();
-        const userBlog = published.find(w => w.id === id);
+        const userBlog = published.find(w => w.contentType === 'blog' && (w.slug === id || w.id === id));
         
         if (userBlog) {
           setBlog({
             id: userBlog.id,
+            slug: userBlog.slug,
             title: userBlog.title,
             excerpt: userBlog.excerpt || '',
             content: userBlog.content,
@@ -58,6 +62,96 @@ export default function BlogPostPage() {
 
     findBlog();
   }, [id]);
+
+  // Comments and Share state
+  const [comments, setComments] = useState<BlogComment[]>([]);
+  const [commentName, setCommentName] = useState('');
+  const [commentText, setCommentText] = useState('');
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [commentSuccess, setCommentSuccess] = useState(false);
+
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  // Fetch comments
+  useEffect(() => {
+    if (!id) return;
+    const fetchComments = async () => {
+      try {
+        const list = await getCommentsByBlogId(id);
+        list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        setComments(list);
+      } catch (err) {
+        console.error("Failed to fetch comments", err);
+      }
+    };
+    fetchComments();
+  }, [id]);
+
+  // Click outside listener for Share menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(event.target as Node)) {
+        setShowShareMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Post Comment Handler
+  const handlePostComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!id || !commentText.trim()) return;
+
+    setIsSubmittingComment(true);
+    try {
+      const newComment = await saveComment(id, commentName || 'Anonymous', commentText);
+      setComments([...comments, newComment]);
+      setCommentText('');
+      setCommentSuccess(true);
+      setTimeout(() => setCommentSuccess(false), 3000);
+    } catch (err) {
+      console.error("Error saving comment:", err);
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
+
+  // Share Handlers
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShareNative = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: blog?.title || 'Artery Insight',
+          text: blog?.excerpt || '',
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error("Native share failed", err);
+      }
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  // Helper for dynamic reading time
+  const calculateReadingTime = (htmlContent: string | undefined): number => {
+    if (!htmlContent) return 1;
+    const text = htmlContent.replace(/<[^>]*>/g, ' ');
+    const words = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+    const minutes = Math.ceil(words / 200);
+    return minutes > 0 ? minutes : 1;
+  };
+
+  const dynamicReadTime = calculateReadingTime(blog?.content);
 
   if (loading) {
     return (
@@ -97,25 +191,68 @@ export default function BlogPostPage() {
         <meta name="keywords" content={blog.category + ", insight, strategy, AI"} />
       </Helmet>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-m3-surface/80 backdrop-blur-xl border-b border-m3-outline/10 h-20 px-6 flex items-center justify-between">
-        <button 
-          onClick={() => navigate('/my-writings')}
-          className="group flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-m3-on-surface/60 hover:text-m3-primary transition-all"
-        >
-          <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span>Back</span>
-        </button>
-        
-        <div className="flex items-center gap-4">
-          <button className="p-3 rounded-full hover:bg-m3-primary/5 transition-colors">
-            <Share2 className="w-5 h-5" />
-          </button>
-        </div>
-      </nav>
-
-      <main className="pt-32 pb-32">
+      <main className="pt-36 pb-32">
         <article className="max-w-[1240px] mx-auto px-6">
+          {/* Action Row: Back & Share (positioned after the global header) */}
+          <div className="flex items-center justify-between mb-12 pb-4 border-b border-m3-outline/10">
+            <button 
+              onClick={() => navigate('/my-writings')}
+              className="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-m3-on-surface/60 hover:text-m3-primary transition-all"
+            >
+              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span>Back to writings</span>
+            </button>
+            
+            <div className="relative" ref={shareMenuRef}>
+              <button 
+                onClick={() => setShowShareMenu(!showShareMenu)}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-m3-outline/20 text-xs font-bold uppercase tracking-widest hover:bg-m3-surface-container transition-all text-m3-on-surface"
+              >
+                <Share2 className="w-4 h-4" /> Share
+              </button>
+
+              <AnimatePresence>
+                {showShareMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-2 p-2 w-48 bg-white dark:bg-[#1d1b20] border border-m3-outline/20 rounded-2xl shadow-xl z-50 text-m3-on-surface flex flex-col gap-1"
+                  >
+                    <a
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setShowShareMenu(false)}
+                      className="flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-m3-primary/10 hover:text-m3-primary transition-colors"
+                    >
+                      <Linkedin className="w-4 h-4" /> LinkedIn
+                    </a>
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setShowShareMenu(false)}
+                      className="flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-m3-primary/10 hover:text-m3-primary transition-colors"
+                    >
+                      <Facebook className="w-4 h-4" /> Facebook
+                    </a>
+                    <button
+                      onClick={() => {
+                        handleShareNative();
+                        setShowShareMenu(false);
+                      }}
+                      className="flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-m3-primary/10 hover:text-m3-primary transition-colors"
+                    >
+                      {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                      {copied ? 'Copied!' : 'Copy Link / Share'}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
           {/* Header */}
           <header className="mb-16">
             <motion.div 
@@ -132,7 +269,7 @@ export default function BlogPostPage() {
               <div className="w-px h-4 bg-m3-outline/20 mx-2" />
               <div className="flex items-center gap-2 text-m3-on-surface/60">
                  <Clock className="w-4 h-4" />
-                 <span className="text-[10px] font-bold uppercase tracking-widest">~5 MIN READ</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest">~{dynamicReadTime} MIN READ</span>
               </div>
             </motion.div>
 
@@ -176,6 +313,123 @@ export default function BlogPostPage() {
                     {tag}
                   </span>
                 ))}
+              </div>
+
+              {/* Comments Section */}
+              <div className="mt-20 pt-12 border-t border-m3-outline/10 space-y-10">
+                <div>
+                  <h3 className="text-3xl font-display font-medium text-m3-on-surface tracking-tight mb-2">
+                    Discussion ({comments.length})
+                  </h3>
+                  <p className="text-xs text-m3-on-surface/50 font-sans uppercase tracking-widest">
+                    Share your perspective on this insight
+                  </p>
+                </div>
+
+                {/* Comment Form */}
+                <form onSubmit={handlePostComment} className="space-y-4 bg-m3-surface-container/30 p-6 md:p-8 rounded-[32px] border border-m3-outline/10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40 mb-2 pl-1">Name (Optional)</label>
+                      <input
+                        type="text"
+                        placeholder="Anonymous"
+                        value={commentName}
+                        onChange={e => setCommentName(e.target.value)}
+                        className="w-full bg-white dark:bg-[#1d1b20] border border-m3-outline/10 rounded-2xl px-4 py-3 text-sm font-medium text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:border-transparent outline-none transition-all font-sans"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40 mb-2 pl-1">Comment</label>
+                    <textarea
+                      required
+                      rows={4}
+                      placeholder="Write your thoughts..."
+                      value={commentText}
+                      onChange={e => setCommentText(e.target.value)}
+                      className="w-full bg-white dark:bg-[#1d1b20] border border-m3-outline/10 rounded-2xl px-4 py-3 text-sm font-medium text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:border-transparent outline-none transition-all resize-none font-sans"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    <div>
+                      <AnimatePresence>
+                        {commentSuccess && (
+                          <motion.span 
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="text-xs font-semibold text-green-500 flex items-center gap-1.5"
+                          >
+                            <Check className="w-4 h-4" /> Comment posted!
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      disabled={isSubmittingComment || !commentText.trim()}
+                      className="flex items-center gap-2 px-6 py-3.5 bg-m3-primary text-m3-on-primary text-xs font-bold uppercase tracking-widest rounded-full hover:bg-m3-primary/90 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      {isSubmittingComment ? (
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
+                      Post Comment
+                    </button>
+                  </div>
+                </form>
+
+                {/* Comments Feed */}
+                <div className="space-y-6">
+                  {comments.map((comment) => {
+                    const initials = comment.authorName
+                      .split(' ')
+                      .map(n => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2) || 'A';
+                    
+                    const dateStr = new Date(comment.createdAt).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    });
+
+                    return (
+                      <motion.div
+                        key={comment.id}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-start gap-4 p-5 bg-white dark:bg-[#1d1b20] rounded-[24px] border border-m3-outline/5 shadow-sm"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-m3-primary/10 text-m3-primary flex items-center justify-center font-display font-bold text-xs shrink-0 select-none">
+                          {initials}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-baseline gap-2 mb-1.5">
+                            <h4 className="text-sm font-bold text-m3-on-surface">{comment.authorName}</h4>
+                            <span className="text-[10px] text-m3-on-surface/40 font-mono font-medium">{dateStr}</span>
+                          </div>
+                          <p className="text-sm text-m3-on-surface/85 leading-relaxed break-words whitespace-pre-wrap font-sans">
+                            {comment.commentText}
+                          </p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+
+                  {comments.length === 0 && (
+                    <div className="text-center py-12 border border-dashed border-m3-outline/10 rounded-[32px]">
+                      <p className="text-sm text-m3-on-surface/40 font-medium">No comments yet. Be the first to join the discussion!</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

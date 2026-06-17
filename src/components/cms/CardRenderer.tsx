@@ -23,7 +23,7 @@ export function CardRenderer({ card, source }: CardRendererProps) {
   // Navigation target path
   const targetLink = source.contentType === 'case_study' 
     ? `/case-study/${source.slug || source.id}`
-    : (source.contentType === 'testimonial' ? '/testimonials' : `/writings/${source.id}`);
+    : (source.contentType === 'testimonial' ? '/testimonials' : `/writings/${source.slug || source.id}`);
 
   // 1. Standard layout (standard)
   if (type === 'standard') {

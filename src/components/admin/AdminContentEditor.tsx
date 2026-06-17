@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { 
+import {
   Plus, X, Image as ImageIcon, ChevronLeft, Check, Quote, Save, Link2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -14,7 +14,7 @@ interface AdminContentEditorProps {
 }
 
 export default function AdminContentEditor({ initialContent, onClose, onSaveComplete }: AdminContentEditorProps) {
-  const [contentType, setContentType] = useState<'blog' | 'case_study'>(initialContent?.contentType || 'blog');
+  const [contentType, setContentType] = useState<'blog' | 'case_study' | 'testimonial' | 'text_block'>(initialContent?.contentType || 'blog');
   const [title, setTitle] = useState(initialContent?.title || '');
   const [tags, setTags] = useState<string[]>(initialContent?.tags || []);
   const [currentTag, setCurrentTag] = useState('');
@@ -24,7 +24,7 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
   const SERVICE_CATEGORIES = [
     "AI Transformation", "Data Activation", "Modern Marketing", "AI Maturity"
   ];
-  
+
   const [serviceTag, setServiceTag] = useState<string>(
     initialContent?.contentType === 'case_study' ? (initialContent?.badgeText || SERVICE_CATEGORIES[0]) : SERVICE_CATEGORIES[0]
   );
@@ -38,10 +38,29 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
   const [headerFile, setHeaderFile] = useState<File | null>(null);
 
   const [isSaving, setIsSaving] = useState(false);
-  
+
+  const [currentId, setCurrentId] = useState<string | undefined>(initialContent?.id);
+  const [currentStatus, setCurrentStatus] = useState<ContentStatus>(initialContent?.status || 'draft');
+  const [autoSaveState, setAutoSaveState] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [lastSavedTime, setLastSavedTime] = useState<Date | null>(null);
+
   const [linkedCardIds, setLinkedCardIds] = useState<string[]>(initialContent?.linkedCardIds || []);
   const [availableCards, setAvailableCards] = useState<CardItem[]>([]);
   const [isCardSelectorOpen, setIsCardSelectorOpen] = useState(false);
+
+  // Auto-save effect
+  useEffect(() => {
+    // Don't auto-save if it's already published to avoid pushing typos live,
+    // and require at least a title to create a draft record.
+    if (currentStatus === 'published' || !title) return;
+
+    setAutoSaveState('idle');
+    const timeoutId = setTimeout(() => {
+      handleSave('draft', true);
+    }, 5000); // 5 seconds of inactivity
+
+    return () => clearTimeout(timeoutId);
+  }, [title, content, tags, contentType, serviceTag, authorName, authorBio, headerImage, authorImage, linkedCardIds]);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -54,7 +73,7 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
     };
     fetchCards();
   }, []);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const authorPhotoRef = useRef<HTMLInputElement>(null);
   const headerPhotoRef = useRef<HTMLInputElement>(null);
@@ -97,23 +116,27 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
 
 
 
-  const handleSave = async (status: ContentStatus) => {
+  const handleSave = async (status: ContentStatus, isAutoSave: boolean = false) => {
     if (!title) return;
     setIsSaving(true);
-    
+
     try {
       let finalHeaderImage = headerImage;
       let finalAuthorImage = authorImage;
 
       if (headerFile) {
         finalHeaderImage = await uploadImage(headerFile, 'headers');
+        setHeaderFile(null);
+        setHeaderImage(finalHeaderImage);
       }
       if (authorFile) {
         finalAuthorImage = await uploadImage(authorFile, 'authors');
+        setAuthorFile(null);
+        setAuthorImage(finalAuthorImage);
       }
 
       const editorContent = content;
-      
+
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = editorContent;
       const plainText = tempDiv.innerText || '';
@@ -122,7 +145,9 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
       const finalBadgeText = contentType === 'case_study' ? serviceTag : (tags[0] || "");
       const finalCategory = contentType === 'case_study' ? 'Case Study' : 'Blog';
 
-      await saveContent({
+      if (isAutoSave) setAutoSaveState('saving');
+
+      const savedItem = await saveContent({
         contentType: contentType,
         status,
         title,
@@ -138,9 +163,22 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
         badgeText: finalBadgeText,
         submittedBy: 'admin',
         linkedCardIds
-      }, initialContent?.id);
-      
-      onSaveComplete();
+      }, currentId);
+
+      if (!currentId && savedItem.id) {
+        setCurrentId(savedItem.id);
+      }
+
+      if (status !== currentStatus) {
+        setCurrentStatus(status);
+      }
+
+      if (isAutoSave) {
+        setAutoSaveState('saved');
+        setLastSavedTime(new Date());
+      } else {
+        onSaveComplete();
+      }
     } catch (error) {
       console.error("Saving error:", error);
     } finally {
@@ -149,10 +187,10 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
   };
 
   return (
-    <div className="bg-m3-surface rounded-[48px] overflow-hidden">
+    <div className="bg-m3-surface rounded-[48px]">
       {/* Header Actions */}
-      <div className="flex items-center justify-between p-6 border-b border-m3-outline/10 bg-white dark:bg-[#1d1b20]">
-        <button 
+      <div className="sticky top-0 z-50 flex items-center justify-between p-6 border-b border-m3-outline/10 bg-white dark:bg-[#1d1b20] rounded-t-[48px]">
+        <button
           onClick={onClose}
           className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-m3-on-surface/60 hover:text-m3-primary transition-colors"
         >
@@ -160,15 +198,19 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
         </button>
 
         <div className="flex items-center gap-4">
-          <button 
-            onClick={() => handleSave('draft')}
-            disabled={!title || isSaving}
-            className="flex items-center gap-2 px-6 py-3 rounded-full border border-m3-outline/20 text-xs font-bold uppercase tracking-widest hover:bg-m3-surface-container transition-colors disabled:opacity-50"
-          >
-            <Save className="w-4 h-4" /> Save Draft
-          </button>
-          
-          <button 
+          <div className="flex items-center gap-3">
+            {autoSaveState === 'saving' && <span className="text-[10px] uppercase font-bold tracking-widest text-m3-on-surface/40 animate-pulse">Saving...</span>}
+            {autoSaveState === 'saved' && lastSavedTime && <span className="text-[10px] uppercase font-bold tracking-widest text-m3-on-surface/40">Auto-saved at {lastSavedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>}
+            <button
+              onClick={() => handleSave('draft')}
+              disabled={!title || isSaving}
+              className="flex items-center gap-2 px-6 py-3 rounded-full border border-m3-outline/20 text-xs font-bold uppercase tracking-widest hover:bg-m3-surface-container transition-colors disabled:opacity-50"
+            >
+              <Save className="w-4 h-4" /> Save Draft
+            </button>
+          </div>
+
+          <button
             onClick={() => handleSave('published')}
             disabled={!title || isSaving}
             className="flex items-center gap-2 px-6 py-3 rounded-full bg-m3-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-m3-primary/90 transition-colors shadow-lg shadow-m3-primary/20 disabled:opacity-50"
@@ -182,11 +224,10 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
         {/* Left Side: Editor */}
         <div className="lg:col-span-8">
           {/* Header Image */}
-          <div 
+          <div
             onClick={() => headerPhotoRef.current?.click()}
-            className={`relative w-full aspect-[16/7] rounded-[32px] overflow-hidden mb-10 cursor-pointer group border-2 border-dashed transition-all ${
-              headerImage ? 'border-transparent' : 'border-m3-outline/20 hover:border-m3-primary/40 bg-m3-surface-container-high' 
-            }`}
+            className={`relative w-full aspect-[16/7] rounded-[32px] overflow-hidden mb-10 cursor-pointer group border-2 border-dashed transition-all ${headerImage ? 'border-transparent' : 'border-m3-outline/20 hover:border-m3-primary/40 bg-m3-surface-container-high'
+              }`}
           >
             {headerImage ? (
               <>
@@ -263,7 +304,7 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
 
           {/* Editor Body */}
           <div className="relative group editor-container">
-            <SlateEditor 
+            <SlateEditor
               initialHtml={content}
               onChangeHtml={setContent}
             />
@@ -275,9 +316,9 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
           <div className="sticky top-8 space-y-6">
             <div className="bg-m3-surface-container-low p-6 rounded-[32px] border border-m3-outline/10">
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40 mb-6">Author & Meta</h4>
-              
+
               <div className="flex flex-col items-center text-center mb-6">
-                <div 
+                <div
                   onClick={() => authorPhotoRef.current?.click()}
                   className="w-24 h-24 rounded-full bg-m3-surface-container border-2 border-dashed border-m3-outline/20 mb-4 cursor-pointer overflow-hidden group relative flex items-center justify-center transition-all hover:border-m3-primary/40"
                 >
@@ -289,9 +330,9 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
                 </div>
                 <input type="file" ref={authorPhotoRef} onChange={handleAuthorPhotoUpload} className="hidden" accept="image/*" />
 
-                <input 
-                  type="text" 
-                  placeholder="Author Name" 
+                <input
+                  type="text"
+                  placeholder="Author Name"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   className="w-full text-lg font-display font-medium text-center border-none focus:ring-0 placeholder:text-m3-on-surface/20 bg-transparent mb-1 text-m3-on-surface"
@@ -309,7 +350,7 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
             <div className="bg-m3-surface-container-low p-6 rounded-[32px] border border-m3-outline/10">
               <div className="flex items-center justify-between mb-6">
                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-m3-on-surface/40">Associated Cards</h4>
-                <button 
+                <button
                   onClick={() => setIsCardSelectorOpen(!isCardSelectorOpen)}
                   className="text-m3-primary hover:bg-m3-primary/10 p-1.5 rounded-full transition-colors"
                   title="Add Card"
@@ -352,7 +393,7 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
                         <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{card.titleOverride || card.sourceType + " Card"}</div>
                         <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType}</div>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setLinkedCardIds(linkedCardIds.filter(cardId => cardId !== id))}
                         className="text-m3-on-surface/40 hover:text-m3-error transition-colors shrink-0 p-1.5 hover:bg-red-500/10 rounded-full"
                         title="Remove Card"

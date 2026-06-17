@@ -126,10 +126,28 @@ export const updateContentStatus = async (id: string, status: ContentStatus, app
   await update(dbRef(db, `content/${id}`), updates);
 };
 
+export const normalizeTags = (tags: any): string[] => {
+  if (!tags) return [];
+  if (Array.isArray(tags)) {
+    return tags.map(t => (t ? String(t).trim() : "")).filter(Boolean);
+  }
+  if (typeof tags === 'object') {
+    return Object.values(tags).map(t => (t ? String(t).trim() : "")).filter(Boolean);
+  }
+  if (typeof tags === 'string') {
+    return tags.split(',').map(t => t.trim()).filter(Boolean);
+  }
+  return [];
+};
+
 export const getContentById = async (id: string): Promise<ContentItem | null> => {
   const snapshot = await get(dbRef(db, `content/${id}`));
   if (snapshot.exists()) {
-    return snapshot.val() as ContentItem;
+    const item = snapshot.val() as ContentItem;
+    return {
+      ...item,
+      tags: normalizeTags(item.tags)
+    };
   }
   return null;
 };
@@ -138,7 +156,11 @@ export const getAllContent = async (): Promise<ContentItem[]> => {
   const snapshot = await get(dbRef(db, 'content'));
   if (snapshot.exists()) {
     const data = snapshot.val();
-    return Object.values(data) as ContentItem[];
+    const allItems = Object.values(data) as ContentItem[];
+    return allItems.map(item => ({
+      ...item,
+      tags: normalizeTags(item.tags)
+    }));
   }
   return [];
 };
@@ -148,7 +170,12 @@ export const getPublishedContent = async (): Promise<ContentItem[]> => {
   if (snapshot.exists()) {
     const data = snapshot.val();
     const allItems = Object.values(data) as ContentItem[];
-    return allItems.filter(item => item.status === 'published');
+    return allItems
+      .filter(item => item.status === 'published')
+      .map(item => ({
+        ...item,
+        tags: normalizeTags(item.tags)
+      }));
   }
   return [];
 };
@@ -296,5 +323,42 @@ export const deleteTestimonial = async (id: string): Promise<void> => {
 
 export const deleteTestimonialSubmission = async (id: string): Promise<void> => {
   await remove(dbRef(db, `testimonialSubmissions/${id}`));
+};
+
+// --- COMMENT OPERATIONS ---
+
+export interface BlogComment {
+  id: string;
+  blogId: string;
+  authorName: string;
+  commentText: string;
+  createdAt: string;
+}
+
+export const saveComment = async (blogId: string, authorName: string, commentText: string): Promise<BlogComment> => {
+  const commentRef = push(dbRef(db, `blogComments/${blogId}`));
+  const actualId = commentRef.key;
+  if (!actualId) throw new Error("Failed to generate ID for comment");
+
+  const now = new Date().toISOString();
+  const payload: BlogComment = {
+    id: actualId,
+    blogId,
+    authorName: authorName.trim() || 'Anonymous',
+    commentText: commentText.trim(),
+    createdAt: now
+  };
+
+  await set(commentRef, payload);
+  return payload;
+};
+
+export const getCommentsByBlogId = async (blogId: string): Promise<BlogComment[]> => {
+  const snapshot = await get(dbRef(db, `blogComments/${blogId}`));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return Object.values(data) as BlogComment[];
+  }
+  return [];
 };
 

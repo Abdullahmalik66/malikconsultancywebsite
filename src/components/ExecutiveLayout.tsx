@@ -48,7 +48,7 @@ export default function ExecutiveLayout({ title, category, date, image, tags, co
         setRandomInsight({
           title: pickedBlog.title,
           text: pickedBlog.excerpt || "Read more about this insight.",
-          link: `/writings/${pickedBlog.id}`
+          link: `/writings/${pickedBlog.slug || pickedBlog.id}`
         });
       } else {
         // Fallback if no blogs yet

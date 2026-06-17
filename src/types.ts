@@ -1,5 +1,6 @@
 export interface Writing {
   id: string;
+  slug?: string;
   date: string;
   category: 'Blog' | 'News' | 'Strategy';
   author?: string;
