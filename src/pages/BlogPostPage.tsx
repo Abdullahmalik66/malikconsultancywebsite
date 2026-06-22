@@ -608,23 +608,29 @@ export default function BlogPostPage() {
           font-weight: 700 !important;
         }
         .blog-content pre {
-          background-color: #f4f4f4 !important;
-          padding: 1.5rem !important;
-          border-radius: 1rem !important;
+          background-color: #1e1c24 !important;
+          color: #f8f8f2 !important;
+          padding: 1.5rem 2rem !important;
+          border-radius: 1.25rem !important;
           overflow-x: auto !important;
           margin: 2rem 0 !important;
+          border: 1px solid rgba(255,255,255,0.05) !important;
+          box-shadow: inset 0 2px 8px rgba(0,0,0,0.3) !important;
         }
         .blog-content code {
-          font-family: monospace !important;
-          font-size: 0.95em !important;
-          background-color: rgba(0,0,0,0.04);
-          padding: 0.2rem 0.4rem;
-          border-radius: 0.25rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+          font-size: 0.9em !important;
+          background-color: rgba(109, 85, 167, 0.08) !important;
+          color: #6d55a7 !important;
+          padding: 0.2rem 0.4rem !important;
+          border-radius: 0.375rem !important;
         }
         .blog-content pre code {
           background-color: transparent !important;
+          color: #f8f8f2 !important;
           padding: 0 !important;
           border-radius: 0 !important;
+          font-size: 0.9em !important;
         }
       `}</style>
     </div>

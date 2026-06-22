@@ -18,6 +18,7 @@ interface Insight {
 
 export default function LatestInsights() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollAnimationRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const [allInsights, setAllInsights] = useState<Insight[]>([]);
 
@@ -53,6 +54,64 @@ export default function LatestInsights() {
     };
     fetchLatest();
   }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const cards = container.children;
+      if (cards.length === 0) return;
+
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
+      
+      const { scrollLeft } = container;
+      // Get the width of the first card element dynamically (supports 580px or 90vw)
+      const cardWidth = (cards[0] as HTMLElement).offsetWidth || 580;
+      const gap = 40; // gap-10 is 40px
+      const step = cardWidth + gap;
+      
+      // Calculate target snapped scroll position
+      let targetScrollLeft = scrollLeft;
+      if (direction === 'left') {
+        targetScrollLeft = Math.round((scrollLeft - step) / step) * step;
+      } else {
+        targetScrollLeft = Math.round((scrollLeft + step) / step) * step;
+      }
+      
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      targetScrollLeft = Math.max(0, Math.min(maxScroll, targetScrollLeft));
+      
+      const start = container.scrollLeft;
+      const change = targetScrollLeft - start;
+      const startTime = performance.now();
+      const duration = 600; // Easing animation duration
+
+      // Disable scroll snapping during scroll animation to avoid fighting snapping engine
+      container.style.scrollSnapType = 'none';
+
+      const animateScroll = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // EaseInOutCubic curve: smooth and premium
+        const ease = progress < 0.5 
+          ? 4 * progress * progress * progress 
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        container.scrollLeft = start + change * ease;
+
+        if (progress < 1) {
+          scrollAnimationRef.current = requestAnimationFrame(animateScroll);
+        } else {
+          container.style.scrollSnapType = 'x mandatory';
+          scrollAnimationRef.current = null;
+        }
+      };
+
+      scrollAnimationRef.current = requestAnimationFrame(animateScroll);
+    }
+  };
 
   // Performance-optimized 3D Scroll Rotation and Trackpad/Scrollwheel listener
   useEffect(() => {
@@ -105,11 +164,28 @@ export default function LatestInsights() {
       }
     };
 
-    // Convert vertical mouse scroll into horizontal scroll for the carousel
+    let lastScrollTime = 0;
+    // Convert vertical mouse scroll into horizontal scroll for the carousel,
+    // while preserving native horizontal trackpad scrolling
     const handleWheel = (e: WheelEvent) => {
+      // If the scroll is mostly horizontal (e.g. left/right trackpad swipe),
+      // let the browser handle it natively.
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        return;
+      }
+
       if (e.deltaY !== 0) {
         e.preventDefault();
-        container.scrollLeft += e.deltaY;
+        
+        const now = Date.now();
+        // Debounce to prevent scrolling multiple cards in a single flick
+        if (now - lastScrollTime < 250) {
+          return;
+        }
+        
+        const direction = e.deltaY > 0 ? 'right' : 'left';
+        scroll(direction);
+        lastScrollTime = now;
       }
     };
 
@@ -130,16 +206,11 @@ export default function LatestInsights() {
       container.removeEventListener('wheel', handleWheel);
       window.removeEventListener('resize', handleScroll);
       clearTimeout(timeoutId);
+      if (scrollAnimationRef.current) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
     };
   }, [allInsights]);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollTo = direction === 'left' ? scrollLeft - clientWidth : scrollLeft + clientWidth;
-      scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-    }
-  };
 
   return (
     <section className="pt-32 pb-0 bg-white overflow-hidden" id="latest-insights">
@@ -154,7 +225,7 @@ export default function LatestInsights() {
                 viewport={{ once: true }}
                 className="text-5xl md:text-7xl font-display font-medium text-[#1a1a1a] mb-8"
               >
-                Resources
+                Writings. Insights. Systems.
               </motion.h2>
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}
@@ -163,7 +234,7 @@ export default function LatestInsights() {
                 transition={{ delay: 0.1 }}
                 className="text-xl md:text-2xl text-[#1a1a1a]/60 max-w-[56ch] font-sans leading-relaxed"
               >
-                Discover our latest thinking, news, and insights from across our network.
+                A personal archive of ideas, lessons, and working perspectives on AI, strategy, customer data, marketing, growth, and enterprise transformation.
               </motion.p>
             </div>
             <div className="lg:col-span-4 flex lg:justify-end">
@@ -201,8 +272,7 @@ export default function LatestInsights() {
                 transition={{ delay: index * 0.1, duration: 0.6 }}
                 className="flex-shrink-0 w-[90vw] md:w-[580px] snap-start group cursor-pointer"
                 style={{ 
-                  transformStyle: 'preserve-3d',
-                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease-out'
+                  transformStyle: 'preserve-3d'
                 }}
                 onClick={() => navigate(`/writings/${item.slug || item.id}`)}
               >

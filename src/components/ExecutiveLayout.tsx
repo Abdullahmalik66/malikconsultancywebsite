@@ -132,8 +132,9 @@ export default function ExecutiveLayout({ title, category, date, image, tags, co
               [&_table]:w-full [&_table]:border-collapse [&_table]:my-6
               [&_td]:p-3 [&_td]:border [&_td]:border-[#1a1a1a]/10 [&_td]:text-[20px]
               [&_th]:p-3 [&_th]:border [&_th]:border-[#1a1a1a]/10 [&_th]:bg-black/5 [&_th]:font-bold [&_th]:text-[20px]
-              [&_pre]:bg-black/5 [&_pre]:p-6 [&_pre]:rounded-xl [&_pre]:font-mono [&_pre]:my-6 [&_pre]:overflow-x-auto
-              [&_code]:font-mono [&_code]:bg-black/5 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[18px]
+              [&_pre]:bg-[#1e1c24] [&_pre]:text-[#f8f8f2] [&_pre]:p-6 [&_pre]:rounded-[20px] [&_pre]:font-mono [&_pre]:my-6 [&_pre]:overflow-x-auto [&_pre]:border [&_pre]:border-white/5 [&_pre]:shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]
+              [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-[#f8f8f2]
+              [&_code]:font-mono [&_code]:bg-[rgba(109,85,167,0.08)] [&_code]:text-[#6d55a7] [&_code]:px-2 [&_code]:py-1 [&_code]:rounded-[6px] [&_code]:text-[18px]
             ">
               {content}
             </div>

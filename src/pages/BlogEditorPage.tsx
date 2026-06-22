@@ -36,6 +36,20 @@ export default function BlogEditorPage() {
   const [headerFile, setHeaderFile] = useState<File | null>(null);
 
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [editorKey, setEditorKey] = useState(0);
+
+  const handleStartAnotherDraft = () => {
+    setTitle('');
+    setTags([]);
+    setCurrentTag('');
+    setContent('');
+    setHeaderImage(null);
+    setHeaderFile(null);
+    setEditorKey(prev => prev + 1);
+    setIsSuccessModalOpen(false);
+  };
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const authorPhotoRef = useRef<HTMLInputElement>(null);
   const headerPhotoRef = useRef<HTMLInputElement>(null);
@@ -128,8 +142,7 @@ export default function BlogEditorPage() {
       });
       
       setIsPublishing(false);
-      alert("Submission successful! Your insight is pending review by the editorial team.");
-      navigate('/my-writings');
+      setIsSuccessModalOpen(true);
     } catch (error) {
       console.error("Publishing error:", error);
       setIsPublishing(false);
@@ -253,12 +266,13 @@ export default function BlogEditorPage() {
               />
             </div>
 
-            <div className="relative group editor-container">
-              <SlateEditor 
-                initialHtml={content}
-                onChangeHtml={setContent}
-              />
-            </div>
+             <div className="relative group editor-container">
+               <SlateEditor 
+                 key={editorKey}
+                 initialHtml={content}
+                 onChangeHtml={setContent}
+               />
+             </div>
           </div>
         </div>
 
@@ -336,6 +350,61 @@ export default function BlogEditorPage() {
 
         `}</style>
       </main>
+
+      {/* Success Modal Overlay */}
+      <AnimatePresence>
+        {isSuccessModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSuccessModalOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              className="relative bg-white dark:bg-[#1e1c24] max-w-md w-full rounded-[40px] p-8 md:p-10 shadow-2xl text-center border border-m3-outline/10 overflow-hidden"
+            >
+              {/* Circular success icon container */}
+              <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-[#6d55a7]/10 flex items-center justify-center text-[#6d55a7]">
+                <Check className="w-8 h-8 stroke-[3]" />
+              </div>
+
+              {/* Title */}
+              <h3 className="text-2xl font-display font-medium text-m3-on-surface mb-3 tracking-tight">
+                Submitted. Now under review.
+              </h3>
+
+              {/* Body text */}
+              <p className="text-sm text-m3-on-surface/60 leading-relaxed mb-8">
+                Your insight has been saved successfully and moved into the review queue. You will be able to publish it once it has been approved in the admin panel.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => navigate('/my-writings')}
+                  className="px-6 py-3.5 rounded-full bg-[#6d55a7] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#6d55a7]/90 active:scale-95 transition-all shadow-md flex-1 cursor-pointer"
+                >
+                  Go to writings
+                </button>
+                <button
+                  onClick={handleStartAnotherDraft}
+                  className="px-6 py-3.5 rounded-full border border-m3-outline/20 text-m3-on-surface hover:bg-m3-surface-container text-xs font-bold uppercase tracking-widest active:scale-95 transition-all flex-1 cursor-pointer"
+                >
+                  Start another draft
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

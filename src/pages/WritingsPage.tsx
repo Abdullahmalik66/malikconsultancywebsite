@@ -363,18 +363,20 @@ export default function WritingsPage() {
                   <Plus className="w-8 h-8 text-[#6d55a7]" />
                 </div>
                 <div className="text-center px-6">
-                  <h3 className="text-xl font-display font-medium text-[#6d55a7] mb-1">Write original view</h3>
-                  <p className="text-[10px] font-bold text-[#6d55a7]/50 uppercase tracking-[0.2em]">Start a new insight</p>
+                  <h3 className="text-xl font-display font-medium text-[#6d55a7] mb-2">Write an insight worth reading</h3>
+                  <p className="text-xs text-[#6d55a7]/60 max-w-xs mx-auto">Start a new article, perspective, or working idea.</p>
                 </div>
               </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-[#6d55a7]/40">
-                  <span>New Draft</span>
+                  <span>Draft</span>
                   <div className="w-1.5 h-1.5 rounded-full bg-[#6d55a7]/30" />
                   <span>Perspective</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#6d55a7]/30" />
+                  <span>Original thinking</span>
                 </div>
                 <h3 className="text-2xl font-display font-medium text-[#1a1a1a]/40 italic leading-tight">
-                  "The best way to predict the future is to create it."
+                  “Clear thinking becomes useful when it is documented.”
                 </h3>
               </div>
             </motion.div>

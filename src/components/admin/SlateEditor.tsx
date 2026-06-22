@@ -8,7 +8,7 @@ import {
   Bold, Italic, Underline as UnderlineIcon, Heading1, Heading2, 
   List, ListOrdered, Quote, Image as ImageIcon,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
-  Code as CodeIcon, Superscript, Subscript, Link as LinkIcon, Palette,
+  Code as CodeIcon, Terminal, Superscript, Subscript, Link as LinkIcon, Palette,
   Table as TableIcon, ChevronDown
 } from 'lucide-react';
 import { CustomElement, CustomText } from '../../slate';
@@ -18,7 +18,7 @@ const HOTKEYS: Record<string, string> = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',
-  'mod+`': 'code',
+  'mod+`': 'code-block',
 };
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -173,6 +173,28 @@ export const serialize = (node: any): string => {
 };
 
 // --- Plugins ---
+const withCodeBlocks = (editor: any) => {
+  const { insertBreak } = editor;
+
+  editor.insertBreak = () => {
+    const { selection } = editor;
+    if (selection) {
+      const [match] = Editor.nodes(editor, {
+        match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && (n as any).type === 'code-block'
+      });
+
+      if (match) {
+        // Insert a literal newline instead of splitting the block
+        editor.insertText('\n');
+        return;
+      }
+    }
+    insertBreak();
+  };
+
+  return editor;
+};
+
 const withLinks = (editor: any) => {
   const { isInline } = editor;
   editor.isInline = (element: any) => {
@@ -257,7 +279,7 @@ interface SlateEditorProps {
 export default function SlateEditor({ initialHtml, onChangeHtml }: SlateEditorProps) {
     const renderElement = useCallback((props: any) => <Element {...props} />, []);
     const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
-    const editor = useMemo(() => withTables(withLinks(withImages(withHistory(withReact(createEditor()))))), []);
+    const editor = useMemo(() => withCodeBlocks(withTables(withLinks(withImages(withHistory(withReact(createEditor())))))), []);
 
     const [value, setValue] = useState<Descendant[]>(deserializeHtml(initialHtml));
 
@@ -288,8 +310,12 @@ export default function SlateEditor({ initialHtml, onChangeHtml }: SlateEditorPr
                             for (const hotkey in HOTKEYS) {
                                 if (isHotkey(hotkey, event as any)) {
                                     event.preventDefault();
-                                    const mark = HOTKEYS[hotkey];
-                                    toggleMark(editor, mark);
+                                    const format = HOTKEYS[hotkey];
+                                    if (format === 'code-block') {
+                                        toggleBlock(editor, 'code-block');
+                                    } else {
+                                        toggleMark(editor, format);
+                                    }
                                 }
                             }
                         }}
@@ -310,21 +336,21 @@ const Toolbar = () => {
             <FontSizeSelect />
             <ColorPaletteDropdown />
             <div className="w-px h-6 bg-m3-outline/20 mx-1" />
-            <MarkButton format="bold" icon={<Bold className="w-4 h-4" />} />
-            <MarkButton format="italic" icon={<Italic className="w-4 h-4" />} />
-            <MarkButton format="underline" icon={<UnderlineIcon className="w-4 h-4" />} />
-            <MarkButton format="code" icon={<CodeIcon className="w-4 h-4" />} />
-            <MarkButton format="superscript" icon={<Superscript className="w-4 h-4" />} />
-            <MarkButton format="subscript" icon={<Subscript className="w-4 h-4" />} />
+            <MarkButton format="bold" icon={<Bold className="w-4 h-4" />} title="Bold (Ctrl+B)" />
+            <MarkButton format="italic" icon={<Italic className="w-4 h-4" />} title="Italic (Ctrl+I)" />
+            <MarkButton format="underline" icon={<UnderlineIcon className="w-4 h-4" />} title="Underline (Ctrl+U)" />
+            <BlockButton format="code-block" icon={<CodeIcon className="w-4 h-4" />} title="Code Block (Ctrl+`)" />
+            <MarkButton format="superscript" icon={<Superscript className="w-4 h-4" />} title="Superscript" />
+            <MarkButton format="subscript" icon={<Subscript className="w-4 h-4" />} title="Subscript" />
             <div className="w-px h-6 bg-m3-outline/20 mx-1" />
             <AlignButton align="left" icon={<AlignLeft className="w-4 h-4" />} />
             <AlignButton align="center" icon={<AlignCenter className="w-4 h-4" />} />
             <AlignButton align="right" icon={<AlignRight className="w-4 h-4" />} />
             <AlignButton align="justify" icon={<AlignJustify className="w-4 h-4" />} />
             <div className="w-px h-6 bg-m3-outline/20 mx-1" />
-            <BlockButton format="numbered-list" icon={<ListOrdered className="w-4 h-4" />} />
-            <BlockButton format="bulleted-list" icon={<List className="w-4 h-4" />} />
-            <BlockButton format="block-quote" icon={<Quote className="w-4 h-4" />} />
+            <BlockButton format="numbered-list" icon={<ListOrdered className="w-4 h-4" />} title="Numbered List" />
+            <BlockButton format="bulleted-list" icon={<List className="w-4 h-4" />} title="Bulleted List" />
+            <BlockButton format="block-quote" icon={<Quote className="w-4 h-4" />} title="Block Quote" />
             <div className="w-px h-6 bg-m3-outline/20 mx-1" />
             <LinkButton />
             <TableDropdown />
@@ -467,7 +493,7 @@ const TableDropdown = () => {
 
 const HeadingDropdown = () => {
   const editor = useSlate();
-  const format = ['heading-one', 'heading-two', 'heading-three', 'heading-four'].find(f => isBlockActive(editor, f)) || 'paragraph';
+  const format = ['heading-one', 'heading-two', 'heading-three', 'heading-four', 'code-block'].find(f => isBlockActive(editor, f)) || 'paragraph';
 
   return (
     <select
@@ -480,6 +506,7 @@ const HeadingDropdown = () => {
       <option value="heading-two">Heading 2</option>
       <option value="heading-three">Heading 3</option>
       <option value="heading-four">Heading 4</option>
+      <option value="code-block">Code Block</option>
     </select>
   );
 };
@@ -652,6 +679,16 @@ const ImageUploadButton = () => {
     );
 };
 
+const serializeTextOnly = (node: any): string => {
+  if (node.text !== undefined) {
+    return node.text;
+  }
+  if (node.children) {
+    return node.children.map(serializeTextOnly).join('');
+  }
+  return '';
+};
+
 // --- Toolbar Buttons ---
 const toggleBlock = (editor: any, format: string) => {
   const isActive = isBlockActive(editor, format);
@@ -661,6 +698,31 @@ const toggleBlock = (editor: any, format: string) => {
     match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && LIST_TYPES.includes((n as any).type),
     split: true,
   });
+
+  if (format === 'code-block' && !isActive) {
+    const { selection } = editor;
+    if (selection) {
+      const blocks = Array.from(
+        Editor.nodes(editor, {
+          at: selection,
+          match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && Editor.isBlock(editor, n)
+        })
+      );
+      
+      if (blocks.length > 1) {
+        const mergedText = blocks
+          .map(([node]) => serializeTextOnly(node))
+          .join('\n');
+          
+        Transforms.removeNodes(editor, { at: selection });
+        Transforms.insertNodes(editor, {
+          type: 'code-block',
+          children: [{ text: mergedText }]
+        } as any);
+        return;
+      }
+    }
+  }
 
   const newProperties: Partial<SlateElement> = {
     type: isActive ? 'paragraph' : isList ? 'list-item' : format,
@@ -695,7 +757,7 @@ const isMarkActive = (editor: any, format: string) => {
   return marks ? (marks as any)[format] === true : false;
 };
 
-const BlockButton = ({ format, icon }: { format: string, icon: React.ReactNode }) => {
+const BlockButton = ({ format, icon, title }: { format: string, icon: React.ReactNode, title?: string }) => {
   const editor = useSlate();
   const active = isBlockActive(editor, format);
   return (
@@ -705,13 +767,14 @@ const BlockButton = ({ format, icon }: { format: string, icon: React.ReactNode }
         toggleBlock(editor, format);
       }}
       className={`p-2 rounded-xl transition-colors ${active ? 'bg-m3-primary/10 text-m3-primary' : 'text-m3-on-surface/60 hover:bg-m3-surface-container-high'}`}
+      title={title}
     >
       {icon}
     </button>
   );
 };
 
-const MarkButton = ({ format, icon }: { format: string, icon: React.ReactNode }) => {
+const MarkButton = ({ format, icon, title }: { format: string, icon: React.ReactNode, title?: string }) => {
   const editor = useSlate();
   const active = isMarkActive(editor, format);
   return (
@@ -721,6 +784,7 @@ const MarkButton = ({ format, icon }: { format: string, icon: React.ReactNode })
         toggleMark(editor, format);
       }}
       className={`p-2 rounded-xl transition-colors ${active ? 'bg-m3-primary/10 text-m3-primary' : 'text-m3-on-surface/60 hover:bg-m3-surface-container-high'}`}
+      title={title}
     >
       {icon}
     </button>
@@ -764,8 +828,8 @@ const Element = ({ attributes, children, element }: any) => {
       );
     case 'code-block':
       return (
-        <pre style={style} {...attributes} className="bg-m3-surface-container-high p-4 rounded-xl overflow-x-auto text-sm font-mono my-4">
-          <code>{children}</code>
+        <pre style={style} {...attributes} className="bg-[#1e1c24] text-[#f8f8f2] p-6 rounded-2xl overflow-x-auto text-sm font-mono my-4 border border-white/5 shadow-inner">
+          <code className="bg-transparent p-0 text-[#f8f8f2]">{children}</code>
         </pre>
       );
     case 'table':
@@ -787,7 +851,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   if (leaf.bold) children = <strong>{children}</strong>;
   if (leaf.italic) children = <em>{children}</em>;
   if (leaf.underline) children = <u>{children}</u>;
-  if (leaf.code) children = <code className="bg-m3-surface-container-high px-1.5 py-0.5 rounded text-sm font-mono text-m3-primary">{children}</code>;
+  if (leaf.code) children = <code className="bg-m3-primary/10 px-1.5 py-0.5 rounded text-sm font-mono text-m3-primary">{children}</code>;
   if (leaf.superscript) children = <sup>{children}</sup>;
   if (leaf.subscript) children = <sub>{children}</sub>;
   
