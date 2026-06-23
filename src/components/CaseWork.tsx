@@ -38,7 +38,7 @@ export default function CaseWork() {
   };
 
   return (
-    <section className="py-32 bg-white overflow-hidden" id="case-work">
+    <section className="pt-32 pb-16 bg-white overflow-hidden" id="case-work">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           

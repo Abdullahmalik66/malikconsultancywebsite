@@ -1,44 +1,37 @@
 import React from 'react';
 import { Send } from 'lucide-react';
-import { motion } from 'motion/react';
 
 export default function NewsletterSection() {
   return (
     <section className="bg-[#EAFF00] py-32 px-6 relative overflow-hidden">
       {/* Wavy Background Pattern - Animated & Seamless */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <motion.div 
-          animate={{ 
-            x: [0, -1440],
-          }}
-          transition={{ 
-            duration: 35, 
-            repeat: Infinity, 
-            ease: "linear" 
-          }}
-          className="flex w-[2880px] h-full"
-        >
-          <svg className="w-[1440px] h-full shrink-0" viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path 
-              fill="#5d5177" 
-              d="M0,160 C320,300,420,0,720,160 C1020,320,1120,20,1440,160 V320 H0 Z"
-            />
-          </svg>
-          <svg className="w-[1440px] h-full shrink-0" viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path 
-              fill="#5d5177" 
-              d="M0,160 C320,300,420,0,720,160 C1020,320,1120,20,1440,160 V320 H0 Z"
-            />
-          </svg>
-        </motion.div>
-      </div>
+      <div 
+        className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath fill='%235d5177' d='M0,160 C180,160 180,200 360,200 C540,200 540,160 720,160 C900,160 900,120 1080,120 C1260,120 1260,160 1440,160 V320 H0 Z'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat-x',
+          backgroundSize: '1440px 100%',
+          animation: 'scrollWave 35s linear infinite',
+        }}
+      />
+      
+      <style>{`
+        @keyframes scrollWave {
+          0% {
+            background-position-x: 0px;
+          }
+          100% {
+            background-position-x: -1440px;
+          }
+        }
+      `}</style>
 
       <div className="max-w-4xl mx-auto relative z-10 text-center">
         <h2 className="text-4xl md:text-6xl font-display font-medium text-[#1a1a1a] mb-8 tracking-tight">
           Stay ahead of the <span className="text-[#6d55a7]">curve.</span>
         </h2>
         <p className="text-xl text-[#1a1a1a]/60 mb-12 font-medium">
-          Weekly insights on growth architecture, AI automation, and performance marketing.
+          Weekly insights on the ideas, lessons, and working perspectives shaping marketing, AI, data, and strategy.
         </p>
         <form className="flex flex-col md:flex-row gap-4" onSubmit={(e) => e.preventDefault()}>
           <input 

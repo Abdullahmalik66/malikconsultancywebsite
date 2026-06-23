@@ -22,13 +22,9 @@ export default function BlogEditorPage() {
   const [currentTag, setCurrentTag] = useState('');
   const [content, setContent] = useState('');
   // Author fields
-  const [authorName, setAuthorName] = useState('Abdullah Malik');
-  const [authorBio, setAuthorBio] = useState(
-    'Driving AI Transformation ┊ Agentic AI Use Case Pioneer ┊ Leadership in Scalable Innovation'
-  );
-  const [authorImage, setAuthorImage] = useState<string | null>(
-    '/images/472164386_10170748401095387_7067836675242530090_n.jpg'
-  );
+  const [authorName, setAuthorName] = useState('');
+  const [authorBio, setAuthorBio] = useState('');
+  const [authorImage, setAuthorImage] = useState<string | null>(null);
   const [authorFile, setAuthorFile] = useState<File | null>(null);
 
   // Header Image

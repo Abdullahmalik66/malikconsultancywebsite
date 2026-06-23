@@ -213,7 +213,7 @@ export default function LatestInsights() {
   }, [allInsights]);
 
   return (
-    <section className="pt-32 pb-0 bg-white overflow-hidden" id="latest-insights">
+    <section className="pt-12 pb-0 bg-white overflow-hidden" id="latest-insights">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 mb-20">
           
           {/* Header Grid */}
