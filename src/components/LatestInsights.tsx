@@ -349,7 +349,7 @@ export default function LatestInsights() {
               className="flex items-center gap-3 px-8 py-5 rounded-full bg-[#EAFF00] text-[#1a1a1a] font-bold uppercase tracking-widest text-sm shadow-xl shadow-[#EAFF00]/20 hover:shadow-[#EAFF00]/40 transition-all border border-[#1a1a1a]/5"
             >
               <Plus className="w-5 h-5" />
-              Write a Blog
+              Share Your Insight
             </motion.button>
           </div>
         </div>

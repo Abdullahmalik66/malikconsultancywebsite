@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
-  Plus, X, Image as ImageIcon, ChevronLeft, Check, Quote, Save, Link2
+  Plus, X, Image as ImageIcon, ChevronLeft, Check, Quote, Save, Link2, GripVertical
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { saveContent, generateSlug, uploadImage, getAllCards, getAllContent, getAllTestimonials, ContentItem, ContentStatus, CardItem } from '../../lib/firebase/cms';
@@ -54,6 +54,30 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
   const [availableCards, setAvailableCards] = useState<CardItem[]>([]);
   const [allContent, setAllContent] = useState<ContentItem[]>([]);
   const [isCardSelectorOpen, setIsCardSelectorOpen] = useState(false);
+
+  // Drag and drop state and handlers for reordering Associated Cards
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnter = (index: number) => {
+    if (draggedIndex === null || draggedIndex === index) return;
+    const updatedIds = [...linkedCardIds];
+    const [removed] = updatedIds.splice(draggedIndex, 1);
+    updatedIds.splice(index, 0, removed);
+    setDraggedIndex(index);
+    setLinkedCardIds(updatedIds);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
 
   const currentIdRef = useRef<string | undefined>(initialContent?.id);
   const handleSaveRef = useRef<any>(null);
@@ -432,16 +456,35 @@ export default function AdminContentEditor({ initialContent, onClose, onSaveComp
               )}
 
               <div className="space-y-3">
-                {linkedCardIds.map(id => {
+                {linkedCardIds.map((id, index) => {
                   const card = availableCards.find(c => c.id === id);
                   if (!card) return null;
                   const associatedContent = allContent.find(c => c.id === card.sourceId);
                   const displayTitle = card.titleOverride || associatedContent?.title || (card.sourceType.replace('_', ' ') + " Card");
+                  const isDragging = draggedIndex === index;
                   return (
-                    <div key={id} className="flex items-center justify-between p-3 bg-white dark:bg-[#1d1b20] rounded-[16px] border border-m3-outline/10 shadow-sm">
-                      <div className="flex-1 min-w-0 pr-3">
-                        <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{displayTitle}</div>
-                        <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType}</div>
+                    <div 
+                      key={id} 
+                      draggable={true}
+                      onDragStart={() => handleDragStart(index)}
+                      onDragEnter={() => handleDragEnter(index)}
+                      onDragOver={handleDragOver}
+                      onDragEnd={handleDragEnd}
+                      className={`flex items-center justify-between p-3 bg-white dark:bg-[#1d1b20] rounded-[16px] border border-m3-outline/10 shadow-sm transition-all duration-200 select-none ${
+                        isDragging ? 'opacity-40 border-dashed border-m3-primary/40 scale-[0.98]' : 'hover:border-m3-outline/30'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0 pr-3">
+                        <div 
+                          className="cursor-grab active:cursor-grabbing text-m3-on-surface/30 hover:text-m3-primary p-1 rounded transition-colors shrink-0"
+                          title="Drag to reorder"
+                        >
+                          <GripVertical className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-m3-on-surface line-clamp-1">{displayTitle}</div>
+                          <div className="text-[10px] text-m3-on-surface/60 uppercase tracking-widest mt-1">{card.cardType}</div>
+                        </div>
                       </div>
                       <button
                         onClick={() => setLinkedCardIds(linkedCardIds.filter(cardId => cardId !== id))}

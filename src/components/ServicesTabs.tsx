@@ -348,7 +348,7 @@ export default function ServicesTabs() {
         </div>
 
         {/* Integrated FAQ Accordion */}
-        <div className="mt-20 max-w-2xl">
+        <div className="mt-20 w-full">
           <FAQAccordion />
         </div>
 

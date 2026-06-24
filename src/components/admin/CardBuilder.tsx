@@ -7,7 +7,10 @@ import {
   EyeOff, Layers, FileText, FolderGit2, Info, Moon, Sun, ArrowUpDown
 } from 'lucide-react';
 
-type ExtendedCardType = 'standard' | 'hero' | 'minimal' | 'media_showcase' | 'quote' | 'compact' | 'case_study' | 'dual_content' | 'custom';
+import { getDeterministicFormatting } from '../../lib/caseStudyHelpers';
+import { AnimatedBackground } from '../cms/AnimatedBackground';
+
+type ExtendedCardType = 'standard' | 'hero' | 'minimal' | 'media_showcase' | 'quote' | 'compact' | 'case_study' | 'dual_content' | 'custom' | 'case_study_solid';
 
 export default function CardBuilder() {
   const [cards, setCards] = useState<CardItem[]>([]);
@@ -25,6 +28,7 @@ export default function CardBuilder() {
   const [section, setSection] = useState('sidebar-writings');
   const [cardType, setCardType] = useState<ExtendedCardType>('standard');
   const [titleOverride, setTitleOverride] = useState('');
+  const [eyebrowOverride, setEyebrowOverride] = useState('');
   const [textOverride, setTextOverride] = useState('');
   const [imageOverride, setImageOverride] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -88,6 +92,7 @@ export default function CardBuilder() {
 
     setCardType(initialType);
     setTitleOverride(card.titleOverride || '');
+    setEyebrowOverride(card.eyebrowOverride || '');
     setTextOverride(card.textOverride || '');
     setImageOverride(card.imageOverride || '');
     setImageFile(null);
@@ -104,6 +109,7 @@ export default function CardBuilder() {
     setSection('sidebar-writings');
     setCardType('standard');
     setTitleOverride('');
+    setEyebrowOverride('');
     setTextOverride('');
     setImageOverride('');
     setImageFile(null);
@@ -157,6 +163,9 @@ export default function CardBuilder() {
       if (titleOverride && titleOverride.trim()) {
         payload.titleOverride = titleOverride.trim();
       }
+      if (eyebrowOverride && eyebrowOverride.trim()) {
+        payload.eyebrowOverride = eyebrowOverride.trim();
+      }
       if (textOverride && textOverride.trim()) {
         payload.textOverride = textOverride.trim();
       }
@@ -189,6 +198,7 @@ export default function CardBuilder() {
   // Derive preview items
   const selectedSource = publishedContent.find(c => c.id === selectedContent);
   const previewTitle = titleOverride.trim() || selectedSource?.title || "Draft Card Title";
+  const previewEyebrow = eyebrowOverride.trim();
   const previewText = textOverride.trim() || selectedSource?.excerpt || "Your card description or excerpt will appear here. Select a source content to use its fallback text.";
   const previewImage = imageOverride || selectedSource?.headerImage || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop";
 
@@ -198,6 +208,7 @@ export default function CardBuilder() {
   const previewAuthor = selectedSource?.authorName || "Principal";
 
   const isTitleOverridden = titleOverride.trim().length > 0;
+  const isEyebrowOverridden = eyebrowOverride.trim().length > 0;
   const isTextOverridden = textOverride.trim().length > 0;
   const isImageOverridden = imageOverride.trim().length > 0 && !imageOverride.startsWith('blob:');
   const isImageLocalBlob = imageOverride.startsWith('blob:');
@@ -214,6 +225,7 @@ export default function CardBuilder() {
     { id: 'quote', name: 'Quote / Testimonial', icon: Quote, desc: 'High-end typographic layout focused on blockquotes and client author blocks.' },
     { id: 'compact', name: 'Compact Text', icon: FileText, desc: '轻量 border card with compact metadata for editorial dense lists.' },
     { id: 'case_study', name: 'Case Study Card', icon: FolderGit2, desc: 'High contrast design with custom service badges and metrics focus.' },
+    { id: 'case_study_solid', name: 'Solid Case Study', icon: FolderGit2, desc: 'Solid background card with dynamic color and neon-line background effects.' },
     { id: 'dual_content', name: 'Dual Content split', icon: Layers, desc: 'Horizontal layout split between media column and content.' },
     { id: 'custom', name: 'Custom Blueprint', icon: Sparkles, desc: 'Interactive developer preview showing indicators for customized overrides.' },
   ] as const;
@@ -436,6 +448,28 @@ export default function CardBuilder() {
                       />
                     </div>
 
+                    {/* Eyebrow / Tagline Override (Shown for Case Study layouts) */}
+                    {(cardType === 'case_study' || cardType === 'case_study_solid') && (
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[11px] font-bold text-m3-on-surface/60 uppercase tracking-wider">
+                            Eyebrow / Tagline Override
+                          </span>
+                          <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${isEyebrowOverridden ? 'bg-purple-100 text-purple-700 dark:bg-purple-950/30 dark:text-purple-300' : 'bg-gray-100 text-gray-400 dark:bg-[#25232a] dark:text-gray-600'
+                            }`}>
+                            {isEyebrowOverridden ? 'Overridden' : 'Empty (No Eyebrow)'}
+                          </span>
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="e.g. RESULTS ARCHITECTED, KEY OUTCOME, MODERN MARKETING, etc. (Leave empty to hide)"
+                          value={eyebrowOverride}
+                          onChange={(e) => setEyebrowOverride(e.target.value)}
+                          className="w-full bg-m3-surface-container-low border border-m3-outline/20 rounded-xl p-3 text-sm focus:border-m3-primary focus:ring-0 text-m3-on-surface"
+                        />
+                      </div>
+                    )}
+
                     {/* Excerpt/Quote Override */}
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
@@ -654,6 +688,7 @@ export default function CardBuilder() {
                         <CardPreviewRenderer
                           cardType={cardType}
                           title={previewTitle}
+                          eyebrow={previewEyebrow}
                           excerpt={previewText}
                           imageUrl={previewImage}
                           badge={previewBadge}
@@ -665,6 +700,7 @@ export default function CardBuilder() {
                             text: isTextOverridden,
                             image: isImageOverrideApplied(imageOverride, selectedSource)
                           }}
+                          sourceId={selectedSource?.id}
                         />
                       </motion.div>
                     </AnimatePresence>
@@ -803,6 +839,7 @@ export default function CardBuilder() {
                   {/* Indicators */}
                   <div className="flex gap-2.5 mt-4 pt-3 border-t border-m3-outline/5 text-[9px] text-m3-on-surface/30 uppercase font-mono">
                     {card.titleOverride && <span className="text-purple-600 dark:text-purple-400">Title Override</span>}
+                    {card.eyebrowOverride && <span className="text-purple-600 dark:text-purple-400">Eyebrow Override</span>}
                     {card.textOverride && <span className="text-purple-600 dark:text-purple-400">Text Override</span>}
                     {card.imageOverride && <span className="text-purple-600 dark:text-purple-400">Image Override</span>}
                   </div>
@@ -836,6 +873,7 @@ function isImageOverrideApplied(imageOverride: string, selectedSource?: ContentI
 interface CardPreviewProps {
   cardType: ExtendedCardType;
   title: string;
+  eyebrow?: string;
   excerpt: string;
   imageUrl: string;
   badge: string;
@@ -847,9 +885,10 @@ interface CardPreviewProps {
     text: boolean;
     image: boolean;
   };
+  sourceId?: string;
 }
 
-function CardPreviewRenderer({ cardType, title, excerpt, imageUrl, badge, date, author, theme, isOverridden }: CardPreviewProps) {
+function CardPreviewRenderer({ cardType, title, eyebrow, excerpt, imageUrl, badge, date, author, theme, isOverridden, sourceId }: CardPreviewProps) {
   const t = {
     cardBg: theme === 'light' ? 'bg-white border-gray-100 shadow-sm' : 'bg-[#1e1c24] border-zinc-800 shadow-xl',
     textPrimary: theme === 'light' ? 'text-[#1a1a1a]' : 'text-white',
@@ -1002,7 +1041,9 @@ function CardPreviewRenderer({ cardType, title, excerpt, imageUrl, badge, date, 
 
         {/* Bottom bar summary */}
         <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2 text-white z-10">
-          <span className="text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#EAFF00] block">RESULTS ARCHITECTED</span>
+          {eyebrow && (
+            <span className="text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#EAFF00] block">{eyebrow}</span>
+          )}
           <h3 className="text-base font-display font-semibold leading-tight line-clamp-2">
             {title}
           </h3>
@@ -1011,6 +1052,47 @@ function CardPreviewRenderer({ cardType, title, excerpt, imageUrl, badge, date, 
           </p>
           <div className="flex items-center text-[9px] font-bold uppercase tracking-widest text-[#EAFF00] pt-1">
             EXPLORE STUDY <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 5.5 Solid Case Study Card (case_study_solid)
+  if (cardType === 'case_study_solid') {
+    const fmt = getDeterministicFormatting(sourceId || title || 'default');
+    const bgColor = fmt.color;
+    return (
+      <div 
+        className="relative aspect-[16/10] rounded-[32px] overflow-hidden group shadow-lg w-full"
+        style={{ backgroundColor: bgColor }}
+      >
+        {/* Dynamic background animation matching CaseWork */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity duration-700">
+          <AnimatedBackground type={fmt.animationType} />
+        </div>
+
+        {/* Top badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="bg-white/10 backdrop-blur-md text-white border border-white/10 px-3.5 py-1.5 rounded-full text-[8.5px] font-bold uppercase tracking-[0.15em] shadow-sm">
+            {badge}
+          </span>
+        </div>
+
+        {/* Content info wrapper */}
+        <div className="absolute inset-0 p-5 flex flex-col justify-between pt-16 text-left">
+          <div className="mt-auto space-y-3">
+            {eyebrow && (
+              <span className="text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#EAFF00] block">{eyebrow}</span>
+            )}
+            <h3 className="text-base font-display font-semibold leading-tight line-clamp-2 text-white">
+              {title}
+            </h3>
+            
+            {/* Read more action pill */}
+            <div className="inline-flex items-center gap-1.5 bg-[#fbe1ff] text-[#1a1a1a] px-4 py-2 rounded-full font-bold text-[9px] uppercase tracking-wider w-fit shadow-md group-hover:bg-[#EAFF00] group-hover:scale-105 transition-all duration-300">
+              Read more <ArrowRight className="w-3 h-3 transition-transform" />
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Layout, Image as ImageIcon, Quote, FileText, FolderGit2, Layers, Sparkles } from 'lucide-react';
 import { getAllCards, getPublishedContent, getPublishedTestimonials, CardItem, ContentItem } from '../../lib/firebase/cms';
+import { getDeterministicFormatting } from '../../lib/caseStudyHelpers';
+import { AnimatedBackground } from './AnimatedBackground';
 
 interface CardRendererProps {
   card: CardItem;
@@ -14,6 +16,7 @@ export function CardRenderer({ card, source }: CardRendererProps) {
 
   // Derive visual values using overrides if specified, or content fallbacks
   const title = card.titleOverride?.trim() || source.title || "Untitled Insight";
+  const eyebrow = card.eyebrowOverride?.trim() || "";
   const excerpt = card.textOverride?.trim() || source.excerpt || source.content?.replace(/<[^>]*>/g, '').substring(0, 160) || "";
   const imageUrl = card.imageOverride || source.headerImage || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop";
   const badge = source.badgeText || source.category || (source.contentType === 'case_study' ? 'Case Study' : 'Insight');
@@ -158,7 +161,9 @@ export function CardRenderer({ card, source }: CardRendererProps) {
             </span>
           </div>
           <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2 text-white z-10 text-left">
-            <span className="text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#EAFF00] block">RESULTS ARCHITECTED</span>
+            {eyebrow && (
+              <span className="text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#EAFF00] block">{eyebrow}</span>
+            )}
             <h3 className="text-base font-display font-semibold leading-tight line-clamp-2">
               {title}
             </h3>
@@ -167,6 +172,49 @@ export function CardRenderer({ card, source }: CardRendererProps) {
             </p>
             <div className="flex items-center text-[9px] font-bold uppercase tracking-widest text-[#EAFF00] pt-1">
               EXPLORE STUDY <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-1" />
+            </div>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // 5.5 Solid Case Study layout (case_study_solid)
+  if (type === 'case_study_solid') {
+    const fmt = getDeterministicFormatting(source.id);
+    const bgColor = fmt.color;
+    return (
+      <Link to={targetLink} className="block group transition-all duration-300">
+        <div 
+          className="relative aspect-[16/10] rounded-[32px] overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full"
+          style={{ backgroundColor: bgColor }}
+        >
+          {/* Dynamic background animation matching CaseWork */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity duration-700">
+            <AnimatedBackground type={fmt.animationType} />
+          </div>
+
+          {/* Top badge */}
+          <div className="absolute top-4 left-4 z-10">
+            <span className="bg-white/10 backdrop-blur-md text-white border border-white/10 px-3.5 py-1.5 rounded-full text-[8.5px] font-bold uppercase tracking-[0.15em] shadow-sm">
+              {badge}
+            </span>
+          </div>
+
+          {/* Content info wrapper */}
+          <div className="absolute inset-0 p-5 flex flex-col justify-between pt-16 text-left">
+            <div className="mt-auto space-y-3">
+              {eyebrow && (
+                <span className="text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#EAFF00] block">{eyebrow}</span>
+              )}
+              <h3 className="text-base font-display font-semibold leading-tight line-clamp-2 text-white">
+                {title}
+              </h3>
+              
+              {/* Read more action pill */}
+              <div className="inline-flex items-center gap-1.5 bg-[#fbe1ff] text-[#1a1a1a] px-4 py-2 rounded-full font-bold text-[9px] uppercase tracking-wider w-fit shadow-md group-hover:bg-[#EAFF00] group-hover:scale-105 transition-all duration-300">
+                Read more <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
             </div>
           </div>
         </div>

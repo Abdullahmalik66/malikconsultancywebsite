@@ -7,7 +7,7 @@
     "testimonialSubmissions": {
       ".read": "auth != null",
       "$submissionId": {
-        ".write": "newData.hasChildren(['name', 'company', 'testimonial']) && !data.exists()"
+        ".write": "(auth != null) || (newData.hasChildren(['name', 'company', 'testimonial']) && !data.exists())"
       }
     },
     "settings": {

@@ -360,44 +360,41 @@ export default function BlogEditorPage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             />
             {/* Modal Box */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="relative bg-white dark:bg-[#1e1c24] max-w-md w-full rounded-[40px] p-8 md:p-10 shadow-2xl text-center border border-m3-outline/10 overflow-hidden"
-            >
-              {/* Circular success icon container */}
-              <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-[#6d55a7]/10 flex items-center justify-center text-[#6d55a7]">
-                <Check className="w-8 h-8 stroke-[3]" />
-              </div>
+<motion.div
+  aria-live="polite"
+  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+  animate={{ opacity: 1, scale: 1, y: 0 }}
+  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+  transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+  className="relative bg-white/30 backdrop-blur-lg max-w-md w-full rounded-[40px] p-8 md:p-10 shadow-2xl text-center border border-white/20 overflow-hidden"
+>
+  {/* Confetti burst placeholder */}
+  <div className="confetti" />
+  <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-[#6d55a7]/10 flex items-center justify-center text-[#6d55a7]">
+    <Check className="w-8 h-8 stroke-[3]" />
+  </div>
+  <h3 className="text-2xl font-display font-medium text-m3-on-surface mb-3 tracking-tight">
+    Insight Submitted!
+  </h3>
+  <p className="text-sm text-m3-on-surface/60 leading-relaxed mb-8">
+    Your insight is now in our editorial queue, where it will be carefully reviewed. Once approved, it will shine among your fellow writings.
+  </p>
+  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+    <button
+      onClick={() => navigate('/my-writings')}
+      className="px-6 py-3.5 rounded-full bg-gradient-to-r from-[#6d55a7] to-[#EAFF00] text-white text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all shadow-md flex-1 cursor-pointer"
+    >
+      Go to writings
+    </button>
+    <button
+      onClick={handleStartAnotherDraft}
+      className="px-6 py-3.5 rounded-full border border-m3-outline/20 text-m3-on-surface hover:bg-m3-surface-container text-xs font-bold uppercase tracking-widest active:scale-95 transition-all flex-1 cursor-pointer"
+    >
+      Start another draft
+    </button>
+  </div>
+</motion.div>
 
-              {/* Title */}
-              <h3 className="text-2xl font-display font-medium text-m3-on-surface mb-3 tracking-tight">
-                Submitted. Now under review.
-              </h3>
-
-              {/* Body text */}
-              <p className="text-sm text-m3-on-surface/60 leading-relaxed mb-8">
-                Your insight has been saved successfully and moved into the review queue. You will be able to publish it once it has been approved in the admin panel.
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button
-                  onClick={() => navigate('/my-writings')}
-                  className="px-6 py-3.5 rounded-full bg-[#6d55a7] text-white text-xs font-bold uppercase tracking-widest hover:bg-[#6d55a7]/90 active:scale-95 transition-all shadow-md flex-1 cursor-pointer"
-                >
-                  Go to writings
-                </button>
-                <button
-                  onClick={handleStartAnotherDraft}
-                  className="px-6 py-3.5 rounded-full border border-m3-outline/20 text-m3-on-surface hover:bg-m3-surface-container text-xs font-bold uppercase tracking-widest active:scale-95 transition-all flex-1 cursor-pointer"
-                >
-                  Start another draft
-                </button>
-              </div>
-            </motion.div>
           </div>
         )}
       </AnimatePresence>

@@ -30,8 +30,13 @@ export default function WritingsPage() {
         const published = await getPublishedContent();
         const blogsOnly = published.filter(item => item.contentType === 'blog');
         
+        // Sort blogs so that the latest published ones are shown first
+        const sortedBlogs = [...blogsOnly].sort((a, b) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+        
         // Map ContentItem to Writing interface
-        const mappedWritings: Writing[] = blogsOnly.map(item => ({
+        const mappedWritings: Writing[] = sortedBlogs.map(item => ({
           id: item.id,
           slug: item.slug,
           title: item.title,

@@ -59,10 +59,11 @@ export interface CardItem {
   id: string;
   sourceId: string;
   sourceType: 'blog' | 'case_study' | 'testimonial' | 'text_block';
-  cardType: 'standard' | 'hero' | 'minimal' | 'media_showcase' | 'quote' | 'compact' | 'case_study' | 'dual_content' | 'custom';
+  cardType: 'standard' | 'hero' | 'minimal' | 'media_showcase' | 'quote' | 'compact' | 'case_study' | 'dual_content' | 'custom' | 'case_study_solid';
   titleOverride?: string;
   textOverride?: string;
   imageOverride?: string;
+  eyebrowOverride?: string;
   section: string;
   sortOrder: number;
   active: boolean;
