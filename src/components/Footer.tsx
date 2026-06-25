@@ -19,10 +19,10 @@ export default function Footer() {
               Helping high-growth brands and startups engineer performance engines that scale through data-driven precision and AI-powered automation.
             </p>
           </div>
-          
+
           <div className="space-y-4">
-            <a 
-              href="mailto:abdullahmalik66@gmail.com" 
+            <a
+              href="mailto:abdullahmalik66@gmail.com"
               className="block text-xl font-display font-medium text-[#EAFF00] hover:underline transition-all"
             >
               abdullahmalik66@gmail.com
@@ -36,10 +36,10 @@ export default function Footer() {
               { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
               { icon: Github, href: "https://github.com", label: "GitHub" }
             ].map(({ icon: Icon, href, label }) => (
-              <a 
+              <a
                 key={label}
-                href={href} 
-                target="_blank" 
+                href={href}
+                target="_blank"
                 rel="noreferrer"
                 className="w-12 h-12 rounded-full bg-[#EAFF00] text-[#1a1a1a] flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-black/20"
                 aria-label={label}
@@ -66,8 +66,8 @@ export default function Footer() {
               "CRO & Optimization"
             ].map((service) => (
               <li key={service}>
-                <Link 
-                  to="/services" 
+                <Link
+                  to="/services"
                   className="text-white/70 hover:text-[#EAFF00] text-sm uppercase font-black tracking-widest transition-colors flex md:justify-end items-center gap-2 group"
                 >
                   <span className="opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 transform">→</span>
@@ -111,14 +111,14 @@ export default function Footer() {
           {/* The Earth Container */}
           <div className="relative w-[600px] md:w-[900px] h-[600px] md:h-[900px] rounded-full bottom-[-300px] md:bottom-[-450px]">
             {/* The Earth - Day Mode */}
-            <motion.div 
-              animate={{ 
-                rotate: 360 
+            <motion.div
+              animate={{
+                rotate: 360
               }}
-              transition={{ 
-                duration: 180, 
-                repeat: Infinity, 
-                ease: "linear" 
+              transition={{
+                duration: 180,
+                repeat: Infinity,
+                ease: "linear"
               }}
               className="absolute inset-0 rounded-full"
               style={{
@@ -132,14 +132,14 @@ export default function Footer() {
             </motion.div>
 
             {/* Clouds Layer */}
-            <motion.div 
-              animate={{ 
-                rotate: -360 
+            <motion.div
+              animate={{
+                rotate: -360
               }}
-              transition={{ 
-                duration: 240, 
-                repeat: Infinity, 
-                ease: "linear" 
+              transition={{
+                duration: 240,
+                repeat: Infinity,
+                ease: "linear"
               }}
               className="absolute inset-0 rounded-full opacity-60 mix-blend-screen scale-105"
               style={{
@@ -155,4 +155,3 @@ export default function Footer() {
     </footer>
   );
 }
-

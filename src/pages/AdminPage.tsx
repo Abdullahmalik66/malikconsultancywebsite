@@ -6,9 +6,10 @@ import { LogOut, ShieldCheck, Database, FolderGit2, Cpu, Settings, FileText, Plu
 import ContentList from "../components/admin/ContentList";
 import AdminContentEditor from "../components/admin/AdminContentEditor";
 import CardBuilder from "../components/admin/CardBuilder";
+import ClientShowcaseManager from "../components/admin/ClientShowcaseManager";
 import { ContentItem } from "../lib/firebase/cms";
 
-type Tab = 'dashboard' | 'content' | 'editor' | 'cards';
+type Tab = 'dashboard' | 'content' | 'editor' | 'cards' | 'showcase';
 
 export default function AdminPage() {
   const { currentUser, signOutUser } = useAuth();
@@ -109,6 +110,15 @@ export default function AdminPage() {
             >
               <Layout className="w-4 h-4" /> Card Builder
             </button>
+            
+            <button
+              onClick={() => setActiveTab('showcase')}
+              className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${
+                activeTab === 'showcase' ? 'bg-m3-surface-container-high text-m3-on-surface shadow-sm border border-m3-outline/10' : 'text-m3-on-surface/50 hover:bg-m3-surface-container'
+              }`}
+            >
+              <FolderGit2 className="w-4 h-4" /> Client Showcase
+            </button>
           </div>
         </motion.div>
 
@@ -207,6 +217,17 @@ export default function AdminPage() {
               exit={{ opacity: 0, y: -15 }}
             >
               <CardBuilder />
+            </motion.div>
+          )}
+          
+          {activeTab === 'showcase' && (
+            <motion.div
+              key="showcase"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+            >
+              <ClientShowcaseManager />
             </motion.div>
           )}
         </AnimatePresence>

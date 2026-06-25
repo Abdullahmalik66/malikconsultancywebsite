@@ -363,3 +363,73 @@ export const getCommentsByBlogId = async (blogId: string): Promise<BlogComment[]
   return [];
 };
 
+// --- CLIENT SHOWCASE LOGO OPERATIONS ---
+
+export interface ClientLogoItem {
+  id: string;
+  name: string;
+  logoUrl: string;
+  padding: string; // e.g. "p-3"
+  ringIndex: number; // 0 for innermost, 1 for circle 1, 2 for circle 2, 3 for circle 3
+  sortOrder: number;
+  active: boolean;
+  createdAt: string;
+}
+
+export const saveClientLogo = async (item: Omit<ClientLogoItem, 'id' | 'createdAt'>, id?: string): Promise<ClientLogoItem> => {
+  const logoRef = id ? dbRef(db, `clientLogos/${id}`) : push(dbRef(db, 'clientLogos'));
+  const actualId = id || logoRef.key;
+  if (!actualId) throw new Error("Failed to generate ID for client logo");
+
+  const now = new Date().toISOString();
+  let createdAt = now;
+  if (id) {
+    const existingSnap = await get(logoRef);
+    if (existingSnap.exists()) {
+      createdAt = existingSnap.val().createdAt || now;
+    }
+  }
+
+  const payload: ClientLogoItem = {
+    ...item,
+    id: actualId,
+    createdAt,
+  };
+
+  await set(logoRef, payload);
+  return payload;
+};
+
+export const getAllClientLogos = async (): Promise<ClientLogoItem[]> => {
+  const snapshot = await get(dbRef(db, 'clientLogos'));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return Object.values(data) as ClientLogoItem[];
+  }
+  return [];
+};
+
+export const deleteClientLogo = async (id: string): Promise<void> => {
+  await remove(dbRef(db, `clientLogos/${id}`));
+};
+
+export interface ClientShowcaseSettings {
+  title: string;
+  description: string;
+}
+
+export const getClientShowcaseSettings = async (): Promise<ClientShowcaseSettings> => {
+  const snapshot = await get(dbRef(db, 'settings/clientShowcase'));
+  if (snapshot.exists()) {
+    return snapshot.val() as ClientShowcaseSettings;
+  }
+  return {
+    title: "Organisation I Worked With:",
+    description: "A selection of organisations I’ve worked with through consulting-led engagements, contributing to growth, data, and AI-driven initiatives."
+  };
+};
+
+export const saveClientShowcaseSettings = async (settings: ClientShowcaseSettings): Promise<void> => {
+  await set(dbRef(db, 'settings/clientShowcase'), settings);
+};
+

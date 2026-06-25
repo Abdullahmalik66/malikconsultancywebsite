@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ValueStatement from './components/ValueStatement';
+import WorkedWithSection from './components/WorkedWithSection';
 import ServicesTabs from './components/ServicesTabs';
 import CaseWork from './components/CaseWork';
 import LatestInsights from './components/LatestInsights';
@@ -39,6 +40,7 @@ function HomePage() {
     <>
       <Hero />
       <ValueStatement />
+      <WorkedWithSection />
       <ServicesTabs />
       <CaseWork />
       <LatestInsights />

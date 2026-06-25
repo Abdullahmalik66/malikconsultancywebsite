@@ -12,7 +12,7 @@
     },
     "settings": {
       ".read": true,
-      ".write": "auth != null && root.child('adminUsers').child(auth.uid).exists()"
+      ".write": "auth != null"
     },
     "adminUsers": {
       ".read": "auth != null && root.child('adminUsers').child(auth.uid).exists()",
@@ -27,6 +27,10 @@
       }
     },
     "cards": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "clientLogos": {
       ".read": true,
       ".write": "auth != null"
     }

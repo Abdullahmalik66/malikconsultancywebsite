@@ -81,3 +81,102 @@ html.dark {
 ::-webkit-scrollbar-thumb {
   @apply bg-m3-outline/20 rounded-full hover:bg-m3-outline/40 transition-colors;
 }
+
+/* ==========================================
+   Orbit & Credibility Section Animations
+   ========================================== */
+
+@property --orbit-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: true;
+}
+
+@keyframes orbit-angle-anim {
+  from { --orbit-angle: 0deg; }
+  to { --orbit-angle: 360deg; }
+}
+
+.animate-orbit-cw-slow {
+  animation: orbit-angle-anim 50s linear infinite;
+  will-change: transform;
+}
+
+.animate-orbit-ccw-slow {
+  animation: orbit-angle-anim 50s linear infinite reverse;
+  will-change: transform;
+}
+
+.animate-orbit-cw-medium {
+  animation: orbit-angle-anim 70s linear infinite;
+  will-change: transform;
+}
+
+.animate-orbit-ccw-medium {
+  animation: orbit-angle-anim 70s linear infinite reverse;
+  will-change: transform;
+}
+
+.animate-orbit-cw-very-slow {
+  animation: orbit-angle-anim 90s linear infinite;
+  will-change: transform;
+}
+
+.animate-orbit-ccw-very-slow {
+  animation: orbit-angle-anim 90s linear infinite reverse;
+  will-change: transform;
+}
+
+/* Circular step-gradients for concentric orbits background glows */
+.orbit-glow-3 {
+  background: radial-gradient(circle, rgba(109, 85, 167, 0.025) 0%, rgba(109, 85, 167, 0.008) 70%, transparent 100%);
+}
+.dark .orbit-glow-3 {
+  background: radial-gradient(circle, rgba(208, 188, 255, 0.015) 0%, rgba(208, 188, 255, 0.003) 70%, transparent 100%);
+}
+
+.orbit-glow-2 {
+  background: radial-gradient(circle, rgba(109, 85, 167, 0.05) 0%, rgba(109, 85, 167, 0.02) 65%, transparent 100%);
+}
+.dark .orbit-glow-2 {
+  background: radial-gradient(circle, rgba(208, 188, 255, 0.03) 0%, rgba(208, 188, 255, 0.008) 65%, transparent 100%);
+}
+
+.orbit-glow-1 {
+  background: radial-gradient(circle, rgba(109, 85, 167, 0.10) 0%, rgba(109, 85, 167, 0.04) 60%, transparent 100%);
+}
+.dark .orbit-glow-1 {
+  background: radial-gradient(circle, rgba(208, 188, 255, 0.06) 0%, rgba(208, 188, 255, 0.02) 60%, transparent 100%);
+}
+
+.orbit-glow-0 {
+  background: radial-gradient(circle, rgba(109, 85, 167, 0.20) 0%, rgba(109, 85, 167, 0.08) 55%, transparent 100%);
+}
+.dark .orbit-glow-0 {
+  background: radial-gradient(circle, rgba(208, 188, 255, 0.14) 0%, rgba(208, 188, 255, 0.04) 55%, transparent 100%);
+}
+
+/* Infinite Marquee for Mobile */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-orbit-cw-slow,
+  .animate-orbit-ccw-slow,
+  .animate-orbit-cw-medium,
+  .animate-orbit-ccw-medium,
+  .animate-orbit-cw-very-slow,
+  .animate-orbit-ccw-very-slow,
+  .animate-marquee {
+    animation: none !important;
+  }
+}
+
