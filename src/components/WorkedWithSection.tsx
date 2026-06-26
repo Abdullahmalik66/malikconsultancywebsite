@@ -8,14 +8,14 @@ interface LogoItem {
   padding: string;
 }
 
-// Ring 0 (Innermost static ring: w-[160px] h-[160px])
+// Ring 0 (Innermost static ring: w-[100px] h-[100px])
 const ring0Logos: LogoItem[] = [
   { name: 'Adpro', src: '/images/logos/adpro.svg', padding: 'p-3' },
   { name: 'VTT', src: '/images/logos/vtt.png', padding: 'p-3.5' },
   { name: 'QuietOn', src: '/images/logos/quieton.jpeg', padding: 'p-3' },
 ];
 
-// Ring 1 (Radius 340px, w-[140px] h-[140px])
+// Ring 1 (Radius 340px, w-[120px] h-[120px])
 const ring1Logos: LogoItem[] = [
   { name: 'Mercedes-Benz', src: '/images/logos/mercedes-benz-logo-png_seeklogo-190348.png', padding: 'p-3.5' },
   { name: 'Vodafone', src: '/images/logos/hd-vodafone-logo-transparent-background-701751694713984m4g61ghlmo.png', padding: 'p-3.5' },
@@ -25,7 +25,7 @@ const ring1Logos: LogoItem[] = [
   { name: 'Vaisala', src: '/images/logos/Vaisala_logo.svg.png', padding: 'p-4' },
 ];
 
-// Ring 2 (Radius 500px, w-[120px] h-[120px])
+// Ring 2 (Radius 500px, w-[140px] h-[140px])
 const ring2Logos: LogoItem[] = [
   { name: 'Neste', src: '/images/logos/Neste_logo.png', padding: 'p-3' },
   { name: 'PriceRunner', src: '/images/logos/PriceRunner_Logo_2019.svg.png', padding: 'p-2' },
@@ -36,7 +36,7 @@ const ring2Logos: LogoItem[] = [
   { name: 'Avaus', src: '/images/logos/avaus.jpg', padding: 'p-2.5' },
 ];
 
-// Ring 3 (Radius 660px, w-[100px] h-[100px])
+// Ring 3 (Radius 660px, w-[160px] h-[160px])
 const ring3Logos: LogoItem[] = [
   { name: 'Renault', src: '/images/logos/renaultlogo.png', padding: 'p-2' },
   { name: 'HBO', src: '/images/logos/HBO_Portugal.svg.png', padding: 'p-2.5' },
@@ -299,7 +299,7 @@ export default function WorkedWithSection() {
               style={{ width: R_inner * 2, height: R_inner * 2 }}
             />
 
-            {/* Ring 0 - (Radius 180px, Logo: w-[160px] h-[160px]) */}
+            {/* Ring 0 - (Radius 180px, Logo: w-[100px] h-[100px]) */}
             <div 
               className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
               style={{ width: R_inner * 2, height: R_inner * 2 }}
@@ -309,7 +309,7 @@ export default function WorkedWithSection() {
               >
                 {getRingLogos(0).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'inner');
-                  const logoSize = 160;
+                  const logoSize = 100;
                   return (
                     <div 
                       key={`ring0-${idx}`} 
@@ -341,7 +341,7 @@ export default function WorkedWithSection() {
               </div>
             </div>
 
-            {/* Ring 1 - (Radius 340px, Logo: w-[140px] h-[140px]) */}
+            {/* Ring 1 - (Radius 340px, Logo: w-[120px] h-[120px]) */}
             <div 
               className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
               style={{ width: R_mid1 * 2, height: R_mid1 * 2 }}
@@ -351,7 +351,7 @@ export default function WorkedWithSection() {
               >
                 {getRingLogos(1).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'mid1');
-                  const logoSize = 140;
+                  const logoSize = 120;
                   return (
                     <div 
                       key={`ring1-${idx}`} 
@@ -383,7 +383,7 @@ export default function WorkedWithSection() {
               </div>
             </div>
 
-            {/* Ring 2 - (Radius 500px, Logo: w-[120px] h-[120px]) */}
+            {/* Ring 2 - (Radius 500px, Logo: w-[140px] h-[140px]) */}
             <div 
               className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
               style={{ width: R_mid2 * 2, height: R_mid2 * 2 }}
@@ -393,7 +393,7 @@ export default function WorkedWithSection() {
               >
                 {getRingLogos(2).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'mid2');
-                  const logoSize = 120;
+                  const logoSize = 140;
                   return (
                     <div 
                       key={`ring2-${idx}`} 
@@ -425,7 +425,7 @@ export default function WorkedWithSection() {
               </div>
             </div>
 
-            {/* Ring 3 - (Radius 660px, Logo: w-[100px] h-[100px]) */}
+            {/* Ring 3 - (Radius 660px, Logo: w-[160px] h-[160px]) */}
             <div 
               className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
               style={{ width: R_outer * 2, height: R_outer * 2 }}
@@ -435,7 +435,7 @@ export default function WorkedWithSection() {
               >
                 {getRingLogos(3).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'outer');
-                  const logoSize = 100;
+                  const logoSize = 160;
                   return (
                     <div 
                       key={`ring3-${idx}`} 
