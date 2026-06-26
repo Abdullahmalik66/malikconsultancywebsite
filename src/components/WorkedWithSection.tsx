@@ -302,11 +302,11 @@ export default function WorkedWithSection() {
 
             {/* Ring 0 - (Radius 180px, Logo: w-[100px] h-[100px]) */}
             <div 
-              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10 pointer-events-none" 
               style={{ width: R_inner * 2, height: R_inner * 2 }}
             >
               <div 
-                className={`w-full h-full relative ${prefersReducedMotion ? '' : 'animate-orbit-ccw-slow'}`}
+                className={`w-full h-full relative pointer-events-none ${prefersReducedMotion ? '' : 'animate-orbit-ccw-slow'}`}
               >
                 {getRingLogos(0).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'inner');
@@ -314,7 +314,7 @@ export default function WorkedWithSection() {
                   return (
                     <div 
                       key={`ring0-${idx}`} 
-                      className="absolute left-1/2 top-1/2" 
+                      className="absolute left-1/2 top-1/2 pointer-events-auto" 
                       style={{ 
                         width: logoSize, 
                         height: logoSize,
@@ -344,11 +344,11 @@ export default function WorkedWithSection() {
 
             {/* Ring 1 - (Radius 340px, Logo: w-[120px] h-[120px]) */}
             <div 
-              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10 pointer-events-none" 
               style={{ width: R_mid1 * 2, height: R_mid1 * 2 }}
             >
               <div 
-                className={`w-full h-full relative ${prefersReducedMotion ? '' : 'animate-orbit-cw-slow'}`}
+                className={`w-full h-full relative pointer-events-none ${prefersReducedMotion ? '' : 'animate-orbit-cw-slow'}`}
               >
                 {getRingLogos(1).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'mid1');
@@ -356,7 +356,7 @@ export default function WorkedWithSection() {
                   return (
                     <div 
                       key={`ring1-${idx}`} 
-                      className="absolute left-1/2 top-1/2" 
+                      className="absolute left-1/2 top-1/2 pointer-events-auto" 
                       style={{ 
                         width: logoSize, 
                         height: logoSize,
@@ -386,11 +386,11 @@ export default function WorkedWithSection() {
 
             {/* Ring 2 - (Radius 500px, Logo: w-[140px] h-[140px]) */}
             <div 
-              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10 pointer-events-none" 
               style={{ width: R_mid2 * 2, height: R_mid2 * 2 }}
             >
               <div 
-                className={`w-full h-full relative ${prefersReducedMotion ? '' : 'animate-orbit-ccw-medium'}`}
+                className={`w-full h-full relative pointer-events-none ${prefersReducedMotion ? '' : 'animate-orbit-ccw-medium'}`}
               >
                 {getRingLogos(2).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'mid2');
@@ -398,7 +398,7 @@ export default function WorkedWithSection() {
                   return (
                     <div 
                       key={`ring2-${idx}`} 
-                      className="absolute left-1/2 top-1/2" 
+                      className="absolute left-1/2 top-1/2 pointer-events-auto" 
                       style={{ 
                         width: logoSize, 
                         height: logoSize,
@@ -428,11 +428,11 @@ export default function WorkedWithSection() {
 
             {/* Ring 3 - (Radius 660px, Logo: w-[140px] h-[140px]) */}
             <div 
-              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10 pointer-events-none" 
               style={{ width: R_outer * 2, height: R_outer * 2 }}
             >
               <div 
-                className={`w-full h-full relative ${prefersReducedMotion ? '' : 'animate-orbit-cw-very-slow'}`}
+                className={`w-full h-full relative pointer-events-none ${prefersReducedMotion ? '' : 'animate-orbit-cw-very-slow'}`}
               >
                 {getRingLogos(3).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'outer');
@@ -440,7 +440,7 @@ export default function WorkedWithSection() {
                   return (
                     <div 
                       key={`ring3-${idx}`} 
-                      className="absolute left-1/2 top-1/2" 
+                      className="absolute left-1/2 top-1/2 pointer-events-auto" 
                       style={{ 
                         width: logoSize, 
                         height: logoSize,
