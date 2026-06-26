@@ -233,9 +233,9 @@ export default function ClientShowcaseManager() {
   const getRingName = (index: number) => {
     switch (index) {
       case 0: return "Circle 1 (Innermost - R180)";
-      case 1: return "Circle 2 (R340)";
-      case 2: return "Circle 3 (R500)";
-      case 3: return "Circle 4 (Outermost - R660)";
+      case 1: return "Circle 2 (R330)";
+      case 2: return "Circle 3 (R480)";
+      case 3: return "Circle 4 (Outermost - R630)";
       default: return `Circle ${index + 1}`;
     }
   };
@@ -361,9 +361,9 @@ export default function ClientShowcaseManager() {
                 className="w-full bg-m3-surface dark:bg-[#25232a] border border-m3-outline/25 dark:border-m3-outline/10 focus:border-m3-primary rounded-xl px-4 py-3 text-sm text-m3-on-surface transition-all outline-none"
               >
                 <option value={0}>Circle 1 (Innermost - R180)</option>
-                <option value={1}>Circle 2 (R340)</option>
-                <option value={2}>Circle 3 (R500)</option>
-                <option value={3}>Circle 4 (Outermost - R660)</option>
+                <option value={1}>Circle 2 (R330)</option>
+                <option value={2}>Circle 3 (R480)</option>
+                <option value={3}>Circle 4 (Outermost - R630)</option>
               </select>
             </div>
 

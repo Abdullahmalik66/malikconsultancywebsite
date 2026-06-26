@@ -114,9 +114,9 @@ export default function WorkedWithSection() {
 
   // Radii matching the reference image layout - expanded for spaciousness
   const R_inner = 180;  // Ring 0 (Innermost filled arch)
-  const R_mid1 = 340;   // Ring 1 (Mercedes, Vodafone, Nissan)
-  const R_mid2 = 500;   // Ring 2 (Neste, PriceRunner, etc.)
-  const R_outer = 660;  // Ring 3 (Renault, HBO, etc.)
+  const R_mid1 = 330;   // Ring 1 (Mercedes, Vodafone, Nissan)
+  const R_mid2 = 480;   // Ring 2 (Neste, PriceRunner, etc.)
+  const R_outer = 630;  // Ring 3 (Renault, HBO, etc.)
 
   const getRingLogos = (ringIndex: number): { name: string; src: string; padding: string }[] => {
     const ringDbLogos = dbLogos.filter((l) => l.ringIndex === ringIndex);
@@ -241,17 +241,18 @@ export default function WorkedWithSection() {
         {/* Orbit System (Desktop & Tablet) */}
         {/* Heights map exactly to scaled baseline of the outer circle to eliminate vertical gaps */}
         <div 
-          className="hidden sm:flex relative w-full items-end justify-center select-none overflow-hidden h-[407px] md:h-[503px] lg:h-[629px] xl:h-[740px]"
+          className="hidden sm:flex relative w-full items-end justify-center select-none h-[385px] md:h-[476px] lg:h-[595px] xl:h-[700px]"
+          style={{ clipPath: 'inset(-150px -150px 0px -150px)' }}
         >
           {/* Internal Scaler Wrapper */}
           <div 
             className="absolute origin-bottom scale-[0.55] sm:scale-[0.55] md:scale-[0.68] lg:scale-[0.85] xl:scale-100 transition-transform duration-700 ease-out" 
-            style={{ width: '1320px', height: '740px', bottom: '0px' }}
+            style={{ width: '1260px', height: '700px', bottom: '0px' }}
           >
             {/* SVG Background concentric orbits */}
             <svg 
-              className="absolute left-1/2 bottom-0 -translate-x-1/2 w-[1320px] h-[740px] pointer-events-none overflow-visible z-0" 
-              style={{ width: 1320, height: 740 }}
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 w-[1260px] h-[700px] pointer-events-none overflow-visible z-0" 
+              style={{ width: 1260, height: 700 }}
             >
               <defs>
                 <linearGradient id="orbit-gradient-stroke" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -262,16 +263,16 @@ export default function WorkedWithSection() {
               </defs>
               
               {/* Ring 0 (Radius 180px) */}
-              <circle cx="660" cy="740" r="180" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1.25" />
+              <circle cx="630" cy="700" r="180" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1.25" />
               
-              {/* Ring 1 (Radius 340px) */}
-              <circle cx="660" cy="740" r="340" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1" strokeDasharray="3 3" />
+              {/* Ring 1 (Radius 330px) */}
+              <circle cx="630" cy="700" r="330" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1" strokeDasharray="3 3" />
               
-              {/* Ring 2 (Radius 500px) */}
-              <circle cx="660" cy="740" r="500" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1" />
+              {/* Ring 2 (Radius 480px) */}
+              <circle cx="630" cy="700" r="480" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1" />
               
-              {/* Ring 3 (Radius 660px) */}
-              <circle cx="660" cy="740" r="660" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1.25" />
+              {/* Ring 3 (Radius 630px) */}
+              <circle cx="630" cy="700" r="630" fill="none" stroke="url(#orbit-gradient-stroke)" strokeWidth="1.25" />
             </svg>
 
             {/* Concentric Step-Gradient Glow Domes */}
