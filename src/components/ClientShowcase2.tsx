@@ -32,6 +32,7 @@ const fallbackLogos: StaticLogo[] = [
 export default function ClientShowcase2() {
   const [dbLogos, setDbLogos] = useState<ClientShowcase2LogoItem[]>([]);
   const [title, setTitle] = useState("Trusted by our customers & partners");
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function ClientShowcase2() {
         if (active) {
           setDbLogos(logosData.filter(l => l.active));
           setTitle(settingsData.title);
+          setDescription(settingsData.description || "");
         }
       } catch (err) {
         console.error("Failed to load Showcase 2 data:", err);
@@ -81,7 +83,7 @@ export default function ClientShowcase2() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch">
           
           {/* Left Column: Heading & Text */}
-          <div className="lg:col-span-4 flex flex-col justify-center pr-0 lg:pr-8 relative">
+          <div className="lg:col-span-4 flex flex-col justify-center pr-0 lg:pr-8 relative gap-4">
             <motion.h2 
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -91,6 +93,18 @@ export default function ClientShowcase2() {
             >
               {title}
             </motion.h2>
+
+            {description && (
+              <motion.p
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-sm md:text-base text-m3-on-surface/60 font-sans leading-relaxed dark:text-white/60"
+              >
+                {description}
+              </motion.p>
+            )}
 
             {/* Vertical Line on Desktop */}
             <div className="hidden lg:block absolute right-0 top-4 bottom-4 w-px bg-m3-outline/15 dark:bg-white/10" />

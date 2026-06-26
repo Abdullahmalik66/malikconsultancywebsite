@@ -53,6 +53,7 @@ export default function ClientShowcaseManager() {
   const [error2, setError2] = useState<string | null>(null);
   const [isSettingsExpanded2, setIsSettingsExpanded2] = useState(false);
   const [settingsTitle2, setSettingsTitle2] = useState("");
+  const [settingsDesc2, setSettingsDesc2] = useState("");
   const [isSavingSettings2, setIsSavingSettings2] = useState(false);
 
   // Showcase 2 Form State
@@ -261,6 +262,7 @@ export default function ClientShowcaseManager() {
       });
       setLogos2(sorted);
       setSettingsTitle2(settingsData.title);
+      setSettingsDesc2(settingsData.description || "");
     } catch (err: any) {
       setError2(err.message || "Failed to load Showcase 2 details.");
     } finally {
@@ -278,7 +280,8 @@ export default function ClientShowcaseManager() {
     setError2(null);
     try {
       await saveClientShowcase2Settings({
-        title: settingsTitle2.trim()
+        title: settingsTitle2.trim(),
+        description: settingsDesc2.trim()
       });
       alert("Showcase 2 settings saved successfully!");
     } catch (err: any) {
@@ -813,6 +816,19 @@ export default function ClientShowcaseManager() {
                       onChange={(e) => setSettingsTitle2(e.target.value)} 
                       placeholder="e.g. Trusted by our customers & partners" 
                       className="w-full bg-m3-surface dark:bg-[#25232a] border border-m3-outline/25 dark:border-m3-outline/10 focus:border-m3-primary rounded-xl px-4 py-3 text-sm text-m3-on-surface transition-all outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-m3-on-surface/75">
+                      Grid Section Description
+                    </label>
+                    <textarea 
+                      value={settingsDesc2} 
+                      onChange={(e) => setSettingsDesc2(e.target.value)} 
+                      rows={3}
+                      placeholder="Enter description text..." 
+                      className="w-full bg-m3-surface dark:bg-[#25232a] border border-m3-outline/25 dark:border-m3-outline/10 focus:border-m3-primary rounded-xl px-4 py-3 text-sm text-m3-on-surface transition-all outline-none resize-none"
                     />
                   </div>
 

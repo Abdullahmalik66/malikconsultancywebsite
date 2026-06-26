@@ -485,6 +485,7 @@ export const deleteClientShowcase2Logo = async (id: string): Promise<void> => {
 
 export interface ClientShowcase2Settings {
   title: string;
+  description: string;
 }
 
 export const getClientShowcase2Settings = async (): Promise<ClientShowcase2Settings> => {
@@ -493,7 +494,8 @@ export const getClientShowcase2Settings = async (): Promise<ClientShowcase2Setti
     return snapshot.val() as ClientShowcase2Settings;
   }
   return {
-    title: "Trusted by our customers & partners"
+    title: "Trusted by our customers & partners",
+    description: ""
   };
 };
 
