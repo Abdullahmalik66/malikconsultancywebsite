@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { getAllClientShowcase2Logos, getClientShowcase2Settings, ClientShowcase2LogoItem } from "../lib/firebase/cms";
 
 interface StaticLogo {
@@ -34,6 +34,7 @@ export default function ClientShowcase2() {
   const [title, setTitle] = useState("Trusted by our customers & partners");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -111,44 +112,119 @@ export default function ClientShowcase2() {
           </div>
 
           {/* Right Column: Grid Rows with Dividers */}
-          <div className="lg:col-span-8 flex flex-col justify-center divide-y divide-m3-outline/10 dark:divide-white/10 select-none">
+          <div className="lg:col-span-8 flex flex-col justify-center select-none">
             {loading ? (
               <div className="py-12 flex flex-col items-center justify-center text-m3-on-surface/50 text-sm">
                 <span className="w-6 h-6 rounded-full border-2 border-m3-primary border-t-transparent animate-spin mb-3" />
                 <span>Loading grid showcase...</span>
               </div>
             ) : (
-              rows.map((rowLogos, rowIndex) => (
-                <div 
-                  key={`row-${rowIndex}`}
-                  className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 py-8 first:pt-2 last:pb-2"
-                >
-                  {rowLogos.map((logo, logoIdx) => (
-                    <motion.div
-                      initial={{ opacity: 0, y: 15 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: logoIdx * 0.08 }}
-                      key={logo.id || `static-${rowIndex}-${logoIdx}`}
-                      className="group flex items-center justify-center h-20 relative cursor-pointer"
+              <>
+                {/* First 2 rows (always visible) */}
+                <div className="divide-y divide-m3-outline/10 dark:divide-white/10">
+                  {rows.slice(0, 2).map((rowLogos, rowIndex) => (
+                    <div 
+                      key={`row-${rowIndex}`}
+                      className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 py-8 first:pt-2 last:pb-2"
                     >
-                      <div className="w-full h-full flex items-center justify-center hover:scale-105 transition-all duration-300 relative z-10">
-                        <img 
-                          src={logo.src || (logo as any).logoUrl} 
-                          alt={logo.name} 
-                          className={`max-w-[140px] max-h-full object-contain ${logo.padding} grayscale opacity-75 dark:brightness-0 dark:invert group-hover:grayscale-0 group-hover:opacity-100 group-hover:dark:brightness-100 group-hover:dark:invert-0 transition-all duration-500`}
-                          loading="lazy"
-                        />
-                      </div>
+                      {rowLogos.map((logo, logoIdx) => (
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: logoIdx * 0.08 }}
+                          key={logo.id || `static-${rowIndex}-${logoIdx}`}
+                          className="group flex items-center justify-center h-20 relative cursor-pointer"
+                        >
+                          <div className="w-full h-full flex items-center justify-center hover:scale-105 transition-all duration-300 relative z-10">
+                            <img 
+                              src={logo.src || (logo as any).logoUrl} 
+                              alt={logo.name} 
+                              className={`max-w-[140px] max-h-full object-contain ${logo.padding} grayscale opacity-75 dark:brightness-0 dark:invert group-hover:grayscale-0 group-hover:opacity-100 group-hover:dark:brightness-100 group-hover:dark:invert-0 transition-all duration-500`}
+                              loading="lazy"
+                            />
+                          </div>
 
-                      {/* Client Tooltip */}
-                      <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-[#1A102E] dark:bg-[#d0bcff] text-white dark:text-[#1A102E] text-[10px] font-bold uppercase tracking-wider rounded-md opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 shadow-md whitespace-nowrap z-50">
-                        {logo.name}
-                      </div>
-                    </motion.div>
+                          {/* Client Tooltip */}
+                          <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-[#1A102E] dark:bg-[#d0bcff] text-white dark:text-[#1A102E] text-[10px] font-bold uppercase tracking-wider rounded-md opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 shadow-md whitespace-nowrap z-50">
+                            {logo.name}
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
                   ))}
                 </div>
-              ))
+
+                {/* Extra rows (expandable) */}
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="overflow-hidden divide-y divide-m3-outline/10 dark:divide-white/10 border-t border-m3-outline/10 dark:border-white/10"
+                    >
+                      {rows.slice(2).map((rowLogos, rowIndex) => (
+                        <div 
+                          key={`row-extra-${rowIndex}`}
+                          className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 py-8"
+                        >
+                          {rowLogos.map((logo, logoIdx) => (
+                            <motion.div
+                              initial={{ opacity: 0, y: 15 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.5, delay: logoIdx * 0.08 }}
+                              key={logo.id || `static-extra-${rowIndex}-${logoIdx}`}
+                              className="group flex items-center justify-center h-20 relative cursor-pointer"
+                            >
+                              <div className="w-full h-full flex items-center justify-center hover:scale-105 transition-all duration-300 relative z-10">
+                                <img 
+                                  src={logo.src || (logo as any).logoUrl} 
+                                  alt={logo.name} 
+                                  className={`max-w-[140px] max-h-full object-contain ${logo.padding} grayscale opacity-75 dark:brightness-0 dark:invert group-hover:grayscale-0 group-hover:opacity-100 group-hover:dark:brightness-100 group-hover:dark:invert-0 transition-all duration-500`}
+                                  loading="lazy"
+                                />
+                              </div>
+
+                              {/* Client Tooltip */}
+                              <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-[#1A102E] dark:bg-[#d0bcff] text-white dark:text-[#1A102E] text-[10px] font-bold uppercase tracking-wider rounded-md opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 shadow-md whitespace-nowrap z-50">
+                                {logo.name}
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Expand / Collapse Button */}
+                {rows.length > 2 && (
+                  <div className="relative flex justify-center mt-6 z-20">
+                    {/* Visual horizontal guide line passing behind the button */}
+                    <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-m3-outline/10 dark:bg-white/10 z-0" />
+                    
+                    {/* Glowing Circle Button */}
+                    <button
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className="relative z-10 w-12 h-12 rounded-full bg-white dark:bg-[#25232a] border border-[#6d55a7]/30 dark:border-[#d0bcff]/30 text-[#6d55a7] dark:text-[#d0bcff] hover:text-white hover:bg-[#6d55a7] dark:hover:bg-[#d0bcff] dark:hover:text-[#1A102E] flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(109,85,167,0.15)] dark:shadow-[0_0_15px_rgba(208,188,255,0.15)] hover:shadow-[0_0_25px_rgba(109,85,167,0.35)] dark:hover:shadow-[0_0_25px_rgba(208,188,255,0.35)] cursor-pointer scale-100 hover:scale-110 active:scale-95"
+                      title={isExpanded ? "Show Less" : "Show More"}
+                    >
+                      {isExpanded ? (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
