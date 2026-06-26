@@ -36,7 +36,7 @@ const ring2Logos: LogoItem[] = [
   { name: 'Avaus', src: '/images/logos/avaus.jpg', padding: 'p-2.5' },
 ];
 
-// Ring 3 (Radius 660px, w-[160px] h-[160px])
+// Ring 3 (Radius 660px, w-[140px] h-[140px])
 const ring3Logos: LogoItem[] = [
   { name: 'Renault', src: '/images/logos/renaultlogo.png', padding: 'p-2' },
   { name: 'HBO', src: '/images/logos/HBO_Portugal.svg.png', padding: 'p-2.5' },
@@ -425,7 +425,7 @@ export default function WorkedWithSection() {
               </div>
             </div>
 
-            {/* Ring 3 - (Radius 660px, Logo: w-[160px] h-[160px]) */}
+            {/* Ring 3 - (Radius 660px, Logo: w-[140px] h-[140px]) */}
             <div 
               className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2 z-10" 
               style={{ width: R_outer * 2, height: R_outer * 2 }}
@@ -435,7 +435,7 @@ export default function WorkedWithSection() {
               >
                 {getRingLogos(3).map((logo, idx, arr) => {
                   const initialAngle = getInitialAngle(idx, arr.length, 'outer');
-                  const logoSize = 160;
+                  const logoSize = 140;
                   return (
                     <div 
                       key={`ring3-${idx}`} 
