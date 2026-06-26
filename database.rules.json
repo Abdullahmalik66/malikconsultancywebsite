@@ -33,6 +33,10 @@
     "clientLogos": {
       ".read": true,
       ".write": "auth != null"
+    },
+    "clientShowcase2Logos": {
+      ".read": true,
+      ".write": "auth != null"
     }
   }
 }

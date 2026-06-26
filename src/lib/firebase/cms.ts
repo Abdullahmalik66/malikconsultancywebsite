@@ -433,3 +433,70 @@ export const saveClientShowcaseSettings = async (settings: ClientShowcaseSetting
   await set(dbRef(db, 'settings/clientShowcase'), settings);
 };
 
+// --- CLIENT SHOWCASE 2 LOGO OPERATIONS ---
+
+export interface ClientShowcase2LogoItem {
+  id: string;
+  name: string;
+  logoUrl: string;
+  padding: string; // e.g. "p-3"
+  rowIndex: number; // 0, 1, 2 etc. representing row 1, row 2, row 3
+  sortOrder: number;
+  active: boolean;
+  createdAt: string;
+}
+
+export const saveClientShowcase2Logo = async (item: Omit<ClientShowcase2LogoItem, 'id' | 'createdAt'>, id?: string): Promise<ClientShowcase2LogoItem> => {
+  const logoRef = id ? dbRef(db, `clientShowcase2Logos/${id}`) : push(dbRef(db, 'clientShowcase2Logos'));
+  const actualId = id || logoRef.key;
+  if (!actualId) throw new Error("Failed to generate ID for client showcase 2 logo");
+
+  const now = new Date().toISOString();
+  let createdAt = now;
+  if (id) {
+    const existingSnap = await get(logoRef);
+    if (existingSnap.exists()) {
+      createdAt = existingSnap.val().createdAt || now;
+    }
+  }
+
+  const payload: ClientShowcase2LogoItem = {
+    ...item,
+    id: actualId,
+    createdAt,
+  };
+
+  await set(logoRef, payload);
+  return payload;
+};
+
+export const getAllClientShowcase2Logos = async (): Promise<ClientShowcase2LogoItem[]> => {
+  const snapshot = await get(dbRef(db, 'clientShowcase2Logos'));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return Object.values(data) as ClientShowcase2LogoItem[];
+  }
+  return [];
+};
+
+export const deleteClientShowcase2Logo = async (id: string): Promise<void> => {
+  await remove(dbRef(db, `clientShowcase2Logos/${id}`));
+};
+
+export interface ClientShowcase2Settings {
+  title: string;
+}
+
+export const getClientShowcase2Settings = async (): Promise<ClientShowcase2Settings> => {
+  const snapshot = await get(dbRef(db, 'settings/clientShowcase2'));
+  if (snapshot.exists()) {
+    return snapshot.val() as ClientShowcase2Settings;
+  }
+  return {
+    title: "Trusted by our customers & partners"
+  };
+};
+
+export const saveClientShowcase2Settings = async (settings: ClientShowcase2Settings): Promise<void> => {
+  await set(dbRef(db, 'settings/clientShowcase2'), settings);
+};
