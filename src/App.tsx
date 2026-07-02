@@ -26,6 +26,7 @@ import BlogEditorPage from './pages/BlogEditorPage';
 import CaseStudyPage from './pages/CaseStudyPage';
 import AboutPage from './pages/AboutPage';
 import AITransformationPage from './pages/AITransformationPage';
+import DataActivationPage from './pages/DataActivationPage';
 import BlogPostPage from './pages/BlogPostPage';
 import ReachMePage from './pages/ReachMePage';
 import TestimonialsPage from './pages/TestimonialsPage';
@@ -71,6 +72,7 @@ function AppContent() {
         <Route path="/my-writings" element={<WritingsPage />} />
         <Route path="/writings/:id" element={<BlogPostPage />} />
         <Route path="/services/ai-transformation" element={<AITransformationPage />} />
+        <Route path="/services/data-activation-intelligence" element={<DataActivationPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/create-insight" element={<BlogEditorPage />} />
         <Route path="/reach-me" element={<ReachMePage />} />

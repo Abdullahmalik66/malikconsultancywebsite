@@ -8,7 +8,7 @@ const navItems = [
     label: 'Services',
     children: [
       { label: 'AI Transformation', path: '/services/ai-transformation' },
-      { label: 'Data Activation & Intelligence', path: '#' },
+      { label: 'Data Activation & Intelligence', path: '/services/data-activation-intelligence' },
       { label: 'Modern Marketing & Growth', path: '#' },
       { label: 'AI Maturity & Capability Building', path: '#' }
     ]
