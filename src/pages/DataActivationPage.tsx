@@ -11,7 +11,7 @@ import WorkedWithSection from '../components/WorkedWithSection';
 
 export default function DataActivationPage() {
   const headingText = "TURNING CUSTOMER DATA INTO COMMERCIAL INTELLIGENCE.";
-  const descriptionText = "I partner with enterprise leaders and growth teams to design, architect, and scale high-performance customer data pipelines and active decisioning layers. By bridging the gap between fragmented data systems and real-time commercial action, we turn passive signals into accelerated acquisition, predictive retention, and measurable growth.";
+  const descriptionText = "I help organisations turn fragmented customer, marketing, CRM, and behavioural data into activation systems that improve decisions, personalise journeys, and create measurable growth.";
   const words = descriptionText.split(" ");
 
   const containerVariants = {

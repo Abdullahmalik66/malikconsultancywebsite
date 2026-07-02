@@ -157,7 +157,7 @@ export default function DataCinematicStory() {
         {isInView && (
           <TypewriterLine 
             lines={[
-              "Most organizations think they need more data.",
+              "Most organisations think they need more data.",
               "They don't.",
               "They have an activation problem."
             ]}
@@ -183,8 +183,8 @@ export default function DataCinematicStory() {
         {/* Step 3 Typewriter */}
         <TypewriterLine 
           lines={[
-            "Passive pipelines look good on a diagram.",
-            "But static data doesn't drive dynamic growth."
+            "Dashboards report what happened.",
+            "But they rarely change what happens next."
           ]}
           isActive={activePhase >= 2}
           onComplete={() => {
@@ -192,25 +192,13 @@ export default function DataCinematicStory() {
           }}
         />
 
-        {/* Step 4 Typewriter */}
-        <TypewriterLine 
-          lines={[
-            "Marketing scales when execution maps to customer behavior.",
-            "Fast, predictive, and unified."
-          ]}
-          isActive={activePhase >= 3}
-          onComplete={() => {
-            if (activePhase === 3) setTimeout(() => setActivePhase(4), 1000);
-          }}
-        />
-
-        {/* Step 5 Final Resolution */}
+        {/* Step 4 Final Resolution */}
         <TypewriterLine 
           lines={[
             "This is where I step in.",
-            "Bridging the gap to turn raw data into active commercial intelligence."
+            "Turning raw data into active commercial intelligence."
           ]}
-          isActive={activePhase >= 4}
+          isActive={activePhase >= 3}
           pauseDuration={1000}
         />
 

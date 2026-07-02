@@ -20,16 +20,16 @@ const subServices: SubServiceData[] = [
   {
     id: 'marketing',
     num: '01',
-    title: 'Cross-Channel Performance Marketing',
-    description: 'I guide growth teams in strategic yield optimization of customer acquisition capital across global digital platforms. Data is active only when it increases the return on your marketing investment. We move beyond simple traffic acquisition to build high-conversion loops driven by unified, live performance indicators.',
+    title: 'Cross-Channel Performance Intelligence',
+    description: 'I help growth teams understand which channels, audiences, campaigns, and journeys are actually creating commercial movement — not just clicks, impressions, or isolated platform results.',
     points: [
-      'Cross-channel budget allocation logic',
-      'Yield optimization on global ad platforms',
-      'Real-time conversion tracking',
-      'Attribution modeling & scaling parameters',
-      'Customer acquisition cost (CAC) reduction frameworks'
+      'Cross-channel acquisition performance model',
+      'CAC, ROAS, pipeline, and conversion signal mapping',
+      'Attribution gap analysis across paid, owned, CRM, and sales touchpoints',
+      'Budget allocation logic based on commercial return',
+      'Live performance indicator framework'
     ],
-    outcome: 'A structured media model maximizing acquisition efficiency across digital networks.',
+    outcome: 'A clearer view of where growth is coming from, where spend is leaking, and which channels deserve more investment.',
     solidBg: 'bg-[#2A1008]', // Deep dark terracotta
     borderColor: 'border-white/10',
     accentText: 'text-[#E2C08A]', // Sand/gold accent
@@ -38,16 +38,16 @@ const subServices: SubServiceData[] = [
   {
     id: 'strategy',
     num: '02',
-    title: 'Activation Planning & Strategy',
-    description: 'Data is a cost until it drives a transaction. I help organizations architect custom roadmaps to transition data from passive warehouses into real-time activation pipelines. The goal is to move customer profiles directly into trigger-based campaigns, real-time personalization, and autonomous sales touchpoints.',
+    title: 'Customer Data Activation Strategy',
+    description: 'I help organisations move customer data from passive storage into active journeys, triggers, segments, and decision flows that can be used by marketing, sales, and customer teams.',
     points: [
-      'Warehouse-to-campaign mapping',
-      'Customer Data Platform (CDP) strategy',
-      'Event-driven trigger mapping',
-      'Activation scoring frameworks',
-      'Stack dependency auditing'
+      'Customer data activation roadmap',
+      'Audience and lifecycle segmentation logic',
+      'Trigger-based campaign architecture',
+      'First-party data activation planning',
+      'Channel and journey dependency mapping'
     ],
-    outcome: 'A comprehensive activation blueprint ready to connect databases to the commercial execution layer.',
+    outcome: 'A practical activation blueprint that turns customer signals into personalised journeys, faster campaign execution, and measurable commercial action.',
     solidBg: 'bg-[#7C2D12]', // Terracotta rust copper
     borderColor: 'border-white/10',
     accentText: 'text-[#FAF8F3]', // Warm ivory accent
@@ -56,16 +56,16 @@ const subServices: SubServiceData[] = [
   {
     id: 'crm',
     num: '03',
-    title: 'CRM Ecosystem & MarTech Orchestration',
-    description: 'Unifying your commercial stack ensures that Sales, Marketing, and Customer Support share a single source of truth. I audit and configure CRM suites, customer tools, and marketing systems to eliminate signal fragmentation, data discrepancies, and execution latency.',
+    title: 'CRM & MarTech Orchestration',
+    description: 'I help align CRM, marketing automation, analytics, and customer data systems so teams can work from cleaner signals and coordinated customer journeys.',
     points: [
-      'CRM stack auditing & alignment',
-      'Cross-channel data flows',
-      'Marketing automation setup',
-      'Customer event tracking logic',
-      'Data sync latency reduction'
+      'CRM and MarTech stack audit',
+      'Customer journey data flow mapping',
+      'Lead, lifecycle, and conversion event alignment',
+      'Marketing automation logic',
+      'Data quality and sync issue diagnosis'
     ],
-    outcome: 'An optimized CRM stack communicating in real-time with zero data silos.',
+    outcome: 'A more connected commercial stack where marketing, sales, and customer teams can act on shared customer signals with less friction.',
     solidBg: 'bg-[#E2C08A]', // Warm tan/gold/sand
     borderColor: 'border-[#2A1008]/10',
     accentText: 'text-[#2A1008]', // Deep terracotta accent
@@ -74,16 +74,16 @@ const subServices: SubServiceData[] = [
   {
     id: 'integration',
     num: '04',
-    title: 'Agentic Data Integration',
-    description: 'AI agents and automation layers require high-integrity, real-time context to make correct decisions. I architect pipelines that translate database records and live signals into structured context feeds for custom AI agents and autonomous decision engines.',
+    title: 'AI-Ready Data Integration',
+    description: 'AI agents and automation systems need reliable customer context. I help design the data layer that gives AI systems the right signals, rules, and context to support better decisions.',
     points: [
-      'Context pipeline engineering',
-      'Real-time event streams',
-      'Prompt data-hydration pipelines',
-      'Agent memory systems',
-      'Guardrails & context caching'
+      'AI-ready data source mapping',
+      'Context pipeline design',
+      'Event and behaviour stream planning',
+      'Data quality checks for AI workflows',
+      'Guardrail and context logic for agentic systems'
     ],
-    outcome: 'An integration layer supplying high-fidelity data to active AI execution systems.',
+    outcome: 'A trusted context layer that allows AI systems to act on relevant, timely, and commercially useful customer data.',
     solidBg: 'bg-[#FAF8F3]', // Warm ivory
     borderColor: 'border-[#2A1008]/10',
     accentText: 'text-[#7C2D12]', // Rust copper accent
@@ -93,15 +93,15 @@ const subServices: SubServiceData[] = [
     id: 'predictive',
     num: '05',
     title: 'Predictive Customer Intelligence',
-    description: 'Anticipating customer intent allows you to act before friction or churn occurs. I build custom modeling layers that score churn risk, predict purchase propensity, and identify high-value customer milestones to trigger preventative activation workflows.',
+    description: 'I help teams anticipate customer intent before friction, churn, or missed opportunity appears in the numbers.',
     points: [
-      'Churn risk scoring',
-      'Purchase propensity models',
-      'Customer Lifetime Value (LTV) forecasting',
-      'Segment behavior analysis',
-      'Automated reactivation triggers'
+      'Churn and retention signal mapping',
+      'Purchase propensity logic',
+      'Customer lifetime value modelling',
+      'Behavioural segmentation',
+      'Reactivation and next-best-action trigger design'
     ],
-    outcome: 'An active scoring engine triggering preventative customer interactions dynamically.',
+    outcome: 'A customer intelligence layer that helps teams identify who is likely to convert, churn, grow, or need action next.',
     solidBg: 'bg-[#3B160C]', // Deep chocolate mahogany
     borderColor: 'border-white/10',
     accentText: 'text-[#E2C08A]', // Sand/gold accent
@@ -110,16 +110,16 @@ const subServices: SubServiceData[] = [
   {
     id: 'dashboards',
     num: '06',
-    title: 'Commercial Performance Dashboards',
-    description: 'Executives require real-time visibility into what is driving growth. I build custom performance indicators that map pipeline conversions, acquisition yield, and activation ROI into a single, high-fidelity business dashboard.',
+    title: 'Commercial Intelligence Dashboards',
+    description: 'I build executive-ready performance views that connect marketing activity, customer behaviour, pipeline movement, and revenue outcomes into one decision layer.',
     points: [
-      'Executive KPI mapping',
-      'Growth velocity tracking',
-      'Multi-touch attribution modeling',
-      'Pipeline lifecycle visualization',
-      'Real-time ROI calculations'
+      'Executive KPI framework',
+      'Acquisition, retention, and pipeline dashboard logic',
+      'Multi-touch attribution view',
+      'Lifecycle performance tracking',
+      'Real-time ROI and commercial signal reporting'
     ],
-    outcome: 'A unified analytics interface providing absolute clarity on commercial execution and returns.',
+    outcome: 'A decision interface that shows what is driving growth, what is slowing it down, and where action should happen next.',
     solidBg: 'bg-[#7C2D12]', // Terracotta rust copper
     borderColor: 'border-white/10',
     accentText: 'text-[#FAF8F3]', // Warm ivory accent
@@ -174,13 +174,13 @@ export default function DataSubServicesShowcase() {
           
           <div className="text-lg md:text-xl font-sans text-[#2A1008]/70 font-light leading-relaxed space-y-8 max-w-5xl">
             <p>
-              Data is a liability until it drives a decision. Most organisations do not lack data. They lack activation.
+              Data is a liability until it changes a decision.
             </p>
             <p className="text-[#7C2D12] font-mono text-sm tracking-widest uppercase font-semibold">
-              The use cases are unclear. The data is fragmented. The pipelines stay static. Attribution is guessed. And integrations are built without real-time activation in mind.
+              Most organisations have more than enough customer signals. The problem is that those signals live in disconnected systems, slow reports, static dashboards, and campaigns that cannot react fast enough.
             </p>
             <p>
-              This is where the service becomes practical. I help organisations connect the data layer to the commercial layer to turn raw customer signals into accelerated acquisition, predictive retention, and measurable growth.
+              This service connects the data layer to the commercial layer — turning raw customer signals into acquisition, retention, personalisation, and measurable growth.
             </p>
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function DataSubServicesShowcase() {
 
                 <div className="flex flex-col gap-6">
                   <div>
-                    <h4 className={`text-xs font-mono uppercase tracking-[0.2em] ${service.accentText} mb-4 font-semibold`}>What you get:</h4>
+                    <h4 className={`text-xs font-mono uppercase tracking-[0.2em] ${service.accentText} mb-4 font-semibold`}>What we provide:</h4>
                     <ul className={`grid grid-cols-1 gap-3 text-sm font-sans ${
                       isDark ? 'text-white/70' : 'text-[#2A1008]/75'
                     }`}>
@@ -344,7 +344,7 @@ export default function DataSubServicesShowcase() {
                         {/* Right column: bullet points and outcome */}
                         <div className="flex flex-col gap-8">
                           <div>
-                            <h4 className={`text-xs font-mono uppercase tracking-[0.2em] ${service.accentText} mb-4 font-semibold`}>What you get:</h4>
+                            <h4 className={`text-xs font-mono uppercase tracking-[0.2em] ${service.accentText} mb-4 font-semibold`}>What we provide:</h4>
                             <ul className={`space-y-4 text-base font-sans ${
                               isDark ? 'text-white/70' : 'text-[#2A1008]/75'
                             }`}>
@@ -376,6 +376,13 @@ export default function DataSubServicesShowcase() {
           </div>
         </div>
       )}
+
+      {/* Final Closing Line banner */}
+      <div className="w-full max-w-[1750px] mx-auto px-6 md:px-12 lg:px-24 py-20 text-center border-t border-[#2A1008]/10 mt-12">
+        <p className="text-xl md:text-2xl font-display font-medium text-[#2A1008] uppercase tracking-wide">
+          The objective is simple: turn customer data into decisions, journeys, and revenue movement.
+        </p>
+      </div>
 
     </div>
   );
