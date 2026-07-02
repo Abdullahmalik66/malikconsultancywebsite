@@ -377,13 +377,6 @@ export default function DataSubServicesShowcase() {
         </div>
       )}
 
-      {/* Final Closing Line banner */}
-      <div className="w-full max-w-[1750px] mx-auto px-6 md:px-12 lg:px-24 py-20 text-center border-t border-[#2A1008]/10 mt-12">
-        <p className="text-xl md:text-2xl font-display font-medium text-[#2A1008] uppercase tracking-wide">
-          The objective is simple: turn customer data into decisions, journeys, and revenue movement.
-        </p>
-      </div>
-
     </div>
   );
 }

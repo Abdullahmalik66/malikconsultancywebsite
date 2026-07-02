@@ -13,23 +13,23 @@ const questions: Question[] = [
   {
     id: 1,
     text: "How unified is your customer data today?",
-    helperText: "Mapping your database connectivity is the first step to unlocking active marketing loops.",
+    helperText: "Mapping your data connectivity is the first step to unlocking active marketing loops.",
     options: [
       "Siloed across campaign tools",
       "Basic CRM sync exists",
       "Unified CDP / warehouse in place",
-      "Fully activated in real-time"
+      "I’m not sure how unified it is"
     ]
   },
   {
     id: 2,
     text: "What is your primary activation blocker?",
-    helperText: "Identifying execution lag helps us focus pipeline design where friction is highest.",
+    helperText: "Identifying execution friction helps us focus the diagnostic where it matters most.",
     options: [
       "Slow execution pipelines",
       "Messy / untrusted data quality",
       "Complex tech stack integration",
-      "Team capabilities & adoption"
+      "Not sure — need diagnosis"
     ]
   },
   {
@@ -40,7 +40,7 @@ const questions: Question[] = [
       "Personalised marketing campaigns",
       "Customer churn prevention",
       "Multi-market global scaling",
-      "Ad yield & spend optimization"
+      "Not sure — help identify priority"
     ]
   },
   {
@@ -51,7 +51,7 @@ const questions: Question[] = [
       "Data activation strategy",
       "CRM & stack orchestration",
       "Real-time pipeline engineering",
-      "Predictive model design"
+      "Not sure — recommend the right path"
     ]
   },
   {
@@ -67,12 +67,12 @@ const questions: Question[] = [
   {
     id: 6,
     text: "What should happen next?",
-    helperText: "Select how you would prefer to transition from diagnostic to active roadmap discussion.",
+    helperText: "Select how you would prefer to move from diagnostic to active roadmap discussion.",
     options: [
       "Book an activation review",
       "Discuss a pipeline audit",
       "Review current stack layout",
-      "Discuss custom integration"
+      "Help me choose the next step"
     ]
   }
 ];
@@ -174,7 +174,7 @@ export default function DataDecisionQuestionnaire() {
 
             <div className="flex flex-col gap-6 text-[#1A102E]/80 font-sans">
               <p className="font-sans font-normal text-[#1A102E] text-xl md:text-2xl lg:text-[25px] leading-snug tracking-tight">
-                Move customer data from passive collection into real-time commercial execution.
+                Move customer data from passive collection into decisions, journeys, and measurable growth.
               </p>
               <p className="text-base md:text-lg text-[#1A102E]/70 font-sans font-light leading-relaxed">
                 If that is the kind of shift you are trying to make, start with a few questions. This helps me understand where your data is siloed, what is blocking performance, and what data activation strategy would create the most value.
@@ -354,12 +354,8 @@ export default function DataDecisionQuestionnaire() {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <h4 className="text-xl md:text-2xl font-display font-medium text-[#1A102E] leading-tight">
-                          Good. This gives enough context to make the next conversation sharper.
-                        </h4>
-                        <p className="text-sm md:text-base text-[#1A102E]/75 leading-relaxed font-sans font-light">
-                          Leave your details and I’ll know whether this is a strategy, integration, predictive model, or dashboard discussion.
-                        </p>
+                        <h4 className="text-xl md:text-2xl font-display font-medium text-[#1A102E] leading-tight">Good. This gives enough context to make the next conversation sharper.</h4>
+                        <p className="text-sm md:text-base text-[#1A102E]/75 leading-relaxed font-sans font-light">Leave your details and I’ll know whether this is a strategy, activation, orchestration, pipeline, or intelligence conversation.</p>
                       </div>
 
                       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
