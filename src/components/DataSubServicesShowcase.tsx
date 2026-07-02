@@ -224,7 +224,7 @@ export default function DataSubServicesShowcase() {
                           ? 'bg-[#FAF8F3] text-[#2A1008] hover:bg-[#FAF8F3]/90' 
                           : 'bg-[#2A1008] text-white hover:bg-[#2A1008]/90'
                       }`}>
-                        Learn more <ArrowRight className="w-4 h-4" />
+                        Learn more about {service.title} <ArrowRight className="w-4 h-4" />
                       </button>
                     </Link>
                   </div>
@@ -335,7 +335,7 @@ export default function DataSubServicesShowcase() {
                                   ? 'bg-[#FAF8F3] text-[#2A1008] hover:bg-[#FAF8F3]/90' 
                                   : 'bg-[#2A1008] text-white hover:bg-[#2A1008]/90'
                               }`}>
-                                Learn more <ArrowRight className="w-4 h-4" />
+                                Learn more about {service.title} <ArrowRight className="w-4 h-4" />
                               </button>
                             </Link>
                           </div>

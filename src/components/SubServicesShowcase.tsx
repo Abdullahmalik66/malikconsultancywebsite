@@ -228,7 +228,7 @@ export default function SubServicesShowcase() {
                           ? 'bg-[#FEF7FF] text-[#1D1B20] hover:bg-[#FEF7FF]/90' 
                           : 'bg-[#103A2A] text-white hover:bg-[#103A2A]/90'
                       }`}>
-                        Learn more <ArrowRight className="w-4 h-4" />
+                        Learn more about {service.title} <ArrowRight className="w-4 h-4" />
                       </button>
                     </Link>
                   </div>
@@ -339,7 +339,7 @@ export default function SubServicesShowcase() {
                                   ? 'bg-[#FEF7FF] text-[#1D1B20] hover:bg-[#FEF7FF]/90' 
                                   : 'bg-[#103A2A] text-white hover:bg-[#103A2A]/90'
                               }`}>
-                                Learn more <ArrowRight className="w-4 h-4" />
+                                Learn more about {service.title} <ArrowRight className="w-4 h-4" />
                               </button>
                             </Link>
                           </div>

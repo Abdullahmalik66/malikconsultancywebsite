@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 
 const renderLineWithHighlight = (text: string) => {
-  const target1 = "systems that actually work";
-  const target2 = "step in";
+  const target1 = "system that actually drives growth.";
+  const target2 = "step in.";
   
   if (text.includes(target1)) {
     const parts = text.split(target1);
@@ -116,7 +116,7 @@ const TypewriterLine: React.FC<TypewriterLineProps> = ({
   );
 };
 
-export default function CinematicStory() {
+export default function MarketingCinematicStory() {
   const [activePhase, setActivePhase] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
@@ -141,7 +141,7 @@ export default function CinematicStory() {
   return (
     <div 
       ref={containerRef} 
-      className="relative w-full bg-[#00022b] py-24 md:py-32 overflow-hidden border-t border-white/5"
+      className="relative w-full bg-[#1e0f09] py-24 md:py-32 overflow-hidden border-t border-white/5"
     >
       {/* Soft background particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
@@ -157,9 +157,8 @@ export default function CinematicStory() {
         {isInView && (
           <TypewriterLine 
             lines={[
-              "Most companies think they have an AI problem.",
-              "They don't.",
-              "They have a scaling problem."
+              "Most companies are running marketing.",
+              "But very few are running a growth system."
             ]}
             isActive={activePhase >= 0}
             onComplete={() => {
@@ -171,8 +170,9 @@ export default function CinematicStory() {
         {/* Step 2 Typewriter */}
         <TypewriterLine 
           lines={[
-            "88% of organisations are already using AI.",
-            "Only a third have scaled it."
+            "Campaigns are launched.",
+            "Channels are active.",
+            "Budgets are spent."
           ]}
           isActive={activePhase >= 1}
           onComplete={() => {
@@ -183,8 +183,7 @@ export default function CinematicStory() {
         {/* Step 3 Typewriter */}
         <TypewriterLine 
           lines={[
-            "Data is everywhere.",
-            "Decisions are still slow."
+            "But growth is still hard to scale."
           ]}
           isActive={activePhase >= 2}
           onComplete={() => {
@@ -195,8 +194,8 @@ export default function CinematicStory() {
         {/* Step 4 Typewriter */}
         <TypewriterLine 
           lines={[
-            "Marketing is running.",
-            "Growth is not predictable."
+            "Performance looks good in dashboards.",
+            "But decisions are still disconnected."
           ]}
           isActive={activePhase >= 3}
           onComplete={() => {
@@ -208,7 +207,7 @@ export default function CinematicStory() {
         <TypewriterLine 
           lines={[
             "This is where I step in.",
-            "Turning AI ambition into systems that actually work."
+            "Turning marketing into a system that actually drives growth."
           ]}
           isActive={activePhase >= 4}
           pauseDuration={1000}

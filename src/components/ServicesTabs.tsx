@@ -340,7 +340,7 @@ export default function ServicesTabs() {
                 </div>
 
                  {/* Action Button - Darker styling */}
-                 <Link to={activeTab.id === 'ai-transformation' ? '/services/ai-transformation' : activeTab.id === 'data-activation' ? '/services/data-activation-intelligence' : '#'}>
+                 <Link to={activeTab.id === 'ai-transformation' ? '/services/ai-transformation' : activeTab.id === 'data-activation' ? '/services/data-activation-intelligence' : activeTab.id === 'modern-marketing' ? '/services/modern-marketing-growth' : activeTab.id === 'ai-maturity' ? '/services/ai-maturity-capability-building' : '#'}>
                    <button className="group relative inline-flex items-center justify-center px-8 py-4 bg-[#6d55a7] text-[#e8dff8] rounded-full font-bold text-base hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 w-fit cursor-pointer">
                      <span>Explore {activeTab.label}</span>
                    </button>

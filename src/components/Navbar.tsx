@@ -9,8 +9,8 @@ const navItems = [
     children: [
       { label: 'AI Transformation', path: '/services/ai-transformation' },
       { label: 'Data Activation & Intelligence', path: '/services/data-activation-intelligence' },
-      { label: 'Modern Marketing & Growth', path: '#' },
-      { label: 'AI Maturity & Capability Building', path: '#' }
+      { label: 'Modern Marketing & Growth', path: '/services/modern-marketing-growth' },
+      { label: 'AI Maturity & Capability Building', path: '/services/ai-maturity-capability-building' }
     ]
   },
   { label: 'Case work', path: '/case-work' },
