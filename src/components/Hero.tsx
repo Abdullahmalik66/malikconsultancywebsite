@@ -100,7 +100,7 @@ export default function Hero() {
             {/* CTA Section */}
             <motion.div 
               variants={itemVariants}
-              className="mt-16 md:mt-24"
+              className="mt-16 md:mt-24 flex flex-col sm:flex-row gap-6"
             >
               <Link to="/reach-me">
                 <motion.div
@@ -110,6 +110,26 @@ export default function Hero() {
                 >
                   <span className="relative z-10 flex items-center gap-4">
                     Start Your Transformation
+                  </span>
+                  <motion.div 
+                    variants={{
+                      hover: { x: 0 }
+                    }}
+                    initial={{ x: "-101%" }}
+                    className="absolute inset-0 bg-[#EAFF00]"
+                    transition={{ duration: 0.4, ease: "circOut" }}
+                  />
+                </motion.div>
+              </Link>
+
+              <Link to="/services/ai-transformation">
+                <motion.div
+                  whileHover="hover"
+                  whileTap={{ scale: 0.98 }}
+                  className="relative overflow-hidden px-10 py-6 rounded-full border border-white/20 hover:border-[#EAFF00] text-white font-bold text-lg md:text-xl uppercase tracking-[0.2em] cursor-pointer group w-fit shadow-2xl transition-colors duration-300"
+                >
+                  <span className="relative z-10 flex items-center gap-4 group-hover:text-[#1A102E] transition-colors duration-300">
+                    Explore AI Transformation
                   </span>
                   <motion.div 
                     variants={{
