@@ -29,6 +29,7 @@ import AITransformationPage from './pages/AITransformationPage';
 import DataActivationPage from './pages/DataActivationPage';
 import ModernMarketingPage from './pages/ModernMarketingPage';
 import AIMaturityPage from './pages/AIMaturityPage';
+import MyLifeStoryPage from './pages/MyLifeStoryPage';
 import BlogPostPage from './pages/BlogPostPage';
 import ReachMePage from './pages/ReachMePage';
 import TestimonialsPage from './pages/TestimonialsPage';
@@ -63,16 +64,17 @@ function ScrollToTop() {
 
 function AppContent() {
   const location = useLocation();
-  const isCleanLayout = location.pathname.startsWith('/admin') || location.pathname === '/reach-me';
+  const isCleanLayout = location.pathname.startsWith('/admin') || location.pathname === '/reach-me' || location.pathname === '/my-life-story';
 
   return (
     <main className="relative min-h-screen bg-m3-surface transition-colors duration-300">
-      <Navbar />
+      {!isCleanLayout && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/case-work" element={<CaseWorkPage />} />
         <Route path="/my-writings" element={<WritingsPage />} />
         <Route path="/writings/:id" element={<BlogPostPage />} />
+        <Route path="/my-life-story" element={<MyLifeStoryPage />} />
         <Route path="/services/ai-transformation" element={<AITransformationPage />} />
         <Route path="/services/data-activation-intelligence" element={<DataActivationPage />} />
         <Route path="/services/modern-marketing-growth" element={<ModernMarketingPage />} />

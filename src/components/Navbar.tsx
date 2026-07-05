@@ -22,7 +22,7 @@ const navItems = [
       { label: 'Agents', path: '#' }
     ]
   },
-  { label: 'My life story', path: '#' }
+  { label: 'My life story', path: '/my-life-story' }
 ];
 
 export default function Navbar() {
