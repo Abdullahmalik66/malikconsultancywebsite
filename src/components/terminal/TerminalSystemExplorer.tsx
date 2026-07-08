@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { terminalAudio } from '../../lib/terminalAudio';
 import { OriginStoryTerminal } from './OriginStoryTerminal';
+import { CareerEvolutionTerminal } from './CareerEvolutionTerminal';
+import { CertificationsTerminal } from './CertificationsTerminal';
+import { AITransformationJourneyTerminal } from './AITransformationJourneyTerminal';
+import { CognitiveProfileTerminal } from './CognitiveProfileTerminal';
+import { BehavioralProfileTerminal } from './BehavioralProfileTerminal';
 
 interface ExplorationMode {
   id: number;
@@ -11,9 +16,10 @@ interface ExplorationMode {
 const explorationModes: ExplorationMode[] = [
   { id: 1, title: 'Origin Story', commandName: 'origin' },
   { id: 2, title: 'Career Evolution', commandName: 'career' },
-  { id: 3, title: 'Breakthrough Moments', commandName: 'breakthrough' },
-  { id: 4, title: 'From Marketing to AI Transformation Journey', commandName: 'journey' },
-  { id: 5, title: 'Certifications', commandName: 'certifications' }
+  { id: 3, title: 'From Marketing to AI Transformation Journey', commandName: 'journey' },
+  { id: 4, title: 'Cognitive Profile', commandName: 'cognitive' },
+  { id: 5, title: 'Behavioral Profile', commandName: 'behavioral' },
+  { id: 6, title: 'Certifications', commandName: 'certifications' }
 ];
 
 interface TerminalSystemExplorerProps {
@@ -33,13 +39,22 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
     }
   }, [selectedModeId]);
 
-  // Global Keydown Handler for keys 1-5
+  // Global Keydown Handler for keys 1-6
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if typing in input box (let form submit handle it)
-      if (document.activeElement === inputRef.current) return;
+      // Don't intercept if a sub-mode is active
+      if (selectedModeId !== null) return;
 
-      if (['1', '2', '3', '4', '5'].includes(e.key)) {
+      // Don't intercept if typing in any input or textarea
+      if (
+        document.activeElement?.tagName === 'INPUT' ||
+        document.activeElement?.tagName === 'TEXTAREA' ||
+        document.activeElement === inputRef.current
+      ) {
+        return;
+      }
+
+      if (['1', '2', '3', '4', '5', '6'].includes(e.key)) {
         e.preventDefault();
         const id = parseInt(e.key, 10);
         handleSelectMode(id);
@@ -48,7 +63,7 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [selectedModeId]);
 
   const handleSelectMode = (id: number) => {
     terminalAudio.playKeyClick();
@@ -63,7 +78,7 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
 
     terminalAudio.playEnterSound();
 
-    if (['1', '2', '3', '4', '5'].includes(val)) {
+    if (['1', '2', '3', '4', '5', '6'].includes(val)) {
       const id = parseInt(val, 10);
       handleSelectMode(id);
       setInputVal('');
@@ -80,18 +95,23 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
       setInputVal('');
       return;
     }
-    if (val === 'breakthrough' || val.includes('breakthrough')) {
+    if (val === 'journey' || val.includes('marketing') || val.includes('transformation')) {
       handleSelectMode(3);
       setInputVal('');
       return;
     }
-    if (val === 'journey' || val.includes('marketing') || val.includes('transformation')) {
+    if (val === 'cognitive' || val.includes('logic') || val.includes('profile')) {
       handleSelectMode(4);
       setInputVal('');
       return;
     }
-    if (val === 'certifications' || val.includes('cert')) {
+    if (val === 'behavioral' || val.includes('personality') || val.includes('behavior')) {
       handleSelectMode(5);
+      setInputVal('');
+      return;
+    }
+    if (val === 'certifications' || val.includes('cert')) {
+      handleSelectMode(6);
       setInputVal('');
       return;
     }
@@ -110,12 +130,12 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
     // Unrecognized command
     setCommandLogs(prev => [
       ...prev,
-      { command: inputVal, output: `Unrecognized option '${inputVal}'. Enter a number (1-5) or option title.` }
+      { command: inputVal, output: `Unrecognized option '${inputVal}'. Enter a number (1-6) or option title.` }
     ]);
     setInputVal('');
   };
 
-  // If Mode 1 (Origin Story) is active, render the multi-step OriginStoryTerminal directly
+  // Mode 1 (Origin Story)
   if (selectedModeId === 1) {
     return (
       <OriginStoryTerminal
@@ -125,6 +145,62 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
       />
     );
   }
+
+  // Mode 2 (Career Evolution)
+  if (selectedModeId === 2) {
+    return (
+      <CareerEvolutionTerminal
+        onBackToMenu={() => setSelectedModeId(null)}
+        onRestart={onRestart}
+        onSelectOtherMode={(modeId) => setSelectedModeId(modeId)}
+      />
+    );
+  }
+
+  // Mode 3 (Marketing to AI Transformation Journey)
+  if (selectedModeId === 3) {
+    return (
+      <AITransformationJourneyTerminal
+        onBackToMenu={() => setSelectedModeId(null)}
+        onRestart={onRestart}
+        onSelectOtherMode={(modeId) => setSelectedModeId(modeId)}
+      />
+    );
+  }
+
+  // Mode 4 (Cognitive Profile)
+  if (selectedModeId === 4) {
+    return (
+      <CognitiveProfileTerminal
+        onBackToMenu={() => setSelectedModeId(null)}
+        onRestart={onRestart}
+        onSelectOtherMode={(modeId) => setSelectedModeId(modeId)}
+      />
+    );
+  }
+
+  // Mode 5 (Behavioral Profile)
+  if (selectedModeId === 5) {
+    return (
+      <BehavioralProfileTerminal
+        onBackToMenu={() => setSelectedModeId(null)}
+        onRestart={onRestart}
+        onSelectOtherMode={(modeId) => setSelectedModeId(modeId)}
+      />
+    );
+  }
+
+  // Mode 6 (Certifications)
+  if (selectedModeId === 6) {
+    return (
+      <CertificationsTerminal
+        onBackToMenu={() => setSelectedModeId(null)}
+        onRestart={onRestart}
+        onSelectOtherMode={(modeId) => setSelectedModeId(modeId)}
+      />
+    );
+  }
+
 
   return (
     <div className="flex flex-col justify-between h-full min-h-[460px] font-mono leading-relaxed select-none text-[#ffb000] text-sm sm:text-base md:text-lg">
@@ -141,7 +217,7 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
               <span>Select exploration mode:</span>
             </div>
 
-            {/* 1-5 Mode Options List */}
+            {/* 1-6 Mode Options List */}
             <div className="flex flex-col gap-3 pl-4 sm:pl-6 text-white font-bold">
               {explorationModes.map((mode) => (
                 <div
@@ -173,7 +249,7 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
 
           </div>
         ) : (
-          /* Active Selected Mode Placeholder Display (To be built step-by-step with user) */
+          /* Active Selected Mode Placeholder Display */
           <div className="flex flex-col gap-6 pt-2">
             <div className="flex items-center justify-between border-b border-[#ffb000]/30 pb-3 text-xs tracking-widest text-[#ffb000]/70">
               <span className="text-[#00ff66] font-bold">
@@ -199,7 +275,7 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
             <div className="text-xs text-[#ffb000]/70 flex items-center gap-2">
               <span>Type</span>
               <span className="text-white font-bold border border-[#ffb000]/40 px-1.5 py-0.5 rounded cursor-pointer" onClick={() => setSelectedModeId(null)}>menu</span>
-              <span>or press [1-5] to switch mode.</span>
+              <span>or press [1-6] to switch mode.</span>
             </div>
           </div>
         )}
@@ -218,7 +294,7 @@ export const TerminalSystemExplorer: React.FC<TerminalSystemExplorerProps> = ({ 
               type="text"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
-              placeholder={selectedModeId === null ? "type 1-5 or option name..." : "type 1-5 or 'menu'..."}
+              placeholder={selectedModeId === null ? "type 1-6 or option name..." : "type 1-6 or 'menu'..."}
               className="w-full bg-transparent border-none outline-none font-mono text-sm sm:text-base text-[#ffb000] placeholder:text-[#ffb000]/30"
               autoFocus
             />

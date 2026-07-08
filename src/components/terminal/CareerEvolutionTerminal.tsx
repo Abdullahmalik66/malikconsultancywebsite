@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { terminalAudio } from '../../lib/terminalAudio';
 
-interface OriginStoryTerminalProps {
+interface CareerEvolutionTerminalProps {
   onBackToMenu: () => void;
   onRestart: () => void;
   onSelectOtherMode: (modeId: number) => void;
@@ -16,384 +16,304 @@ interface StepContent {
   };
   title: string;
   lines: string[];
-  question: string;
 }
 
-const originStepsData: StepContent[] = [
+const careerStepsData: StepContent[] = [
   {
     step: 0,
-    title: '[ORIGIN STORY]',
+    title: '[CAREER EVOLUTION]',
     lines: [
-      'It didn’t start with AI.',
+      'Nothing about this career was planned.',
       '',
-      'It started with a screen,',
-      'and a lot of unanswered questions.',
+      'It started with curiosity.',
+      'And doing whatever worked.',
       '',
-      'Back in Lahore,',
-      'there was no roadmap, no network, no shortcuts.',
+      'No titles.',
+      'No clear path.',
       '',
-      'Just curiosity,',
-      'and the need to figure things out myself.',
-      '',
-      'So I started building.',
-      '',
-      'Content. Campaigns. SEO.',
-      'Not because I had a strategy—',
-      'but because it was the only way forward.',
-      '',
-      'Every small win was hard-earned.',
-      'Every mistake forced me to think differently.',
-      '',
-      'That phase didn’t just teach me marketing.',
-      '',
-      'It built something deeper:',
-      'how to learn fast,',
-      'adapt faster,',
-      'and move without waiting for permission.'
-    ],
-    question: 'Was this just about survival,\nor was I unknowingly building something bigger?'
+      'Just momentum.'
+    ]
   },
   {
     step: 1,
     headerMeta: {
       processingText: 'System processing...',
-      detectingText: 'Detecting next phase...',
-      transitionText: '→ Transition: local → global'
+      detectingText: 'Detecting early phase...',
+      transitionText: '→ Learning → Execution → Survival'
     },
-    title: '[THE FIRST SHIFT]',
+    title: '[THE BEGINNING]',
     lines: [
-      'At some point, building wasn’t enough.',
+      'It started at Askaticket.',
       '',
-      'I needed a bigger arena.',
+      'Learning SEO.',
+      'Writing content.',
+      'Figuring out how the internet actually works.',
       '',
-      'So I left.',
+      'No shortcuts.',
+      'Just trial and error.',
       '',
-      'New country.',
-      'New system.',
-      'Zero familiarity.',
+      'Then came MobiWac.',
       '',
-      'Everything reset.',
+      'Digital marketing.',
+      'Real responsibility.',
       '',
-      'Comfort disappeared.',
-      'Uncertainty became the default.',
+      'In two years,',
+      'I moved into a manager role.',
       '',
-      'But that’s where things changed.',
+      'Not by design.',
+      'But by necessity.',
       '',
-      'I stopped thinking like a marketer.',
+      'Managing teams.',
+      'Running campaigns.',
+      'Handling clients.',
       '',
-      'And started thinking like a system builder.',
+      'At the same time,',
+      'doing freelance and gig work.',
       '',
-      'Campaigns became data.',
-      'Data became decisions.',
-      'Decisions became growth.',
+      'Learning faster than any structured job could offer.',
       '',
-      'That shift changed everything.',
+      'This phase was raw.',
       '',
-      'What started as execution...',
-      'was turning into something deeper.'
-    ],
-    question: 'Was I still building campaigns—\nor was I starting to build systems that scale?'
+      'Messy.',
+      'Fast.',
+      'Unfiltered.',
+      '',
+      'But it built the foundation.'
+    ]
   },
   {
     step: 2,
     headerMeta: {
       processingText: 'System processing...',
-      detectingText: 'Detecting pattern...',
-      transitionText: '→ Service → Product → System'
+      detectingText: 'Detecting transition...',
+      transitionText: '→ Local → Global'
     },
-    title: '[THE NEXT SHIFT]',
+    title: '[THE SHIFT TO EUROPE]',
     lines: [
-      'At some point, I realised something.',
+      'Then I moved to Finland.',
       '',
-      'Services don’t scale.',
-      'Systems do.',
+      'New country.',
+      'New system.',
+      'New expectations.',
       '',
-      'Up until then,',
-      'I was solving problems one campaign at a time.',
+      'Master’s in Marketing.',
       '',
-      'Good results.',
-      'Real impact.',
-      'But always starting from zero.',
+      'And the real shift started here.',
       '',
-      'So I changed the approach.',
+      'At QuietOn.',
       '',
-      'Instead of doing more work—',
-      'I started designing repeatable systems.',
+      'Digital Marketing Manager.',
       '',
-      'Playbooks.',
-      'Frameworks.',
-      'Growth engines.',
+      'But this was different.',
       '',
-      'This was the beginning of something bigger.',
+      'Presales marketing.',
+      'Data-driven personas.',
       '',
-      'Not just executing tasks,',
-      'but turning knowledge into assets.',
+      'Collecting data from multiple sources.',
+      'Extracting features.',
+      'Understanding patterns.',
       '',
-      'That’s when things accelerated.',
+      'Not guessing audiences.',
+      'Designing them.',
       '',
-      'Because once you productise thinking,',
-      'you don’t just deliver results—',
+      'Then building campaigns on top of that.',
       '',
-      'you build something that compounds.'
-    ],
-    question: 'Was this still marketing—\nor had I already crossed into something else?'
+      'This was the first time',
+      'marketing became analytical.',
+      '',
+      'Structured.',
+      'Intentional.'
+    ]
   },
   {
     step: 3,
     headerMeta: {
       processingText: 'System processing...',
-      detectingText: 'Detecting evolution...',
-      transitionText: '→ Marketing → Data → Intelligence'
+      detectingText: 'Detecting scale...',
+      transitionText: '→ Markets → Platforms → Complexity'
     },
-    title: '[THE REAL TURNING POINT]',
+    title: '[WORKING ACROSS MARKETS]',
     lines: [
-      'At first, it all looked like growth.',
+      'Then came Azerion.',
       '',
-      'Better campaigns.',
-      'Bigger clients.',
-      'Stronger results.',
+      'Working with Portugal and Nordic markets.',
       '',
-      'But something felt off.',
+      'Partner ecosystem:',
+      'Microsoft Bing.',
+      'Yahoo.',
+      'Gemini.',
       '',
-      'More performance didn’t mean more control.',
+      'Different markets.',
+      'Different behaviour.',
+      'Same objective.',
       '',
-      'More tools didn’t mean more clarity.',
+      'Performance at scale.',
       '',
-      'Everything was getting faster…',
-      'but not necessarily smarter.',
+      'Learning how platforms,',
+      'data,',
+      'and distribution actually connect.',
       '',
-      'That’s when it clicked.',
+      'This is where complexity increased.',
       '',
-      'The problem wasn’t marketing.',
-      '',
-      'The problem was how decisions were made.',
-      '',
-      'So I went deeper.',
-      '',
-      'Into data.',
-      'Into systems.',
-      'Into how businesses actually operate under the surface.',
-      '',
-      'And that’s where everything changed.',
-      '',
-      'Because once you understand the system,',
-      'you don’t just optimise campaigns.',
-      '',
-      'You reshape how the entire machine works.'
-    ],
-    question: 'Was this still growth marketing,\nor was I stepping into something far more complex?'
+      'And thinking had to level up.'
+    ]
   },
   {
     step: 4,
     headerMeta: {
       processingText: 'System processing...',
-      detectingText: 'Detecting phase...',
-      transitionText: '→ Intelligence → AI → Transformation'
+      detectingText: 'Detecting evolution...',
+      transitionText: '→ Execution → Productisation'
     },
-    title: '[THE SHIFT TO AI]',
+    title: '[BUILDING SYSTEMS]',
     lines: [
-      'At some point, everything started pointing in one direction.',
+      'Then at Adpro,',
+      'everything changed.',
       '',
-      'Data was no longer enough.',
+      'This is where productisation started.',
       '',
-      'Dashboards explained the past.',
-      'But they didn’t drive decisions.',
+      'Turning services into repeatable systems.',
       '',
-      'And businesses didn’t need more reports.',
-      'They needed systems that could think.',
+      'Growth hacking mindset.',
       '',
-      'That’s when AI stopped being interesting—',
-      'and became necessary.',
+      'Not just running campaigns,',
+      'but designing growth engines.',
       '',
-      'So I leaned in.',
+      'Building digital marketing as a function.',
       '',
-      'Not as a trend.',
-      'But as the next logical step.',
+      'Not tasks.',
+      'Not campaigns.',
       '',
-      'From analysing data',
-      'to building systems that act on it.',
+      'A system.',
       '',
-      'From insights',
-      'to intelligence.',
-      '',
-      'From manual decisions',
-      'to automated reasoning.',
-      '',
-      'This wasn’t a pivot.',
-      '',
-      'It was an evolution.',
-      '',
-      'Everything I had built before',
-      'finally connected.'
-    ],
-    question: 'Was I just using AI—\n\nor was I starting to build systems\nthat could run parts of a business on their own?'
+      'That can run,',
+      'scale,',
+      'and evolve.'
+    ]
   },
   {
     step: 5,
     headerMeta: {
       processingText: 'System processing...',
-      detectingText: 'Detecting external impact...',
-      transitionText: '→ Internet → AI → LLM revolution'
+      detectingText: 'Detecting alignment...',
+      transitionText: '→ Marketing → Sales → Customer Success'
     },
-    title: '[THE INFLECTION POINT]',
+    title: '[CONNECTING THE FUNNEL]',
     lines: [
-      'Then something changed globally.',
+      'At Revieve,',
+      'the focus shifted again.',
       '',
-      'ChatGPT happened.',
+      'ABM marketing.',
+      'B2B2C model.',
       '',
-      'LLMs entered the mainstream.',
+      'Now it wasn’t just marketing.',
       '',
-      'Suddenly, AI was not just for labs or hype decks.',
+      'It was alignment.',
       '',
-      'It was usable.',
-      'Accessible.',
-      'Practical.',
+      'Marketing.',
+      'Sales.',
+      'Customer success.',
       '',
-      'Everyone could see it.',
+      'Working as one system.',
       '',
-      'But most people still didn’t understand it.',
+      'Understanding the full journey.',
       '',
-      'They saw outputs.',
-      'I saw systems.',
+      'Not just acquisition.',
       '',
-      'They saw prompts.',
-      'I saw workflows.',
+      'But how revenue actually happens.',
       '',
-      'They saw tools.',
-      'I saw architecture.',
-      '',
-      'That moment mattered.',
-      '',
-      'Because for the first time,',
-      'the gap between idea and execution disappeared.',
-      '',
-      'You could build faster than ever.',
-      '',
-      'But only if you knew what you were building.',
-      '',
-      'That’s when everything accelerated again.',
-      '',
-      'Not just learning AI.',
-      '',
-      'But designing how AI fits into real business systems.'
-    ],
-    question: 'Was this just another technology wave—\nor was this the moment everything I learned finally made sense?'
+      'This is where business understanding deepened.'
+    ]
   },
   {
     step: 6,
     headerMeta: {
       processingText: 'System processing...',
-      detectingText: 'Detecting applied intelligence...',
-      transitionText: '→ POC → Enterprise adoption → LLM systems'
+      detectingText: 'Detecting transformation...',
+      transitionText: '→ Data → Architecture → AI'
     },
-    title: '[FROM THEORY TO REAL SYSTEMS]',
+    title: '[THE DATA & AI SHIFT]',
     lines: [
-      'That’s when it moved from idea to execution.',
+      'At Avaus,',
+      'everything connected.',
       '',
-      'While working with Avaus,',
-      'we didn’t just talk about Generative AI.',
-      '',
-      'We built it.',
-      '',
-      'Early proofs of concept.',
-      'Real use cases.',
-      'Real constraints.',
-      '',
-      'Not demos.',
-      'Not experiments that sit on slides.',
-      '',
-      'Actual systems trying to solve complex problems.',
-      '',
-      'This is where LLMs became practical.',
-      '',
-      'We started building:',
-      '→ Retrieval-based systems',
-      '→ Context-aware assistants',
-      '→ Early RAG pipelines',
-      '',
-      'Not perfect.',
-      'But real enough to test what works.',
-      '',
-      'And more importantly,',
-      'what doesn’t.',
-      '',
-      'We helped companies understand something critical.',
-      '',
-      'AI is easy to demo.',
-      'But hard to implement properly.',
-      '',
-      'Because the real challenge isn’t the model.',
-      '',
-      'It’s the system around it.',
-      '',
-      'Data quality.',
-      'Context design.',
+      'Marketing.',
+      'Data.',
       'Architecture.',
-      'Business fit.',
       '',
-      'That phase changed everything again.',
+      'Bridging activation and data teams.',
       '',
-      'Because now it wasn’t theory anymore.',
+      'Building systems that connect both.',
       '',
-      'It was execution under pressure.'
-    ],
-    question: 'Was I still exploring AI—\n\nor was I already building the foundation\nof enterprise-grade AI systems?'
+      'Then came Generative AI.',
+      '',
+      'Not as theory.',
+      '',
+      'But as real products.',
+      '',
+      'Building Finland’s early POCs in GenAI.',
+      '',
+      'Companies like:',
+      'Vaisala',
+      'VTT Technical Research Centre of Finland',
+      'Pirelli Tyres',
+      '',
+      'Working on real use cases.',
+      '',
+      'RAG systems.',
+      'LLM pipelines.',
+      'Business problem solving.',
+      '',
+      'This is where the shift happened.',
+      '',
+      'From marketing,',
+      'to data,',
+      'to AI systems.'
+    ]
   },
   {
     step: 7,
     headerMeta: {
       processingText: 'System processing...',
-      detectingText: 'Running final synthesis...',
-      transitionText: '→ Journey → Pattern → Mission'
+      detectingText: 'Detecting current phase...',
+      transitionText: '→ AI → Agents → Enterprise scale'
     },
-    title: '[FINAL STATE]',
+    title: '[CURRENT STATE]',
     lines: [
-      'Looking back,',
-      'nothing was random.',
+      'Now at VTT.',
       '',
-      'From marketing,',
-      'to data,',
-      'to AI.',
+      'The focus is different.',
       '',
-      'From execution,',
-      'to systems,',
-      'to agents.',
+      'Production-grade AI.',
       '',
-      'Every step was building on the last one.',
+      'Building AI agents.',
       '',
-      'Not chasing trends.',
-      'Not jumping roles.',
+      'First SDR agent in Salesforce.',
       '',
-      'Just following one core idea:',
+      'Working with Agentforce.',
       '',
-      'How do you turn complexity',
-      'into something that actually works?',
+      'Enhancing copilots.',
+      'Running AI trainings.',
       '',
-      'Today, that question defines everything I do.',
+      'Leading innovation.',
       '',
-      'Designing AI systems,',
-      'that don’t just generate output—',
+      'Now operating inside',
+      'an AI Center of Excellence.',
       '',
-      'but drive real decisions,',
-      'real actions,',
-      'real business impact.',
+      'This is no longer experimentation.',
       '',
-      'And this is not the end.',
-      '',
-      'It’s just the current state of the system.'
-    ],
-    question: 'Because the question still remains.\n\nHow far can AI actually go inside a business?\n\nAnd more importantly—\n\nwhat kind of systems are we going to build next?'
+      'This is enterprise AI.'
+    ]
   }
 ];
 
-export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
+export const CareerEvolutionTerminal: React.FC<CareerEvolutionTerminalProps> = ({
   onBackToMenu,
   onRestart,
   onSelectOtherMode
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [typedLines, setTypedLines] = useState<string[]>([]);
-  const [typedQuestion, setTypedQuestion] = useState<string>('');
   const [isTyping, setIsTyping] = useState<boolean>(true);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [inputVal, setInputVal] = useState<string>('');
@@ -401,7 +321,7 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const activeStepData = originStepsData[currentStep];
+  const activeStepData = careerStepsData[currentStep];
 
   // Character-by-character typewriter loop synchronized 1:1 with audio clicks
   useEffect(() => {
@@ -409,65 +329,43 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
 
     setIsTyping(true);
     setTypedLines([]);
-    setTypedQuestion('');
 
     let lineIndex = 0;
     let charIndex = 0;
-    let isQuestionPhase = false;
     let currentLineList: string[] = [];
-    let currentQuestionStr = '';
 
     const interval = setInterval(() => {
-      if (!isQuestionPhase) {
-        // Typing body lines
-        if (lineIndex < activeStepData.lines.length) {
-          const targetLine = activeStepData.lines[lineIndex];
+      if (lineIndex < activeStepData.lines.length) {
+        const targetLine = activeStepData.lines[lineIndex];
 
-          if (targetLine === '') {
-            currentLineList = [...currentLineList, ''];
-            setTypedLines([...currentLineList]);
-            lineIndex++;
-            charIndex = 0;
-          } else {
-            charIndex++;
-            const partial = targetLine.slice(0, charIndex);
-            
-            const copy = [...currentLineList];
-            copy[lineIndex] = partial;
-            currentLineList = copy;
-            setTypedLines([...copy]);
-
-            const typedChar = targetLine[charIndex - 1];
-            if (typedChar && typedChar !== ' ' && charIndex % 2 === 0) {
-              terminalAudio.playKeyClick();
-            }
-
-            if (charIndex >= targetLine.length) {
-              lineIndex++;
-              charIndex = 0;
-            }
-          }
-        } else {
-          isQuestionPhase = true;
+        if (targetLine === '') {
+          currentLineList = [...currentLineList, ''];
+          setTypedLines([...currentLineList]);
+          lineIndex++;
           charIndex = 0;
-        }
-      } else {
-        // Typing question box
-        const targetQ = activeStepData.question;
-        if (charIndex < targetQ.length) {
+        } else {
           charIndex++;
-          currentQuestionStr = targetQ.slice(0, charIndex);
-          setTypedQuestion(currentQuestionStr);
+          const partial = targetLine.slice(0, charIndex);
+          
+          const copy = [...currentLineList];
+          copy[lineIndex] = partial;
+          currentLineList = copy;
+          setTypedLines([...copy]);
 
-          const typedChar = targetQ[charIndex - 1];
-          if (typedChar && typedChar !== ' ' && typedChar !== '\n' && charIndex % 2 === 0) {
+          const typedChar = targetLine[charIndex - 1];
+          if (typedChar && typedChar !== ' ' && charIndex % 2 === 0) {
             terminalAudio.playKeyClick();
           }
-        } else {
-          setIsTyping(false);
-          terminalAudio.playBootBeep();
-          clearInterval(interval);
+
+          if (charIndex >= targetLine.length) {
+            lineIndex++;
+            charIndex = 0;
+          }
         }
+      } else {
+        setIsTyping(false);
+        terminalAudio.playBootBeep();
+        clearInterval(interval);
       }
     }, 24);
 
@@ -488,7 +386,6 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
     if (isTyping && activeStepData) {
       // Instant reveal current step text
       setTypedLines([...activeStepData.lines]);
-      setTypedQuestion(activeStepData.question);
       setIsTyping(false);
       terminalAudio.playKeyClick();
       return;
@@ -588,8 +485,8 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
       return;
     }
 
-    if (val === '1' || val === 'career') {
-      onSelectOtherMode(2);
+    if (val === '1' || val === 'origin') {
+      onSelectOtherMode(1);
       setInputVal('');
       return;
     }
@@ -613,7 +510,6 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
       setInputVal('');
       return;
     }
-
     setInputVal('');
   };
 
@@ -624,7 +520,7 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
       <div className="flex items-center justify-between border-b border-[#ffb000]/30 pb-3 text-xs tracking-widest text-[#ffb000]/70">
         <div className="flex items-center gap-2">
           <span className="text-[#00ff66] font-bold">
-            PATH: ORIGIN_STORY // STEP_0{Math.min(currentStep, 7)}/07
+            PATH: CAREER_EVOLUTION // STEP_0{Math.min(currentStep, 7)}/07
           </span>
           <span className="hidden sm:inline text-[#ffb000]/40">|</span>
           <span className="hidden sm:inline text-[#ffb000]/60">
@@ -639,7 +535,7 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
         </button>
       </div>
 
-      {/* Clean Screen Display Viewport (Clean Step-by-Step, No Infinite Scroll) */}
+      {/* Clean Screen Display Viewport */}
       <div className="flex-1 py-4 flex flex-col justify-start">
         
         {/* Render ACTIVE current step cleanly */}
@@ -667,7 +563,7 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
             {/* Synchronized typewriter lines */}
             <div className="flex flex-col gap-1 text-white/95 font-normal">
               {typedLines.map((line, lineIdx) => {
-                const isCurrentLine = lineIdx === typedLines.length - 1 && isTyping && typedQuestion === '';
+                const isCurrentLine = lineIdx === typedLines.length - 1 && isTyping;
 
                 return (
                   <div key={lineIdx} className={line === '' ? 'h-3' : 'min-h-[1.2em]'}>
@@ -679,16 +575,6 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
                 );
               })}
             </div>
-
-            {/* Question box */}
-            {typedQuestion !== '' && (
-              <div className="pt-3 text-[#ffb000] font-medium whitespace-pre-line border-l-2 border-[#ffb000]/50 pl-4 py-1 my-2 bg-black/40">
-                {typedQuestion}
-                {isTyping && (
-                  <span className="inline-block w-2 h-5 bg-[#ffb000] ml-1 animate-pulse" />
-                )}
-              </div>
-            )}
 
             {/* Prompt helper ribbon */}
             {!isTyping && (
@@ -711,7 +597,7 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
           </div>
         )}
 
-        {/* FINAL END OF ORIGIN STORY DISPLAY */}
+        {/* FINAL END OF CAREER EVOLUTION DISPLAY */}
         {currentStep === 8 && !isProcessing && (
           <div className="flex flex-col gap-5 pt-2">
             <div className="text-[#ffb000]/80 font-bold">&gt; continue</div>
@@ -721,12 +607,11 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
             </div>
 
             <div className="text-[#00ff66] font-bold text-lg sm:text-xl">
-              {"\u003E\u003E\u003E"} End of Origin Story
+              {"\u003E\u003E\u003E"} End of Career Evolution
             </div>
 
             <div className="text-white font-normal space-y-1">
               <div>Path completed successfully.</div>
-              <div>You can restart the system, connect with me, or continue exploring the journey.</div>
             </div>
 
             <div className="text-[#ffb000] font-bold pt-2">
@@ -736,7 +621,7 @@ export const OriginStoryTerminal: React.FC<OriginStoryTerminalProps> = ({
             <div className="pt-2 text-white/90 space-y-2">
               <div className="text-[#00ff66] font-bold">If explore:</div>
               <div className="pl-4 space-y-1 font-bold">
-                <div>1. Career Evolution</div>
+                <div>1. Origin Story</div>
                 <div>2. From Marketing to AI Transformation Journey</div>
                 <div>3. Cognitive Profile</div>
                 <div>4. Behavioral Profile</div>
