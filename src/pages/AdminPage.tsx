@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { useAuth } from "../lib/firebase/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { LogOut, ShieldCheck, Database, FolderGit2, Cpu, Settings, FileText, Plus, Layout } from "lucide-react";
+import { LogOut, ShieldCheck, Database, FolderGit2, Cpu, Settings, FileText, Plus, Layout, Globe } from "lucide-react";
 import ContentList from "../components/admin/ContentList";
 import AdminContentEditor from "../components/admin/AdminContentEditor";
 import CardBuilder from "../components/admin/CardBuilder";
 import ClientShowcaseManager from "../components/admin/ClientShowcaseManager";
+import SeoWorkspace from "../components/admin/SeoWorkspace";
 import { ContentItem } from "../lib/firebase/cms";
 
-type Tab = 'dashboard' | 'content' | 'editor' | 'cards' | 'showcase';
+type Tab = 'dashboard' | 'content' | 'editor' | 'cards' | 'showcase' | 'seo';
 
 export default function AdminPage() {
   const { currentUser, signOutUser } = useAuth();
@@ -118,6 +119,15 @@ export default function AdminPage() {
               }`}
             >
               <FolderGit2 className="w-4 h-4" /> Client Showcase
+            </button>
+
+            <button
+              onClick={() => setActiveTab('seo')}
+              className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${
+                activeTab === 'seo' ? 'bg-m3-surface-container-high text-m3-on-surface shadow-sm border border-m3-outline/10' : 'text-m3-on-surface/50 hover:bg-m3-surface-container'
+              }`}
+            >
+              <Globe className="w-4 h-4" /> SEO Workspace
             </button>
           </div>
         </motion.div>
@@ -228,6 +238,17 @@ export default function AdminPage() {
               exit={{ opacity: 0, y: -15 }}
             >
               <ClientShowcaseManager />
+            </motion.div>
+          )}
+
+          {activeTab === 'seo' && (
+            <motion.div
+              key="seo"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+            >
+              <SeoWorkspace />
             </motion.div>
           )}
         </AnimatePresence>

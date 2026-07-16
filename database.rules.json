@@ -37,6 +37,10 @@
     "clientShowcase2Logos": {
       ".read": true,
       ".write": "auth != null"
+    },
+    "seo": {
+      ".read": true,
+      ".write": "auth != null"
     }
   }
 }

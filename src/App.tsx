@@ -39,6 +39,8 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './lib/firebase/AuthContext';
 import { ThemeProvider } from './lib/ThemeProvider';
 import { HelmetProvider } from 'react-helmet-async';
+import SEORenderer from './components/seo/SEORenderer';
+
 
 function HomePage() {
   return (
@@ -68,6 +70,7 @@ function AppContent() {
 
   return (
     <main className="relative min-h-screen bg-m3-surface transition-colors duration-300">
+      <SEORenderer />
       {!isCleanLayout && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
