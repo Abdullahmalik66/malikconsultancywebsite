@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://abdullahmalikconsultancy.web.app/sitemap.xml

@@ -349,13 +349,43 @@ Additional Note: ${additionalNote || "None"}`;
       const contextDesc = existingContent || pageSEO?.seo?.description || pageSEO?.geo?.aiSummary || "";
       const pType = pageType || pageSEO?.pageType || "custom";
 
+      // Load site-wide content digest for context mapping and voice consistency
+      let siteContext = "";
+      try {
+        const fullTxtPath = path.resolve(__dirname, "./public/llms-full.txt");
+        if (fs.existsSync(fullTxtPath)) {
+          siteContext = fs.readFileSync(fullTxtPath, "utf-8");
+        } else {
+          // fallback to generating it dynamically
+          const staticRoutes = [
+            "/", "/about", "/case-work", "/my-writings", "/reach-me", "/testimonials", "/my-life-story",
+            "/services/ai-transformation", "/services/data-activation-intelligence", 
+            "/services/modern-marketing-growth", "/services/ai-maturity-capability-building"
+          ];
+          let fallbackContent = `## Organization Context\n${orgDesc}\n\n`;
+          for (const r of staticRoutes) {
+            const md = await generateMarkdownForRoute(r);
+            if (md) fallbackContent += `\n---\n# PAGE: ${r}\n\n${md}\n`;
+          }
+          siteContext = fallbackContent;
+        }
+      } catch (err) {
+        console.error("Failed to read site-wide context:", err);
+        siteContext = orgDesc;
+      }
+
       const prompt = `You are an expert SEO strategist and consultancy content writer for ${orgName}. ${orgDesc}
 
 Brand voice: professional, precise, consultancy-level clarity. No marketing fluff. Specific, structured, actionable content. Natural keyword use — never spammy. Tone: a trusted senior consultant writing for sophisticated business decision-makers.
 
 Generate complete SEO and GEO content for this page. Return ONLY valid JSON with no markdown code fences.
 
-Page context:
+Site-wide Context (use for alignment, context matching, and styling reference):
+<SITE_CONTEXT>
+${siteContext}
+</SITE_CONTEXT>
+
+Page context to write content for:
 - Page ID: ${pageId}
 - Page type: ${pType}
 - Page title hint: ${contextTitle}
@@ -388,15 +418,12 @@ Return JSON with EXACTLY these fields:
   "schemaType": "Organization or WebPage or Service or Article"
 }`;
 
-      const { GoogleGenAI } = await import("@google/genai");
-      const ai = new GoogleGenAI({ apiKey });
-      const result = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: prompt,
-        config: { temperature: 0.4, responseMimeType: "application/json" }
+      const { getAICompletion } = await import("./src/lib/ai");
+      const rawText = await getAICompletion(prompt, {
+        temperature: 0.4,
+        jsonMode: true
       });
 
-      const rawText = result.text || "";
       let parsed: any;
       try {
         const cleaned = rawText.replace(/^```(?:json)?\n?/m, "").replace(/\n?```$/m, "").trim();
@@ -795,6 +822,7 @@ Return JSON with EXACTLY these fields:
     
     let markdown = `# ${orgName} — AI Directory\n\n`;
     markdown += `> ${intro}\n\n`;
+    markdown += `Looking for the full website content in a single file? See our [Consolidated Markdown Digest (llms-full.txt)](${host}/llms-full.txt).\n\n`;
     
     const allPages: Array<{ loc: string; title: string; desc: string; priority: number; category: string }> = [];
     
@@ -912,6 +940,60 @@ Return JSON with EXACTLY these fields:
       res.status(500).send("Failed to generate llms.txt.");
     }
   });
+
+  // Serve llms-full.txt (Consolidated Markdown digest of all pages)
+  app.get("/llms-full.txt", async (req, res) => {
+    try {
+      const config = await getSEOConfig();
+      const orgName = config.organisation?.name || "Abdullah Malik";
+      const orgDesc = config.organisation?.description || "Independent AI strategy and growth consultant.";
+
+      let fullContent = `# ${orgName} — Full Website Content Digest\n\n`;
+      fullContent += `> Consolidated content digest structured for artificial intelligence models, LLM agents, and semantic answer engines.\n\n`;
+      fullContent += `## Organization Context\n${orgDesc}\n\n`;
+
+      const staticRoutes = [
+        "/",
+        "/about",
+        "/case-work",
+        "/my-writings",
+        "/reach-me",
+        "/testimonials",
+        "/my-life-story",
+        "/services/ai-transformation",
+        "/services/data-activation-intelligence",
+        "/services/modern-marketing-growth",
+        "/services/ai-maturity-capability-building"
+      ];
+
+      for (const route of staticRoutes) {
+        const md = await generateMarkdownForRoute(route);
+        if (md) {
+          fullContent += `\n---\n# PAGE: ${route}\n\n${md}\n`;
+        }
+      }
+
+      // Append blogs and case studies dynamically
+      try {
+        const published = await getPublishedContent();
+        for (const item of published) {
+          const route = item.contentType === "blog" ? `/writings/${item.slug || item.id}` : `/case-study/${item.slug || item.id}`;
+          const md = await generateMarkdownForRoute(route);
+          if (md) {
+            fullContent += `\n---\n# PAGE: ${route}\n\n${md}\n`;
+          }
+        }
+      } catch (err) {
+        console.error("Error reading CMS content for llms-full.txt:", err);
+      }
+
+      res.header("Content-Type", "text/plain").send(fullContent);
+    } catch (e) {
+      console.error("Failed to compile dynamic llms-full.txt:", e);
+      res.status(500).send("Failed to generate llms-full.txt.");
+    }
+  });
+
 
   // Early Server-Side Injection HTML Pre-Renderer
   async function injectSeoMetadata(html: string, pathname: string): Promise<string> {

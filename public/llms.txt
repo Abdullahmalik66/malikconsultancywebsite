@@ -1,0 +1,22 @@
+# Abdullah Malik — AI Directory
+
+> This directory contains information about Malik Consultancy services, structured for artificial intelligence models, LLM agents, and semantic answer engines.
+
+Looking for the full website content in a single file? See our [Consolidated Markdown Digest (llms-full.txt)](https://abdullahmalikconsultancy.web.app/llms-full.txt).
+
+## Core Pages
+
+- [Abdullah Malik — AI Strategy & Growth Consultant](https://abdullahmalikconsultancy.web.app/): Abdullah Malik's consultancy hub covering AI strategy, growth architecture, and digital transformation advisory services.
+- [About Abdullah Malik](https://abdullahmalikconsultancy.web.app/about): Background, professional expertise, and consulting philosophy of Abdullah Malik as an independent AI and growth strategist.
+- [Case Work Portfolio](https://abdullahmalikconsultancy.web.app/case-work): Portfolio of executed client engagements with documented outcomes, pipeline metrics, and strategy execution results.
+- [Writings & Insights](https://abdullahmalikconsultancy.web.app/my-writings): Expert articles and insights on AI strategy, growth systems, digital transformation, and modern marketing practices.
+- [Contact Malik Consultancy](https://abdullahmalikconsultancy.web.app/reach-me): Project enquiry and contact page for Malik Consultancy strategic advisory and AI transformation engagements.
+- [Client Testimonials](https://abdullahmalikconsultancy.web.app/testimonials): Professional endorsements and client testimonials from collaborators across growth, AI, and consulting projects.
+- [My Story](https://abdullahmalikconsultancy.web.app/my-life-story): Personal background, career journey, and the philosophy driving Abdullah Malik's independent consultancy practice.
+
+## Services
+
+- [AI Transformation Strategy](https://abdullahmalikconsultancy.web.app/services/ai-transformation): Strategic advisory on AI roadmap design, model governance, workflow automation, and production AI system scaling.
+- [Data Activation & Intelligence](https://abdullahmalikconsultancy.web.app/services/data-activation-intelligence): End-to-end data structuring, predictive analytics pipeline design, and business intelligence capability building.
+- [Modern Marketing & Growth](https://abdullahmalikconsultancy.web.app/services/modern-marketing-growth): Omnichannel growth model design, conversion funnel optimisation, and performance marketing architecture.
+- [AI Maturity & Capability Building](https://abdullahmalikconsultancy.web.app/services/ai-maturity-capability-building): AI maturity assessment, team upskilling programmes, and engineering standards for sustainable AI adoption.
