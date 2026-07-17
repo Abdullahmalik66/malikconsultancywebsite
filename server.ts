@@ -374,7 +374,44 @@ Additional Note: ${additionalNote || "None"}`;
         siteContext = orgDesc;
       }
 
-      const prompt = `You are an expert SEO strategist and consultancy content writer for ${orgName}. ${orgDesc}
+      const targetField = req.body.targetField;
+      let prompt = "";
+      if (targetField) {
+        prompt = `You are an expert SEO strategist and consultancy content writer for ${orgName}. ${orgDesc}
+
+Brand voice: professional, precise, consultancy-level clarity. No marketing fluff. Specific, structured, actionable content. Natural keyword use — never spammy. Tone: a trusted senior consultant writing for sophisticated business decision-makers.
+
+Generate ONLY the value for the field "${targetField}" for this page. Return ONLY valid JSON with no markdown code fences, structured like:
+{
+  "${targetField}": "your generated value"
+}
+
+Site-wide Context (use for alignment, context matching, and styling reference):
+<SITE_CONTEXT>
+${siteContext}
+</SITE_CONTEXT>
+
+Page context to write content for:
+- Page ID: ${pageId}
+- Page type: ${pType}
+- Page title hint: ${contextTitle}
+- Existing content: ${contextDesc || "Not yet configured"}
+- Site URL: ${host}
+- Organisation: ${orgName}
+
+Field descriptions:
+- seoTitle: 50-60 chars, includes primary keyword, no keyword stuffing
+- metaDescription: 120-160 chars, specific and action-oriented, includes primary keyword once
+- primaryKeyword: single most important search keyword for this page
+- aiSummary: 2-3 factual sentences describing what this page covers and why it matters to AI agents and answer engines
+- pagePurpose: 1 sentence: what specific problem or need does this page solve
+- llmsDescription: 1 factual line for llms.txt directory, max 25 words, describes what the page covers
+- markdownTitleOverride: clean title without brand suffix, suitable for AI-readable markdown heading
+- markdownSummary: 1-2 sentence factual summary for AI agent endpoints
+- curatedExplanation: FAQ in markdown format (### Q: Question?\\nA: Answer.) — only for service/about pages; empty string for others
+`;
+      } else {
+        prompt = `You are an expert SEO strategist and consultancy content writer for ${orgName}. ${orgDesc}
 
 Brand voice: professional, precise, consultancy-level clarity. No marketing fluff. Specific, structured, actionable content. Natural keyword use — never spammy. Tone: a trusted senior consultant writing for sophisticated business decision-makers.
 
@@ -417,10 +454,11 @@ Return JSON with EXACTLY these fields:
   "llmsDescription": "1 factual line for llms.txt directory, max 25 words, describes what the page covers",
   "schemaType": "Organization or WebPage or Service or Article"
 }`;
+      }
 
       const { getAICompletion } = await import("./src/lib/ai");
       const rawText = await getAICompletion(prompt, {
-        temperature: 0.4,
+        temperature: 0.85,
         jsonMode: true
       });
 

@@ -54,6 +54,8 @@ export default function SeoWorkspace() {
   // AI content generation state
   const [generatingAI, setGeneratingAI] = useState(false);
   const [aiToast, setAiToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [generatingField, setGeneratingField] = useState<string | null>(null);
+
 
   // Load all configurations
   const loadAllData = async () => {
@@ -132,9 +134,9 @@ export default function SeoWorkspace() {
 
   // Sync selected page
   useEffect(() => {
-    if (!seoConfig || !seoConfig.pages) return;
+    if (!seoConfig) return;
     const activePageKey = sanitizeKey(selectedPageId);
-    const activePage = seoConfig.pages[activePageKey];
+    const activePage = seoConfig.pages ? seoConfig.pages[activePageKey] : null;
     if (activePage) {
       setEditingPage(activePage);
     } else {
@@ -796,6 +798,55 @@ export default function SeoWorkspace() {
       setGeneratingAI(false);
     }
   };
+
+  const handleAutoGenerateField = async (section: 'seo' | 'geo', field: string, apiFieldName: string) => {
+    if (!selectedPageId || !editingPage) return;
+    setGeneratingField(field);
+    setAiToast(null);
+    try {
+      const pageTitle = editingPage.seo?.title || editingPage.geo?.markdownTitleOverride || selectedPageId.replace(/[_-]/g, ' ');
+      const existingContent = editingPage.seo?.description || editingPage.geo?.aiSummary || '';
+      
+      const response = await fetch('/api/seo/auto-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pageId: selectedPageId,
+          pageType: editingPage.pageType,
+          pageTitle,
+          existingContent,
+          targetField: apiFieldName
+        })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.generated) {
+        throw new Error(data.error || 'Field generation failed');
+      }
+      
+      const generatedVal = data.generated[apiFieldName];
+      if (generatedVal !== undefined) {
+        setEditingPage(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            [section]: {
+              ...((prev[section] || {}) as any),
+              [field]: generatedVal
+            }
+          };
+        });
+        setIsDirty(true);
+        setAiToast({ type: 'success', message: `✓ AI successfully generated "${field}"` });
+        setTimeout(() => setAiToast(null), 4000);
+      }
+    } catch (err: any) {
+      console.error('Auto-generate field error:', err);
+      setAiToast({ type: 'error', message: `✗ Field generation failed: ${err.message || 'Unknown error'}` });
+      setTimeout(() => setAiToast(null), 6000);
+    } finally {
+      setGeneratingField(null);
+    }
+  };
   // ────────────────────────────────────────────────────────────────────────
 
 
@@ -1295,7 +1346,18 @@ export default function SeoWorkspace() {
                     <div className="space-y-1.5">
                       <div className="flex justify-between items-baseline">
                         <div className="flex items-center gap-2">
-                          <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/75">SEO Page Title</label>
+                          <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/75 flex items-center gap-1.5">
+                            SEO Page Title
+                            <button
+                              type="button"
+                              disabled={generatingField === 'title' || generatingAI}
+                              onClick={() => handleAutoGenerateField('seo', 'title', 'seoTitle')}
+                              title="Regenerate Title with AI"
+                              className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                            >
+                              <Sparkles className={`w-3 h-3 ${generatingField === 'title' ? 'animate-spin text-purple-500' : ''}`} />
+                            </button>
+                          </label>
                           {getResolvedValue('title', editingPage).isOverride ? (
                             <span className="text-[9px] bg-green-500/10 text-green-500 px-1.5 py-0.5 rounded font-black uppercase tracking-widest border border-green-500/10">Override</span>
                           ) : (
@@ -1325,7 +1387,18 @@ export default function SeoWorkspace() {
                     <div className="space-y-1.5">
                       <div className="flex justify-between items-baseline">
                         <div className="flex items-center gap-2">
-                          <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/75">Meta Description</label>
+                          <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/75 flex items-center gap-1.5">
+                            Meta Description
+                            <button
+                              type="button"
+                              disabled={generatingField === 'description' || generatingAI}
+                              onClick={() => handleAutoGenerateField('seo', 'description', 'metaDescription')}
+                              title="Regenerate Meta Description with AI"
+                              className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                            >
+                              <Sparkles className={`w-3 h-3 ${generatingField === 'description' ? 'animate-spin text-purple-500' : ''}`} />
+                            </button>
+                          </label>
                           {getResolvedValue('description', editingPage).isOverride ? (
                             <span className="text-[9px] bg-green-500/10 text-green-500 px-1.5 py-0.5 rounded font-black uppercase tracking-widest border border-green-500/10">Override</span>
                           ) : (
@@ -1381,7 +1454,18 @@ export default function SeoWorkspace() {
                     {/* Primary Keyword / H1 */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">Primary Target Keyword</label>
+                        <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                          Primary Target Keyword
+                          <button
+                            type="button"
+                            disabled={generatingField === 'primaryKeyword' || generatingAI}
+                            onClick={() => handleAutoGenerateField('seo', 'primaryKeyword', 'primaryKeyword')}
+                            title="Regenerate Primary Keyword with AI"
+                            className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                          >
+                            <Sparkles className={`w-3 h-3 ${generatingField === 'primaryKeyword' ? 'animate-spin text-purple-500' : ''}`} />
+                          </button>
+                        </label>
                         <input
                           type="text"
                           placeholder="e.g. ai bid automation"
@@ -1449,7 +1533,18 @@ export default function SeoWorkspace() {
                     {/* GEO Titles overrides */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">GEO llms.txt Specific Title</label>
+                        <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                          GEO llms.txt Specific Title
+                          <button
+                            type="button"
+                            disabled={generatingField === 'llmsTitle' || generatingAI}
+                            onClick={() => handleAutoGenerateField('geo', 'llmsTitle', 'llmsTitle')}
+                            title="Regenerate Specific Title with AI"
+                            className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                          >
+                            <Sparkles className={`w-3 h-3 ${generatingField === 'llmsTitle' ? 'animate-spin text-purple-500' : ''}`} />
+                          </button>
+                        </label>
                         <input
                           type="text"
                           placeholder="e.g. AI Transforming Bidding Systems"
@@ -1459,7 +1554,18 @@ export default function SeoWorkspace() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">llms.txt Brief description</label>
+                        <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                          llms.txt Brief description
+                          <button
+                            type="button"
+                            disabled={generatingField === 'llmsDescription' || generatingAI}
+                            onClick={() => handleAutoGenerateField('geo', 'llmsDescription', 'llmsDescription')}
+                            title="Regenerate Description with AI"
+                            className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                          >
+                            <Sparkles className={`w-3 h-3 ${generatingField === 'llmsDescription' ? 'animate-spin text-purple-500' : ''}`} />
+                          </button>
+                        </label>
                         <input
                           type="text"
                           placeholder="Single line overview for index files"
@@ -1472,7 +1578,18 @@ export default function SeoWorkspace() {
 
                     {/* AI / Machine Readable Summary */}
                     <div className="space-y-1">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">Machine-Readable Content Summary</label>
+                      <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                        Machine-Readable Content Summary
+                        <button
+                          type="button"
+                          disabled={generatingField === 'aiSummary' || generatingAI}
+                          onClick={() => handleAutoGenerateField('geo', 'aiSummary', 'aiSummary')}
+                          title="Regenerate Summary with AI"
+                          className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                        >
+                          <Sparkles className={`w-3 h-3 ${generatingField === 'aiSummary' ? 'animate-spin text-purple-500' : ''}`} />
+                        </button>
+                      </label>
                       <textarea
                         rows={3}
                         placeholder="Provide a highly structured, dense semantic summary detailing factual context, main outputs, and numerical outcomes."
@@ -1484,7 +1601,18 @@ export default function SeoWorkspace() {
 
                     {/* Page Purpose */}
                     <div className="space-y-1">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">Page Core Purpose</label>
+                      <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                        Page Core Purpose
+                        <button
+                          type="button"
+                          disabled={generatingField === 'pagePurpose' || generatingAI}
+                          onClick={() => handleAutoGenerateField('geo', 'pagePurpose', 'pagePurpose')}
+                          title="Regenerate Page Purpose with AI"
+                          className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                        >
+                          <Sparkles className={`w-3 h-3 ${generatingField === 'pagePurpose' ? 'animate-spin text-purple-500' : ''}`} />
+                        </button>
+                      </label>
                       <textarea
                         rows={2}
                         placeholder="What is the primary role / goal of this page?"
@@ -1511,7 +1639,18 @@ export default function SeoWorkspace() {
 
                     {/* FAQ / Curated Explanations */}
                     <div className="space-y-1">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">FAQ / Curated Q&As (Markdown format)</label>
+                      <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                        FAQ / Curated Q&As (Markdown format)
+                        <button
+                          type="button"
+                          disabled={generatingField === 'curatedExplanation' || generatingAI}
+                          onClick={() => handleAutoGenerateField('geo', 'curatedExplanation', 'curatedExplanation')}
+                          title="Regenerate FAQs with AI"
+                          className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                        >
+                          <Sparkles className={`w-3 h-3 ${generatingField === 'curatedExplanation' ? 'animate-spin text-purple-500' : ''}`} />
+                        </button>
+                      </label>
                       <textarea
                         rows={3}
                         placeholder="### Q: Question?&#10;A: Answer details."
@@ -1551,7 +1690,18 @@ export default function SeoWorkspace() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {/* Custom Markdown Title */}
                               <div className="space-y-1">
-                                <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">Markdown Title Override</label>
+                                <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                                  Markdown Title Override
+                                  <button
+                                    type="button"
+                                    disabled={generatingField === 'markdownTitleOverride' || generatingAI}
+                                    onClick={() => handleAutoGenerateField('geo', 'markdownTitleOverride', 'markdownTitleOverride')}
+                                    title="Regenerate Title Override with AI"
+                                    className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                                  >
+                                    <Sparkles className={`w-3 h-3 ${generatingField === 'markdownTitleOverride' ? 'animate-spin text-purple-500' : ''}`} />
+                                  </button>
+                                </label>
                                 <input
                                   type="text"
                                   placeholder="Defaults to SEO Title"
@@ -1577,7 +1727,18 @@ export default function SeoWorkspace() {
 
                             {/* Custom Markdown Summary */}
                             <div className="space-y-1">
-                              <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70">Markdown Summary Override</label>
+                              <label className="text-[11px] font-black uppercase tracking-wider text-m3-on-surface/70 flex items-center gap-1.5">
+                                Markdown Summary Override
+                                <button
+                                  type="button"
+                                  disabled={generatingField === 'markdownSummary' || generatingAI}
+                                  onClick={() => handleAutoGenerateField('geo', 'markdownSummary', 'markdownSummary')}
+                                  title="Regenerate Summary Override with AI"
+                                  className="p-1 hover:bg-m3-primary/10 rounded-full text-m3-primary/60 hover:text-m3-primary disabled:opacity-50 transition-colors cursor-pointer"
+                                >
+                                  <Sparkles className={`w-3 h-3 ${generatingField === 'markdownSummary' ? 'animate-spin text-purple-500' : ''}`} />
+                                </button>
+                              </label>
                               <textarea
                                 rows={3}
                                 placeholder="Defaults to AI Summary or Meta Description"
