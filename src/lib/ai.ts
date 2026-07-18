@@ -15,6 +15,32 @@ export interface AICompletionOptions {
 }
 
 /**
+ * Fetch wrapper with built-in retry and exponential backoff.
+ * Especially helpful for absorbing 429 rate limit spikes.
+ */
+async function fetchWithRetry(url: string, init: RequestInit, maxRetries = 3): Promise<Response> {
+  let delay = 2000;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const res = await fetch(url, init);
+      if (res.status === 429) {
+        console.warn(`[AI Service] Hit 429 Rate Limit. Retrying in ${delay}ms (attempt ${i + 1}/${maxRetries})...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2;
+        continue;
+      }
+      return res;
+    } catch (e) {
+      if (i === maxRetries - 1) throw e;
+      console.warn(`[AI Service] Network error: ${e}. Retrying in ${delay}ms (attempt ${i + 1}/${maxRetries})...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2;
+    }
+  }
+  return fetch(url, init);
+}
+
+/**
  * Centered AI Client Service for Malik Consultancy.
  * Uses Google Gemini 3.5 Flash as the primary provider, with a fallback to Nvidia.
  */
@@ -31,7 +57,7 @@ export async function getAICompletion(
         ? `${options.systemPrompt}\n\nUser request:\n${prompt}` 
         : prompt;
 
-      const response = await fetch(
+      const response = await fetchWithRetry(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${geminiApiKey}`,
         {
           method: "POST",
@@ -85,7 +111,7 @@ export async function getAICompletion(
   messages.push({ role: 'user', content: prompt });
 
   try {
-    const response = await fetch(`${baseUrl}/chat/completions`, {
+    const response = await fetchWithRetry(`${baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
