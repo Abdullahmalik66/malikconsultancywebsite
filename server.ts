@@ -344,7 +344,38 @@ Additional Note: ${additionalNote || "None"}`;
       const orgDesc = config.organisation?.description || "Independent AI strategy and growth consultant.";
       const pageSEO = (config.pages as any)?.[pageId] || {};
 
-      const contextTitle = pageTitle || pageSEO?.seo?.title ||
+      // Resolve the correct path for the selected page
+      let pagePath = pageSEO?.path;
+      if (!pagePath) {
+        if (pageId === "homepage") {
+          pagePath = "/";
+        } else if (pageId.startsWith("blog_")) {
+          pagePath = `/writings/${pageId.replace("blog_", "")}`;
+        } else if (pageId.startsWith("case_study_")) {
+          pagePath = `/case-study/${pageId.replace("case_study_", "")}`;
+        } else if (pageId.startsWith("services_")) {
+          pagePath = `/services/${pageId.replace("services_", "")}`;
+        } else {
+          pagePath = `/${pageId.replace(/_/g, "-")}`;
+        }
+      }
+
+      // Fetch CMS title dynamically if applicable to replace raw IDs
+      let cmsTitle = "";
+      if (pageId.startsWith("blog_") || pageId.startsWith("case_study_")) {
+        try {
+          const cmsItems = await getPublishedContent();
+          const cleanCmsId = pageId.replace("blog_", "").replace("case_study_", "");
+          const cmsItem = cmsItems.find((x: any) => x.id === cleanCmsId || x.slug === cleanCmsId);
+          if (cmsItem) {
+            cmsTitle = cmsItem.title;
+          }
+        } catch (e) {
+          console.error("Failed to load cms title context:", e);
+        }
+      }
+
+      const contextTitle = cmsTitle || pageTitle || pageSEO?.seo?.title ||
         pageId.replace(/[_-]/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
       const contextDesc = existingContent || pageSEO?.seo?.description || pageSEO?.geo?.aiSummary || "";
       const pType = pageType || pageSEO?.pageType || "custom";
@@ -377,7 +408,6 @@ Additional Note: ${additionalNote || "None"}`;
       // Compile specific page context (actual page content)
       let pageCopy = "";
       try {
-        const pagePath = pageSEO?.path || (pageId === "homepage" ? "/" : `/${pageId.replace(/_/g, "-")}`);
         const mdText = await generateMarkdownForRoute(pagePath);
         if (mdText) {
           pageCopy = mdText;
