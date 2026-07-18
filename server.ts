@@ -374,6 +374,18 @@ Additional Note: ${additionalNote || "None"}`;
         siteContext = orgDesc;
       }
 
+      // Compile specific page context (actual page content)
+      let pageCopy = "";
+      try {
+        const pagePath = pageSEO?.path || (pageId === "homepage" ? "/" : `/${pageId.replace(/_/g, "-")}`);
+        const mdText = await generateMarkdownForRoute(pagePath);
+        if (mdText) {
+          pageCopy = mdText;
+        }
+      } catch (err) {
+        console.error("Failed to compile page-level copy context:", err);
+      }
+
       const targetField = req.body.targetField;
       let prompt = "";
       if (targetField) {
@@ -391,7 +403,12 @@ Site-wide Context (use for alignment, context matching, and styling reference):
 ${siteContext}
 </SITE_CONTEXT>
 
-Page context to write content for:
+Page Content Context (use this actual page content as the source of truth to write the SEO/GEO meta tags):
+<PAGE_CONTENT>
+${pageCopy || "Not yet configured"}
+</PAGE_CONTENT>
+
+Page context details:
 - Page ID: ${pageId}
 - Page type: ${pType}
 - Page title hint: ${contextTitle}
@@ -422,7 +439,12 @@ Site-wide Context (use for alignment, context matching, and styling reference):
 ${siteContext}
 </SITE_CONTEXT>
 
-Page context to write content for:
+Page Content Context (use this actual page content as the source of truth to write the SEO/GEO meta tags):
+<PAGE_CONTENT>
+${pageCopy || "Not yet configured"}
+</PAGE_CONTENT>
+
+Page context details:
 - Page ID: ${pageId}
 - Page type: ${pType}
 - Page title hint: ${contextTitle}
