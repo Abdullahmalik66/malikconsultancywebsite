@@ -68,7 +68,7 @@ export default function AITransformationPage() {
 
       {/* Hero Section - Deep cosmos tone using #00022b */}
       <section 
-        className="relative min-h-[120vh] flex items-start overflow-hidden pt-96 md:pt-[55vh] pb-32"
+        className="relative min-h-[100svh] md:min-h-[120vh] flex items-start overflow-hidden pt-36 md:pt-[55vh] pb-16 md:pb-32"
         style={{ background: 'linear-gradient(135deg, #000114 0%, #00022b 45%, #050b42 100%)' }}
         aria-label="AI Transformation Introduction"
       >

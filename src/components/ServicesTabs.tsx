@@ -258,8 +258,8 @@ export default function ServicesTabs() {
         </div>
 
         {/* Custom Tab Bar - Unified Pill Style like Wise */}
-        <div className="flex justify-start mb-4">
-          <div className="p-1 bg-black/10 backdrop-blur-sm rounded-full flex gap-1">
+        <div className="flex justify-start mb-4 overflow-x-auto no-scrollbar max-w-full">
+          <div className="p-1 bg-black/10 backdrop-blur-sm rounded-full flex gap-1 whitespace-nowrap min-w-max">
             {services.map((service) => (
               <button
                 key={service.id}

@@ -109,7 +109,7 @@ export default function Footer() {
         {/* Realistic Rotating Earth Visual - Focus on Greenery & Water */}
         <div className="relative w-full h-[500px] flex justify-center items-end overflow-hidden pointer-events-none">
           {/* The Earth Container */}
-          <div className="relative w-[600px] md:w-[900px] h-[600px] md:h-[900px] rounded-full bottom-[-300px] md:bottom-[-450px]">
+          <div className="relative w-[85vw] md:w-[600px] lg:w-[900px] h-[85vw] md:h-[600px] lg:h-[900px] rounded-full bottom-[-42vw] md:bottom-[-300px] lg:bottom-[-450px]">
             {/* The Earth - Day Mode */}
             <motion.div
               animate={{

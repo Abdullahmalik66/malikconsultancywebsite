@@ -74,7 +74,7 @@ export default function ModernMarketingPage() {
 
       {/* Hero Section - Deep warm bronze/brown layered gradient */}
       <section 
-        className="relative min-h-[120vh] flex items-start overflow-hidden pt-96 md:pt-[55vh] pb-32"
+        className="relative min-h-[100svh] md:min-h-[120vh] flex items-start overflow-hidden pt-36 md:pt-[55vh] pb-16 md:pb-32"
         style={{ background: 'linear-gradient(135deg, #24170F 0%, #7A4E2D 45%, #3B2416 100%)' }}
         aria-label="Modern Marketing & Growth Introduction"
       >

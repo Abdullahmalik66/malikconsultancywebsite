@@ -95,7 +95,7 @@ export default function CaseWork() {
           <div className="lg:col-span-8 lg:-mr-[100vw]">
             <div 
               ref={scrollRef}
-              className="flex gap-8 overflow-x-auto no-scrollbar pb-12 snap-x snap-mandatory pr-[100vw]"
+              className="flex gap-8 overflow-x-auto no-scrollbar pb-12 snap-x snap-mandatory pr-6 lg:pr-[100vw]"
               style={{ WebkitOverflowScrolling: 'touch' }}
             >
               {randomCases.map((work) => (

@@ -67,7 +67,7 @@ export default function AIMaturityPage() {
 
       {/* Hero Section - Executive dark violet gradient */}
       <section 
-        className="relative min-h-[120vh] flex items-start overflow-hidden pt-96 md:pt-[55vh] pb-32"
+        className="relative min-h-[100svh] md:min-h-[120vh] flex items-start overflow-hidden pt-36 md:pt-[55vh] pb-16 md:pb-32"
         style={{ background: 'linear-gradient(135deg, #12081A 0%, #4B2A5A 45%, #2C1037 100%)' }}
         aria-label="AI Maturity & Capability Building Introduction"
       >

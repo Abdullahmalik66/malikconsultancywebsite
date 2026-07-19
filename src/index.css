@@ -6,7 +6,7 @@
   --font-display: "Syne", sans-serif;
   --font-mono: "Space Grotesk", monospace;
 
-  
+
   --color-m3-surface: var(--m3-surface);
   --color-m3-on-surface: var(--m3-on-surface);
   --color-m3-primary: var(--m3-primary);
@@ -28,7 +28,7 @@
   --m3-tertiary: #7d5260;
   --m3-on-tertiary: #ffffff;
   --m3-outline: #79747e;
-  
+
   --primary: #6750a4;
 }
 
@@ -42,7 +42,7 @@ html.dark {
   --m3-tertiary: #efb8c8;
   --m3-on-tertiary: #492532;
   --m3-outline: #938f99;
-  
+
   --primary: #d0bcff;
 }
 
@@ -93,8 +93,13 @@ html.dark {
 }
 
 @keyframes orbit-angle-anim {
-  from { --orbit-angle: 0deg; }
-  to { --orbit-angle: 360deg; }
+  from {
+    --orbit-angle: 0deg;
+  }
+
+  to {
+    --orbit-angle: 360deg;
+  }
 }
 
 .animate-orbit-cw-slow {
@@ -131,6 +136,7 @@ html.dark {
 .orbit-glow-3 {
   background: radial-gradient(circle, rgba(109, 85, 167, 0.025) 0%, rgba(109, 85, 167, 0.008) 70%, transparent 100%);
 }
+
 .dark .orbit-glow-3 {
   background: radial-gradient(circle, rgba(208, 188, 255, 0.015) 0%, rgba(208, 188, 255, 0.003) 70%, transparent 100%);
 }
@@ -138,6 +144,7 @@ html.dark {
 .orbit-glow-2 {
   background: radial-gradient(circle, rgba(109, 85, 167, 0.05) 0%, rgba(109, 85, 167, 0.02) 65%, transparent 100%);
 }
+
 .dark .orbit-glow-2 {
   background: radial-gradient(circle, rgba(208, 188, 255, 0.03) 0%, rgba(208, 188, 255, 0.008) 65%, transparent 100%);
 }
@@ -145,6 +152,7 @@ html.dark {
 .orbit-glow-1 {
   background: radial-gradient(circle, rgba(109, 85, 167, 0.10) 0%, rgba(109, 85, 167, 0.04) 60%, transparent 100%);
 }
+
 .dark .orbit-glow-1 {
   background: radial-gradient(circle, rgba(208, 188, 255, 0.06) 0%, rgba(208, 188, 255, 0.02) 60%, transparent 100%);
 }
@@ -152,14 +160,20 @@ html.dark {
 .orbit-glow-0 {
   background: radial-gradient(circle, rgba(109, 85, 167, 0.20) 0%, rgba(109, 85, 167, 0.08) 55%, transparent 100%);
 }
+
 .dark .orbit-glow-0 {
   background: radial-gradient(circle, rgba(208, 188, 255, 0.14) 0%, rgba(208, 188, 255, 0.04) 55%, transparent 100%);
 }
 
 /* Infinite Marquee for Mobile */
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {
@@ -169,6 +183,7 @@ html.dark {
 
 
 @media (prefers-reduced-motion: reduce) {
+
   .animate-orbit-cw-slow,
   .animate-orbit-ccw-slow,
   .animate-orbit-cw-medium,
@@ -179,4 +194,3 @@ html.dark {
     animation: none !important;
   }
 }
-
