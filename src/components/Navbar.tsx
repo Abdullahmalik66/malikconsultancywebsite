@@ -69,41 +69,44 @@ export default function Navbar() {
         >
 
           {/* ==========================================================
-              1. LEFT: BRAND LOGO (Picture 3 Logo ONLY - No Text)
+              1. LEFT: TYPOGRAPHIC BRAND LOGO ("Syne" Font Typography)
              ========================================================== */}
           <Link 
             to="/" 
-            className="flex items-center px-4 py-2 rounded-full bg-[#F6F2F9]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-md transition-all group cursor-pointer"
+            className="flex items-center px-5 py-2.5 sm:py-3 rounded-full bg-[#F6F2F9]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-md transition-all group cursor-pointer"
           >
-            <img 
-              src="/am-icon-logo-transparent.png" 
-              alt="AM Logo" 
-              className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto object-contain mix-blend-multiply dark:invert dark:brightness-200 transition-transform group-hover:scale-105"
-            />
+            <div className="flex flex-col text-left">
+              <span className="font-['Syne'] font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-[#1A102E] dark:text-white uppercase leading-none">
+                ABDULLAH MALIK
+              </span>
+              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.25em] text-[#6750A4] dark:text-[#D0BCFF] uppercase font-bold leading-none mt-1">
+                CONSULTANCY
+              </span>
+            </div>
           </Link>
 
           {/* ==========================================================
-              2. MIDDLE 1: MY LIFE PLAYGROUND (Magenta + Neon Yellow Hover)
+              2. MIDDLE 1: MY LIFE PLAYGROUND (#E9FF32 -> Hover #C6B3D1)
              ========================================================== */}
           <div className="hidden lg:flex items-center">
             <Link to="/my-life-playground">
               <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className={`flex items-center gap-2.5 px-6 py-3.5 rounded-full font-sans font-extrabold text-sm sm:text-base transition-all duration-300 shadow-md cursor-pointer border ${
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center gap-2.5 px-6 py-3 rounded-full font-sans font-bold text-sm sm:text-base transition-all duration-300 shadow-sm cursor-pointer border ${
                   isPlaygroundActive
-                    ? 'bg-[#EAFF00] text-black border-[#EAFF00] shadow-[0_0_25px_rgba(234,255,0,0.9)] scale-105 ring-2 ring-[#EAFF00]/40'
-                    : 'bg-[#D81B60] text-white border-pink-400/30 hover:bg-[#EAFF00] hover:text-black hover:border-[#EAFF00] hover:shadow-[0_0_30px_rgba(234,255,0,0.95)]'
+                    ? 'bg-[#C6B3D1] text-[#1A102E] border-[#C6B3D1] shadow-md font-extrabold'
+                    : 'bg-[#E9FF32] text-[#1A102E] border-[#E9FF32]/50 hover:bg-[#C6B3D1] hover:text-[#1A102E] hover:border-[#C6B3D1]'
                 }`}
               >
-                <Terminal className="w-4 h-4" />
+                <Terminal className="w-4 h-4 text-[#1A102E]" />
                 <span>My Life Playground</span>
               </motion.button>
             </Link>
           </div>
 
           {/* ==========================================================
-              3. MAIN NAVIGATION CAPSULE (Picture 2 Styling & Fitted Padding)
+              3. MAIN NAVIGATION CAPSULE (Tabs Hover: #C6B3D1)
              ========================================================== */}
           <div className="hidden lg:flex items-center">
             <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-[#F6F2F9]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.06)] text-m3-on-surface">
@@ -124,8 +127,8 @@ export default function Navbar() {
                       <Link to={item.path} className={`
                         flex items-center gap-1 px-5 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 relative
                         ${isActive || activeDropdown === item.label
-                          ? 'bg-[#E3DAF7] text-[#1D192B] dark:bg-[#4A4458] dark:text-[#E8DEF8] shadow-sm' 
-                          : 'text-[#1D1B20]/80 dark:text-white/80 hover:text-[#1D1B20] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'}
+                          ? 'bg-[#C6B3D1] text-[#1A102E] shadow-sm' 
+                          : 'text-[#1D1B20]/85 dark:text-white/85 hover:text-[#1A102E] hover:bg-[#C6B3D1]'}
                       `}>
                         {item.label}
                       </Link>
@@ -133,8 +136,8 @@ export default function Navbar() {
                       <button className={`
                         flex items-center gap-1 px-5 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 relative cursor-pointer
                         ${isActive || activeDropdown === item.label 
-                          ? 'bg-[#E3DAF7] text-[#1D192B] dark:bg-[#4A4458] dark:text-[#E8DEF8] shadow-sm' 
-                          : 'text-[#1D1B20]/80 dark:text-white/80 hover:text-[#1D1B20] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'}
+                          ? 'bg-[#C6B3D1] text-[#1A102E] shadow-sm' 
+                          : 'text-[#1D1B20]/85 dark:text-white/85 hover:text-[#1A102E] hover:bg-[#C6B3D1]'}
                       `}>
                         {item.label}
                         {item.children && (
@@ -159,8 +162,8 @@ export default function Navbar() {
                               to={child.path}
                               className={`block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
                                 location.pathname === child.path
-                                  ? 'bg-[#E3DAF7] text-[#1D192B] dark:bg-[#4A4458] dark:text-[#E8DEF8]'
-                                  : 'hover:bg-[#E3DAF7]/50 dark:hover:bg-white/10'
+                                  ? 'bg-[#C6B3D1] text-[#1A102E]'
+                                  : 'hover:bg-[#C6B3D1]/60 hover:text-[#1A102E]'
                               }`}
                               onClick={() => setActiveDropdown(null)}
                             >
@@ -175,22 +178,20 @@ export default function Navbar() {
               })}
 
               {/* ==========================================================
-                  4. REACH ME BUTTON (Picture 1 Royal Indigo + Neon Yellow Hover)
+                  4. REACH ME BUTTON (#1A102E -> Simple Hover #E9FF32)
                  ========================================================== */}
               <div className="ml-1 pl-1 border-l border-black/10 dark:border-white/15">
                 <Link to="/reach-me">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`px-6 py-2.5 rounded-full text-sm sm:text-base font-extrabold transition-all duration-300 bg-[#1C0099] text-white border border-transparent shadow-md hover:bg-[#EAFF00] hover:text-black hover:border-[#EAFF00] hover:shadow-[0_0_30px_rgba(234,255,0,0.95)] cursor-pointer ${
+                  <button
+                    className={`px-6 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-[#1A102E] text-white hover:bg-[#E9FF32] hover:text-[#1A102E] shadow-md cursor-pointer ${
                       location.pathname === '/reach-me'
-                        ? 'bg-[#EAFF00] text-black shadow-[0_0_30px_rgba(234,255,0,0.95)] ring-2 ring-[#EAFF00]/40 scale-105 font-bold'
+                        ? 'bg-[#E9FF32] text-[#1A102E] font-extrabold'
                         : ''
                     }`}
                     id="reach-me-btn"
                   >
                     Reach me
-                  </motion.button>
+                  </button>
                 </Link>
               </div>
 
@@ -203,8 +204,8 @@ export default function Navbar() {
           <div className="flex lg:hidden items-center gap-2">
             {/* Compact Playground button on mobile */}
             <Link to="/my-life-playground">
-              <button className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#D81B60] hover:bg-[#EAFF00] hover:text-black text-white text-xs sm:text-sm font-bold shadow-xs transition-colors">
-                <Terminal className="w-4 h-4" />
+              <button className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#E9FF32] text-[#1A102E] hover:bg-[#C6B3D1] text-xs sm:text-sm font-bold shadow-xs transition-colors">
+                <Terminal className="w-4 h-4 text-[#1A102E]" />
                 <span className="hidden sm:inline">Playground</span>
               </button>
             </Link>
@@ -245,11 +246,11 @@ export default function Navbar() {
               <div className="mb-6">
                 <Link
                   to="/my-life-playground"
-                  className="flex items-center justify-between p-4.5 rounded-2xl bg-[#D81B60] text-white shadow-md font-bold text-base hover:bg-[#EAFF00] hover:text-black transition-colors"
+                  className="flex items-center justify-between p-4.5 rounded-2xl bg-[#E9FF32] text-[#1A102E] shadow-md font-bold text-base hover:bg-[#C6B3D1] transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-white/20">
+                    <div className="p-2.5 rounded-xl bg-[#1A102E] text-white">
                       <Terminal className="w-5 h-5" />
                     </div>
                     <div>
@@ -300,8 +301,8 @@ export default function Navbar() {
                                   to={child.path}
                                   className={`block py-3 px-4 text-base rounded-xl transition-colors ${
                                     location.pathname === child.path
-                                      ? 'bg-[#E3DAF7] text-[#1D192B] font-bold dark:bg-[#4A4458] dark:text-[#E8DEF8]'
-                                      : 'text-m3-on-surface/70 hover:bg-m3-on-surface/5'
+                                      ? 'bg-[#C6B3D1] text-[#1A102E] font-bold'
+                                      : 'text-m3-on-surface/70 hover:bg-[#C6B3D1]/50'
                                   }`}
                                   onClick={() => setMobileMenuOpen(false)}
                                 >
@@ -321,7 +322,7 @@ export default function Navbar() {
               <div className="mt-8">
                 <Link
                   to="/reach-me"
-                  className="block w-full text-center py-4 bg-[#1C0099] text-white hover:bg-[#EAFF00] hover:text-black font-extrabold text-lg rounded-full shadow-lg transition-colors"
+                  className="block w-full text-center py-4 bg-[#1A102E] text-white hover:bg-[#E9FF32] hover:text-[#1A102E] font-extrabold text-lg rounded-full shadow-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Reach me
