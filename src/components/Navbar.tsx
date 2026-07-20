@@ -69,7 +69,7 @@ export default function Navbar() {
         >
 
           {/* ==========================================================
-              1. LEFT: BRAND LOGO (Poster Logo Image ONLY - No bed/text)
+              1. LEFT: BRAND LOGO (Poster Logo Image - Much Bigger)
              ========================================================== */}
           <Link 
             to="/" 
@@ -78,7 +78,7 @@ export default function Navbar() {
             <img 
               src="/am-poster-logo-clean.png" 
               alt="Abdullah Malik Consultancy Logo" 
-              className="h-12 sm:h-14 md:h-16 lg:h-18 w-auto object-contain rounded-xl shadow-md border border-white/10"
+              className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain rounded-2xl shadow-2xl border border-white/20"
             />
           </Link>
 
