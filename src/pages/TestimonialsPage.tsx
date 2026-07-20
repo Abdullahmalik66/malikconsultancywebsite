@@ -219,7 +219,7 @@ export default function TestimonialsPage() {
         </svg>
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 z-10 relative">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 z-10 relative pb-24 md:pb-36 lg:pb-48">
 
         {/* =========================================================================
             1. HERO / HEADER SECTION
