@@ -73,12 +73,12 @@ export default function Navbar() {
              ========================================================== */}
           <Link 
             to="/" 
-            className="flex items-center px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-[#F6F2F9]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-md transition-all group cursor-pointer"
+            className="flex items-center px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-white/95 backdrop-blur-xl border border-black/10 shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-md transition-all group cursor-pointer z-50"
           >
             <img 
               src="/am-serif-logo-transparent.png" 
               alt="Abdullah Malik Consultancy Logo" 
-              className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto object-contain mix-blend-multiply dark:invert dark:brightness-200 transition-transform group-hover:scale-105"
+              className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto object-contain mix-blend-multiply transition-transform group-hover:scale-105"
             />
           </Link>
 

@@ -318,7 +318,7 @@ export default function BlogPostPage() {
             {/* Main Content */}
             <div className="lg:col-span-8">
               <div
-                className="blog-content prose prose-xl max-w-none prose-headings:font-display prose-headings:font-medium prose-headings:tracking-tight prose-p:text-m3-on-surface/80 prose-p:leading-relaxed prose-blockquote:italic prose-blockquote:text-m3-primary prose-img:rounded-[32px]"
+                className="blog-content prose prose-xl max-w-none prose-headings:font-display prose-headings:font-medium prose-headings:tracking-tight text-m3-on-surface dark:text-[#F3F0F5] prose-headings:text-m3-on-surface dark:prose-headings:text-white prose-p:text-m3-on-surface/90 dark:prose-p:text-[#F3F0F5] prose-p:leading-relaxed prose-blockquote:italic prose-blockquote:text-m3-primary prose-img:rounded-[32px]"
                 dangerouslySetInnerHTML={{ __html: blog.content || `<p>${blog.excerpt}</p><p>This is a mock representation of the blog post content. In a real system, the full rich text content saved in the database would render here.</p>` }}
               />
 

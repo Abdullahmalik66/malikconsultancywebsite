@@ -48,21 +48,42 @@ html.dark {
 
 @layer base {
   html {
-    background-color: #0b0b12;
     color-scheme: light dark;
   }
 
   body {
-    background-color: #0b0b12;
     @apply bg-m3-surface text-m3-on-surface antialiased selection:bg-m3-primary selection:text-m3-on-primary transition-colors duration-300 overflow-x-hidden;
     min-height: 100%;
   }
 
   #root,
   main {
-    background-color: var(--m3-surface);
     min-height: 100%;
   }
+}
+
+/* High Contrast Blog Content & Text Readability */
+.blog-content p,
+.blog-content li,
+.blog-content span {
+  color: var(--m3-on-surface);
+  opacity: 0.92;
+}
+
+html.dark .blog-content,
+html.dark .blog-content p,
+html.dark .blog-content li,
+html.dark .blog-content span,
+html.dark .blog-content div {
+  color: #f3f0f5 !important;
+  opacity: 0.95 !important;
+}
+
+html.dark .blog-content h1,
+html.dark .blog-content h2,
+html.dark .blog-content h3,
+html.dark .blog-content h4 {
+  color: #ffffff !important;
 }
 
 /* ==========================================================
@@ -96,33 +117,11 @@ html.dark {
   background-color: #1A0F03 !important;
 }
 
-.bg-\[\#16151A\] {
-  background-color: #16151A !important;
-}
-
-.bg-\[\#141218\] {
-  background-color: #141218 !important;
-}
-
-.bg-\[\#1D1B20\] {
-  background-color: #1D1B20 !important;
-}
-
-.bg-\[\#070604\] {
-  background-color: #070604 !important;
-}
-
 /* Mobile Specific Overlays & Contrast Fixes (Screen <= 768px) */
 @media (max-width: 768px) {
   /* Prevent dark overlay collapse and guarantee readable mobile text contrast */
   .dark-overlay-mobile {
     opacity: 0.35 !important;
-  }
-
-  .section-dark-mobile p,
-  .section-dark-mobile .body-text,
-  .section-dark-mobile .meta-text {
-    color: rgba(255, 255, 255, 0.88) !important;
   }
 
   /* Safe Area padding for mobile header controls */
