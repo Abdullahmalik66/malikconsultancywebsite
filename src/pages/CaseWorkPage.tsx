@@ -5,6 +5,8 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
 import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
 import ClientShowcase2 from '../components/ClientShowcase2';
+import LatestInsights from '../components/LatestInsights';
+import StaggerTestimonials from '../components/StaggerTestimonials';
 
 export default function CaseWorkPage() {
   const navigate = useNavigate();
@@ -254,6 +256,12 @@ export default function CaseWorkPage() {
 
       {/* Grid Client Showcase */}
       <ClientShowcase2 />
+
+      {/* Blogs / Insights */}
+      <LatestInsights />
+
+      {/* Testimonials */}
+      <StaggerTestimonials />
     </div>
   );
 }
