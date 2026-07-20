@@ -5,6 +5,7 @@ import { STATIC_TESTIMONIALS, Testimonial, shuffleArray } from '../data/testimon
 import { getPublishedTestimonials, submitPublicTestimonial } from '../lib/firebase/cms';
 import CaseWork from '../components/CaseWork';
 import LatestInsights from '../components/LatestInsights';
+import NewsletterSection from '../components/NewsletterSection';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -377,6 +378,13 @@ export default function TestimonialsPage() {
           ========================================================================= */}
       <div className="relative z-10">
         <LatestInsights />
+      </div>
+
+      {/* =========================================================================
+          4. NEWSLETTER SECTION (UNITED WITH BLOGS)
+          ========================================================================= */}
+      <div className="relative z-10">
+        <NewsletterSection />
       </div>
 
       {/* =========================================================================

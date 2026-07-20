@@ -323,7 +323,7 @@ export default function LatestInsights() {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 mt-4 pb-20">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 mt-4 pb-12 md:pb-16">
           <div className="flex items-center justify-between">
             <div className="flex gap-4">
               <button 

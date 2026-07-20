@@ -7,6 +7,7 @@ import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
 import ClientShowcase2 from '../components/ClientShowcase2';
 import LatestInsights from '../components/LatestInsights';
 import StaggerTestimonials from '../components/StaggerTestimonials';
+import NewsletterSection from '../components/NewsletterSection';
 
 export default function CaseWorkPage() {
   const navigate = useNavigate();
@@ -259,6 +260,9 @@ export default function CaseWorkPage() {
 
       {/* Blogs / Insights */}
       <LatestInsights />
+
+      {/* Newsletter */}
+      <NewsletterSection />
 
       {/* Testimonials */}
       <StaggerTestimonials />
