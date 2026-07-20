@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { 
-  ChevronLeft, Share2, Clock, User, Tag, 
-  Linkedin, Facebook, Copy, Check, Send 
+import {
+  ChevronLeft, Share2, Clock, User, Tag,
+  Linkedin, Facebook, Copy, Check, Send
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Writing } from '../types';
 import { getPublishedContent, getCommentsByBlogId, saveComment, BlogComment } from '../lib/firebase/cms';
-import { defaultBlogPosts } from '../data/blogData';
 import { LinkedCardsSidebar } from '../components/cms/CardRenderer';
 
 // Add the content field to the type if it doesn't exist in our base interface
@@ -27,22 +26,15 @@ export default function BlogPostPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     const findBlog = async () => {
       setLoading(true);
-      
+
+      // Try the backend for user-published writings
       try {
         const published = await getPublishedContent();
-        const cmsBlogs = published.filter(w => w.contentType === 'blog');
-        const combined = [...cmsBlogs];
-        defaultBlogPosts.forEach(fallback => {
-          if (!combined.some(c => c.slug === fallback.slug || c.id === fallback.id)) {
-            combined.push(fallback);
-          }
-        });
+        const userBlog = published.find(w => w.contentType === 'blog' && (w.slug === id || w.id === id));
 
-        const userBlog = combined.find(w => w.slug === id || w.id === id);
-        
         if (userBlog) {
           setBlog({
             id: userBlog.id,
@@ -53,7 +45,7 @@ export default function BlogPostPage() {
             date: new Date(userBlog.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
             imageUrl: userBlog.headerImage || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop',
             category: (userBlog.category as 'Blog' | 'News' | 'Strategy') || 'Blog',
-            author: userBlog.authorName || 'Abdullah Malik',
+            author: userBlog.authorName || 'Anonymous',
             authorBio: userBlog.authorBio,
             authorImage: userBlog.authorImage || undefined,
             tags: userBlog.tags,
@@ -164,7 +156,7 @@ export default function BlogPostPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-m3-surface flex items-center justify-center">
-        <motion.div 
+        <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
           className="w-12 h-12 border-4 border-m3-primary/30 border-t-m3-primary rounded-full"
@@ -178,7 +170,7 @@ export default function BlogPostPage() {
       <div className="min-h-screen bg-m3-surface flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-4xl font-display font-medium text-m3-on-surface mb-4">Post not found</h2>
         <p className="text-m3-on-surface/60 mb-8">The insight you're looking for doesn't exist or has been removed.</p>
-        <button 
+        <button
           onClick={() => navigate('/my-writings')}
           className="px-8 py-4 bg-m3-primary text-m3-on-primary rounded-full font-bold uppercase tracking-widest text-xs"
         >
@@ -203,16 +195,16 @@ export default function BlogPostPage() {
         <article className="max-w-[1240px] mx-auto px-6">
           {/* Action Row: Back & Share (positioned after the global header) */}
           <div className="flex items-center justify-between mb-12 pb-4 border-b border-m3-outline/10">
-            <button 
+            <button
               onClick={() => navigate('/my-writings')}
               className="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-m3-on-surface/60 hover:text-m3-primary transition-all"
             >
               <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to writings</span>
             </button>
-            
+
             <div className="relative" ref={shareMenuRef}>
-              <button 
+              <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-m3-outline/20 text-xs font-bold uppercase tracking-widest hover:bg-m3-surface-container transition-all text-m3-on-surface"
               >
@@ -263,10 +255,10 @@ export default function BlogPostPage() {
 
           {/* Header */}
           <header className="mb-16">
-            <motion.div 
-               initial={{ opacity: 0, y: 30 }}
-               animate={{ opacity: 1, y: 0 }}
-               className="flex flex-wrap items-center gap-4 mb-8"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-wrap items-center gap-4 mb-8"
             >
               <span className="bg-m3-primary/10 text-m3-primary px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-[0.25em] border border-m3-primary/20">
                 {blog.category}
@@ -276,18 +268,17 @@ export default function BlogPostPage() {
               </span>
               <div className="w-px h-4 bg-m3-outline/20 mx-2" />
               <div className="flex items-center gap-2 text-m3-on-surface/60">
-                 <Clock className="w-4 h-4" />
-                 <span className="text-[10px] font-bold uppercase tracking-widest">~{dynamicReadTime} MIN READ</span>
+                <Clock className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">~{dynamicReadTime} MIN READ</span>
               </div>
             </motion.div>
 
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className={`text-5xl md:text-7xl lg:text-8xl font-display font-medium leading-[0.95] tracking-[-0.03em] ${
-                blog.tags && blog.tags.length > 0 ? 'mb-8' : 'mb-12'
-              }`}
+              className={`text-5xl md:text-7xl lg:text-8xl font-display font-medium leading-[0.95] tracking-[-0.03em] ${blog.tags && blog.tags.length > 0 ? 'mb-8' : 'mb-12'
+                }`}
             >
               {blog.title}
             </motion.h1>
@@ -295,7 +286,7 @@ export default function BlogPostPage() {
             {blog.tags && blog.tags.length > 0 && (
               <div className="flex flex-wrap gap-3 mb-12">
                 {blog.tags.map(tag => (
-                  <motion.span 
+                  <motion.span
                     key={tag}
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
@@ -308,16 +299,16 @@ export default function BlogPostPage() {
               </div>
             )}
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
               className="aspect-[16/9] w-full rounded-[64px] overflow-hidden bg-m3-surface-container mb-16 shadow-2xl"
             >
-              <img 
-                src={blog.imageUrl} 
-                className="w-full h-full object-cover" 
-                alt="Banner" 
+              <img
+                src={blog.imageUrl}
+                className="w-full h-full object-cover"
+                alt="Banner"
                 referrerPolicy="no-referrer"
               />
             </motion.div>
@@ -326,7 +317,7 @@ export default function BlogPostPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             {/* Main Content */}
             <div className="lg:col-span-8">
-              <div 
+              <div
                 className="blog-content prose prose-xl max-w-none prose-headings:font-display prose-headings:font-medium prose-headings:tracking-tight prose-p:text-m3-on-surface/80 prose-p:leading-relaxed prose-blockquote:italic prose-blockquote:text-m3-primary prose-img:rounded-[32px]"
                 dangerouslySetInnerHTML={{ __html: blog.content || `<p>${blog.excerpt}</p><p>This is a mock representation of the blog post content. In a real system, the full rich text content saved in the database would render here.</p>` }}
               />
@@ -334,7 +325,7 @@ export default function BlogPostPage() {
               {/* Tags */}
               <div className="mt-16 pt-8 border-t border-m3-outline/10 flex flex-wrap gap-3">
                 {blog.tags?.map(tag => (
-                  <motion.span 
+                  <motion.span
                     key={tag}
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
@@ -387,7 +378,7 @@ export default function BlogPostPage() {
                     <div>
                       <AnimatePresence>
                         {commentSuccess && (
-                          <motion.span 
+                          <motion.span
                             initial={{ opacity: 0, y: 5 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0 }}
@@ -398,7 +389,7 @@ export default function BlogPostPage() {
                         )}
                       </AnimatePresence>
                     </div>
-                    
+
                     <button
                       type="submit"
                       disabled={isSubmittingComment || !commentText.trim()}
@@ -423,7 +414,7 @@ export default function BlogPostPage() {
                       .join('')
                       .toUpperCase()
                       .slice(0, 2) || 'A';
-                    
+
                     const dateStr = new Date(comment.createdAt).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -470,10 +461,10 @@ export default function BlogPostPage() {
               <div className="bg-m3-surface-container p-10 rounded-[48px] border border-m3-outline/10">
                 <div className="flex flex-col items-center text-center">
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-6 bg-m3-primary/10 border-2 border-m3-primary/20">
-                    <img 
-                      src={blog.authorImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"} 
+                    <img
+                      src={blog.authorImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"}
                       alt={blog.author}
-                      className="w-full h-full object-cover" 
+                      className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
                   </div>
@@ -492,15 +483,15 @@ export default function BlogPostPage() {
 
               {/* 3. Reach Out Card (sticky, moves along with content) */}
               <div className="sticky top-36 bg-[#EAFF00] p-10 rounded-[48px] shadow-xl shadow-[#EAFF00]/10">
-                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-m3-on-surface mb-4 text-center">Interested?</h4>
-                 <p className="text-sm font-medium text-m3-on-surface/80 text-center leading-relaxed">
-                   Let's talk about how these insights can manifest in your business ecosystem.
-                 </p>
-                 <Link to="/reach-me" className="block w-full">
-                   <button className="w-full mt-8 py-4 bg-m3-on-surface text-[#EAFF00] rounded-full font-bold uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all cursor-pointer">
-                     Reach out
-                   </button>
-                 </Link>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-m3-on-surface mb-4 text-center">Interested?</h4>
+                <p className="text-sm font-medium text-m3-on-surface/80 text-center leading-relaxed">
+                  Let's talk about how these insights can manifest in your business ecosystem.
+                </p>
+                <Link to="/reach-me" className="block w-full">
+                  <button className="w-full mt-8 py-4 bg-m3-on-surface text-[#EAFF00] rounded-full font-bold uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                    Reach out
+                  </button>
+                </Link>
               </div>
             </aside>
           </div>

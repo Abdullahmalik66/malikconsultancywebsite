@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import CaseWork from '../components/CaseWork';
 import { Writing } from '../types';
 import { getPublishedContent } from '../lib/firebase/cms';
-import { defaultBlogPosts } from '../data/blogData';
 
 export default function WritingsPage() {
   const navigate = useNavigate();
@@ -22,27 +21,20 @@ export default function WritingsPage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   const [allWritings, setAllWritings] = useState<Writing[]>([]);
 
   useEffect(() => {
     const fetchWritings = async () => {
       try {
         const published = await getPublishedContent();
-        const cmsBlogs = published.filter(item => item.contentType === 'blog');
-        
-        const combined = [...cmsBlogs];
-        defaultBlogPosts.forEach(fallback => {
-          if (!combined.some(c => c.slug === fallback.slug || c.id === fallback.id)) {
-            combined.push(fallback);
-          }
-        });
+        const blogsOnly = published.filter(item => item.contentType === 'blog');
 
         // Sort blogs so that the latest published ones are shown first
-        const sortedBlogs = [...combined].sort((a, b) => {
+        const sortedBlogs = [...blogsOnly].sort((a, b) => {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
-        
+
         // Map ContentItem to Writing interface
         const mappedWritings: Writing[] = sortedBlogs.map(item => ({
           id: item.id,
@@ -53,7 +45,7 @@ export default function WritingsPage() {
           date: new Date(item.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
           imageUrl: item.headerImage || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop',
           category: (item.category as 'Blog' | 'News' | 'Strategy') || 'Blog',
-          author: item.authorName || 'Abdullah Malik',
+          author: item.authorName || 'Anonymous',
           badgeText: item.badgeText || '',
           tags: item.tags || []
         }));
@@ -63,7 +55,7 @@ export default function WritingsPage() {
         console.error("Failed to fetch writings:", error);
       }
     };
-    
+
     fetchWritings();
   }, []);
 
@@ -120,14 +112,14 @@ export default function WritingsPage() {
   const bgColor = useTransform(
     heroScrollY,
     [0, 0.5, 1],
-    ["#EAFF00", "#d8f000", "#121212"] 
+    ["#EAFF00", "#d8f000", "#121212"]
   );
 
   return (
     <div className="bg-[#F8F7FA] min-h-screen">
       {/* 300vh Parallax Hero Section */}
       <div ref={heroRef} className="relative h-[300vh]">
-        <motion.div 
+        <motion.div
           style={{ backgroundColor: bgColor }}
           className="sticky top-0 h-screen w-full flex overflow-hidden transition-colors duration-700"
         >
@@ -137,7 +129,7 @@ export default function WritingsPage() {
 
           <div className="relative z-10 w-full h-full px-6 md:px-12 lg:px-24 flex flex-col justify-end pb-0">
             <div className="max-w-[1750px] mx-auto w-full">
-              <motion.div 
+              <motion.div
                 style={{ y: titleY }}
                 className="flex flex-col items-start origin-bottom-left translate-y-[12vw]"
               >
@@ -148,12 +140,12 @@ export default function WritingsPage() {
                 </h1>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 style={{ opacity: descOpacity, y: descY }}
                 className="max-w-[750px] mt-12 mb-8"
               >
                 <div className="flex items-center gap-4 mb-8">
-                  <button 
+                  <button
                     onClick={() => navigate('/')}
                     className="flex items-center gap-2 text-[#6750a4]/60 hover:text-[#6750a4] transition-colors group"
                   >
@@ -163,22 +155,22 @@ export default function WritingsPage() {
                 </div>
 
                 <p className="text-xl md:text-2xl lg:text-3xl font-sans font-normal leading-tight text-[#6750a4]/90 tracking-tight">
-                  Exploring the intersection of AI, strategy, and operational excellence. 
+                  Exploring the intersection of AI, strategy, and operational excellence.
                   A curation of thoughts on structural change and enterprise evolution.
                 </p>
 
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: "80px" }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  className="h-1 bg-[#6750a4]/40 mt-10 rounded-full" 
+                  className="h-1 bg-[#6750a4]/40 mt-10 rounded-full"
                 />
               </motion.div>
             </div>
           </div>
 
           {/* Minimalist Scroll Hint */}
-          <motion.div 
+          <motion.div
             style={{ opacity: useTransform(heroScrollY, [0, 0.05], [1, 0]) }}
             className="absolute bottom-12 right-12 flex items-center gap-4 text-[#6750a4]/50"
           >
@@ -191,7 +183,7 @@ export default function WritingsPage() {
       {/* Search & Dynamic Tag Filter Section */}
       <section className="pt-24 pb-8 px-6 md:px-12 lg:px-24 bg-[#F8F7FA] relative z-20">
         <div className="max-w-[1440px] mx-auto space-y-8">
-          
+
           {/* Glassmorphic Search & Settings Bar */}
           <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
             <div className="relative w-full md:flex-1 md:max-w-5xl group">
@@ -213,13 +205,12 @@ export default function WritingsPage() {
               )}
             </div>
 
-            <button 
+            <button
               onClick={() => setShowExploreTags(!showExploreTags)}
-              className={`flex items-center justify-center gap-2 px-5 py-3 md:py-2.5 rounded-full border text-xs font-bold uppercase tracking-widest transition-all focus:outline-none cursor-pointer w-full md:w-auto ${
-                showExploreTags 
-                  ? 'bg-[#6d55a7] text-white border-[#6d55a7] shadow-md shadow-[#6d55a7]/20 scale-105' 
+              className={`flex items-center justify-center gap-2 px-5 py-3 md:py-2.5 rounded-full border text-xs font-bold uppercase tracking-widest transition-all focus:outline-none cursor-pointer w-full md:w-auto ${showExploreTags
+                  ? 'bg-[#6d55a7] text-white border-[#6d55a7] shadow-md shadow-[#6d55a7]/20 scale-105'
                   : 'border-[#6d55a7]/20 text-[#6d55a7]/70 hover:bg-[#6d55a7]/10'
-              }`}
+                }`}
             >
               <SlidersHorizontal className="w-4 h-4" />
               <span>Explore Topics</span>
@@ -235,11 +226,10 @@ export default function WritingsPage() {
                 <button
                   key={tag}
                   onClick={() => toggleTag(tag)}
-                  className={`px-3.5 py-1.5 rounded-full transition-all font-semibold uppercase tracking-widest text-[9px] border cursor-pointer ${
-                    isSelected
+                  className={`px-3.5 py-1.5 rounded-full transition-all font-semibold uppercase tracking-widest text-[9px] border cursor-pointer ${isSelected
                       ? 'bg-[#6d55a7] text-white border-[#6d55a7] shadow-sm'
                       : 'bg-[#6d55a7]/5 hover:bg-[#6d55a7]/10 text-[#6d55a7] border-[#6d55a7]/10'
-                  }`}
+                    }`}
                 >
                   {tag}
                 </button>
@@ -258,7 +248,7 @@ export default function WritingsPage() {
               >
                 {/* Dynamic Tags Cloud (Capsules) */}
                 {availableTags.length > 0 && (
-                  <motion.div 
+                  <motion.div
                     initial="hidden"
                     animate="visible"
                     variants={{
@@ -278,11 +268,10 @@ export default function WritingsPage() {
                         visible: { opacity: 1, scale: 1, y: 0 }
                       }}
                       onClick={clearAllFilters}
-                      className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
-                        selectedTags.length === 0 && searchQuery.trim() === ''
+                      className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${selectedTags.length === 0 && searchQuery.trim() === ''
                           ? 'bg-[#6d55a7] text-white shadow-md shadow-[#6d55a7]/20 scale-105'
                           : 'bg-white dark:bg-[#1e1c24] border border-m3-outline/10 text-m3-on-surface/60 hover:border-[#6d55a7]/30 hover:text-[#6d55a7]'
-                      }`}
+                        }`}
                     >
                       All Topics
                     </motion.button>
@@ -298,11 +287,10 @@ export default function WritingsPage() {
                           whileHover={{ scale: 1.05, y: -2 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => toggleTag(tag)}
-                          className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${
-                            isSelected
+                          className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${isSelected
                               ? 'bg-[#6d55a7] text-white shadow-md shadow-[#6d55a7]/20 scale-105'
                               : 'bg-white dark:bg-[#1e1c24] border border-m3-outline/10 text-m3-on-surface/60 hover:border-[#6d55a7]/30 hover:text-[#6d55a7]'
-                          }`}
+                            }`}
                         >
                           <TagIcon className="w-3.5 h-3.5 opacity-60" />
                           {tag}
@@ -359,7 +347,7 @@ export default function WritingsPage() {
       {/* Grid Section */}
       <section className="py-20 bg-[#F8F7FA]">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24">
-          <motion.div 
+          <motion.div
             layout
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24"
           >
@@ -401,7 +389,7 @@ export default function WritingsPage() {
             </AnimatePresence>
 
             {filteredWritings.length === 0 && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="md:col-span-2 flex flex-col items-center justify-center text-center p-12 bg-white dark:bg-[#1e1c24] border border-m3-outline/10 rounded-[48px] shadow-sm min-h-[300px]"
@@ -436,7 +424,7 @@ export default function WritingsPage() {
 function WritingCard({ writing }: { writing: Writing; key?: string | number }) {
   const navigate = useNavigate();
   const cardRef = useRef<HTMLDivElement>(null);
-  
+
   return (
     <motion.div
       layout
@@ -450,13 +438,13 @@ function WritingCard({ writing }: { writing: Writing; key?: string | number }) {
     >
       {/* Image Container - CURVY EDGES as requested */}
       <div className="relative aspect-[16/10] overflow-hidden rounded-[48px] mb-8 bg-gray-100">
-        <img 
-          src={writing.imageUrl} 
+        <img
+          src={writing.imageUrl}
           alt={writing.title}
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           referrerPolicy="no-referrer"
         />
-        
+
         {/* Floating Category Badge */}
         {writing.badgeText && (
           <div className="absolute top-6 left-6 pointer-events-none">

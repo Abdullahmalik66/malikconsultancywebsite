@@ -3,14 +3,13 @@ import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight, Plus } from 'lucide-react';
 import { getPublishedContent } from '../lib/firebase/cms';
-import { defaultBlogPosts } from '../data/blogData';
 
 interface Insight {
   id: string;
   slug?: string;
   date: string;
   category: string;
-  author: string;
+  author?: string;
   title: string;
   excerpt: string;
   imageUrl: string;
@@ -27,17 +26,10 @@ export default function LatestInsights() {
     const fetchLatest = async () => {
       try {
         const published = await getPublishedContent();
-        const cmsBlogs = published.filter(item => item.contentType === 'blog');
-
-        const combined = [...cmsBlogs];
-        defaultBlogPosts.forEach(fallback => {
-          if (!combined.some(c => c.slug === fallback.slug || c.id === fallback.id)) {
-            combined.push(fallback);
-          }
-        });
+        const blogs = published.filter(item => item.contentType === 'blog');
 
         // Shuffle randomly using Fisher-Yates algorithm on every refresh
-        const shuffled = [...combined];
+        const shuffled = [...blogs];
         for (let i = shuffled.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -48,7 +40,7 @@ export default function LatestInsights() {
           slug: item.slug,
           date: new Date(item.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
           category: (item.category as 'Blog' | 'News' | 'Strategy') || 'Blog',
-          author: item.authorName || 'Abdullah Malik',
+          author: item.authorName || 'Anonymous',
           title: item.title,
           excerpt: item.excerpt || '',
           imageUrl: item.headerImage || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop',
