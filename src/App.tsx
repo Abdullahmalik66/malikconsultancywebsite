@@ -59,25 +59,14 @@ function HomePage() {
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if ('scrollRestoration' in window.history) {
-        window.history.scrollRestoration = 'manual';
-      }
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      
-      const timer = setTimeout(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      }, 50);
-
-      return () => clearTimeout(timer);
-    }
+    window.scrollTo(0, 0);
   }, [pathname]);
   return null;
 }
 
 function AppContent() {
   const location = useLocation();
-  const isCleanLayout = location.pathname.startsWith('/admin') || location.pathname === '/reach-me' || location.pathname === '/my-life-story' || location.pathname === '/my-life-playground';
+  const isCleanLayout = location.pathname.startsWith('/admin') || location.pathname === '/reach-me' || location.pathname === '/my-life-story';
 
   return (
     <main className="relative min-h-screen bg-m3-surface transition-colors duration-300">
@@ -89,7 +78,6 @@ function AppContent() {
         <Route path="/my-writings" element={<WritingsPage />} />
         <Route path="/writings/:id" element={<BlogPostPage />} />
         <Route path="/my-life-story" element={<MyLifeStoryPage />} />
-        <Route path="/my-life-playground" element={<MyLifeStoryPage />} />
         <Route path="/services/ai-transformation" element={<AITransformationPage />} />
         <Route path="/services/data-activation-intelligence" element={<DataActivationPage />} />
         <Route path="/services/modern-marketing-growth" element={<ModernMarketingPage />} />
@@ -100,13 +88,13 @@ function AppContent() {
         <Route path="/testimonials" element={<TestimonialsPage />} />
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
-        <Route 
-          path="/admin" 
+        <Route
+          path="/admin"
           element={
             <ProtectedRoute>
               <AdminPage />
             </ProtectedRoute>
-          } 
+          }
         />
         {/* Dynamic Case Study Route */}
         <Route path="/case-study/:slug" element={<CaseStudyPage />} />

@@ -5,9 +5,6 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
 import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
 import ClientShowcase2 from '../components/ClientShowcase2';
-import LatestInsights from '../components/LatestInsights';
-import StaggerTestimonials from '../components/StaggerTestimonials';
-import NewsletterSection from '../components/NewsletterSection';
 
 export default function CaseWorkPage() {
   const navigate = useNavigate();
@@ -22,7 +19,7 @@ export default function CaseWorkPage() {
       setIsScrolled(window.scrollY > window.innerHeight * 3);
     };
     window.addEventListener('scroll', handleScroll);
-    
+
     const fetchCases = async () => {
       const published = await getPublishedContent();
       const cases = published.filter(item => item.contentType === 'case_study');
@@ -53,7 +50,7 @@ export default function CaseWorkPage() {
   }, [activeFilter, caseStudies]);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   const { scrollYProgress: heroScrollY } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -68,14 +65,14 @@ export default function CaseWorkPage() {
   const bgColor = useTransform(
     heroScrollY,
     [0, 0.5, 1],
-    ["#1a3c1a", "#1a2c1a", "#121212"] 
+    ["#1a3c1a", "#1a2c1a", "#121212"]
   );
 
   return (
     <div className="min-h-screen bg-[#F8F7FA]">
       {/* Hero Section - Matching Main Page Styling */}
       <div ref={containerRef} className="relative h-[300vh]">
-        <motion.div 
+        <motion.div
           style={{ backgroundColor: bgColor }}
           className="sticky top-0 h-screen w-full flex overflow-hidden transition-colors duration-700"
         >
@@ -87,7 +84,7 @@ export default function CaseWorkPage() {
 
           <div className="relative z-10 w-full h-full px-6 md:px-12 lg:px-24 flex flex-col justify-end pb-0">
             <div className="max-w-[1750px] mx-auto w-full">
-              <motion.div 
+              <motion.div
                 style={{ y: titleY }}
                 className="flex flex-col items-start origin-bottom-left translate-y-[12vw]"
               >
@@ -98,12 +95,12 @@ export default function CaseWorkPage() {
                 </h1>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 style={{ opacity: descOpacity, y: descY }}
                 className="max-w-[750px] mt-12 mb-8"
               >
                 <div className="flex items-center gap-4 mb-8">
-                  <button 
+                  <button
                     onClick={() => navigate('/')}
                     className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
                   >
@@ -113,23 +110,23 @@ export default function CaseWorkPage() {
                 </div>
 
                 <p className="text-xl md:text-2xl lg:text-3xl font-sans font-normal leading-tight text-white/90 tracking-tight">
-                  We partner with forward-thinking organizations to navigate the complexities of AI adoption. 
-                  Our work bridges the gap between ambition and reality, delivering measurable impact 
+                  We partner with forward-thinking organizations to navigate the complexities of AI adoption.
+                  Our work bridges the gap between ambition and reality, delivering measurable impact
                   through strategic innovation and technical excellence.
                 </p>
 
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: "80px" }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  className="h-1 bg-white/40 mt-10 rounded-full" 
+                  className="h-1 bg-white/40 mt-10 rounded-full"
                 />
               </motion.div>
             </div>
           </div>
 
           {/* Minimalist Scroll Hint */}
-          <motion.div 
+          <motion.div
             style={{ opacity: useTransform(heroScrollY, [0, 0.05], [1, 0]) }}
             className="absolute bottom-12 right-12 flex items-center gap-4 text-white/50"
           >
@@ -142,17 +139,16 @@ export default function CaseWorkPage() {
       {/* Filter Bar Space (White) */}
       <section className="bg-[#F8F7FA] pt-32 pb-8 px-6 md:px-12 lg:px-24">
         <div className="max-w-[1440px] mx-auto h-20 relative flex justify-start">
-          <div className={`transition-all duration-1000 ease-[0.22,1,0.36,1] ${
-            isScrolled 
-              ? 'fixed right-8 top-1/2 -translate-y-1/2 z-50 w-64' 
+          <div className={`transition-all duration-1000 ease-[0.22,1,0.36,1] ${isScrolled
+              ? 'fixed right-8 top-1/2 -translate-y-1/2 z-50 w-64'
               : 'relative w-full md:w-fit'
-          }`}>
-            <motion.div 
+            }`}>
+            <motion.div
               layout
               className={`
                 inline-flex items-center p-2 backdrop-blur-[32px] border transition-all duration-700
-                ${isScrolled 
-                  ? 'flex-col gap-2 rounded-[32px] bg-[#1a1a1a]/80 py-6 border-white/20' 
+                ${isScrolled
+                  ? 'flex-col gap-2 rounded-[32px] bg-[#1a1a1a]/80 py-6 border-white/20'
                   : 'rounded-[100px] bg-[#1a1a1a]/70 border-white/10 p-3'}
               `}
             >
@@ -162,8 +158,8 @@ export default function CaseWorkPage() {
                   onClick={() => setActiveFilter(category)}
                   className={`
                     rounded-full text-sm font-bold transition-all relative overflow-hidden flex items-center
-                    ${isScrolled 
-                      ? 'w-full px-6 py-4 justify-center text-center' 
+                    ${isScrolled
+                      ? 'w-full px-6 py-4 justify-center text-center'
                       : 'px-10 py-5 whitespace-nowrap'}
                     ${activeFilter === category ? 'text-white' : 'text-white/40 hover:text-white/80'}
                   `}
@@ -172,7 +168,7 @@ export default function CaseWorkPage() {
                     {category}
                   </span>
                   {activeFilter === category && (
-                    <motion.div 
+                    <motion.div
                       layoutId="activeTab"
                       className="absolute inset-0 bg-[#6d55a7] rounded-full"
                       transition={{ type: "spring", bounce: 0.1, duration: 0.6 }}
@@ -188,7 +184,7 @@ export default function CaseWorkPage() {
       {/* Case Studies Grid */}
       <section className="py-20 px-6 md:px-12 lg:px-24">
         <div className="max-w-[1440px] mx-auto pt-12">
-          <motion.div 
+          <motion.div
             layout
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
@@ -204,8 +200,8 @@ export default function CaseWorkPage() {
                   className={`flex-shrink-0 w-full rounded-[48px] overflow-hidden relative group shadow-2xl shadow-black/5 h-[580px]`}
                 >
                   {/* Background Color */}
-                  <div 
-                    className="absolute inset-0 transition-transform duration-1000 ease-out group-hover:scale-110" 
+                  <div
+                    className="absolute inset-0 transition-transform duration-1000 ease-out group-hover:scale-110"
                     style={{ backgroundColor: work.color }}
                   />
 
@@ -238,7 +234,7 @@ export default function CaseWorkPage() {
                         <span>Read more</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </span>
-                      <motion.div 
+                      <motion.div
                         variants={{
                           hover: { x: 0 }
                         }}
@@ -257,15 +253,6 @@ export default function CaseWorkPage() {
 
       {/* Grid Client Showcase */}
       <ClientShowcase2 />
-
-      {/* Blogs / Insights */}
-      <LatestInsights />
-
-      {/* Newsletter */}
-      <NewsletterSection />
-
-      {/* Testimonials */}
-      <StaggerTestimonials />
     </div>
   );
 }
@@ -275,12 +262,12 @@ function NeonAnimation({ type }: { type: string }) {
     case 'blobs':
       return (
         <>
-          <motion.div 
+          <motion.div
             animate={{ scale: [1, 1.2, 1], x: [0, 30, 0], y: [0, -20, 0] }}
             transition={{ duration: 8, repeat: Infinity }}
             className="absolute top-0 left-0 w-64 h-64 bg-[#00ffcc] rounded-full blur-[80px] opacity-40"
           />
-          <motion.div 
+          <motion.div
             animate={{ scale: [1, 1.3, 1], x: [0, -30, 0], y: [0, 20, 0] }}
             transition={{ duration: 10, repeat: Infinity }}
             className="absolute bottom-0 right-0 w-80 h-80 bg-[#ff00ff] rounded-full blur-[100px] opacity-30"

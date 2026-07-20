@@ -3,21 +3,18 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plus, X, Check, MessageSquare, Quote, Sparkles } from 'lucide-react';
 import { STATIC_TESTIMONIALS, Testimonial, shuffleArray } from '../data/testimonials';
 import { getPublishedTestimonials, submitPublicTestimonial } from '../lib/firebase/cms';
-import CaseWork from '../components/CaseWork';
-import LatestInsights from '../components/LatestInsights';
-import NewsletterSection from '../components/NewsletterSection';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [shuffled, setShuffled] = useState<Testimonial[]>([]);
   const [localPending, setLocalPending] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  
+
   // Modal states
   const [showModal, setShowModal] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
-  
+
   // Form values
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
@@ -113,12 +110,12 @@ export default function TestimonialsPage() {
         featured: false,
         createdAt: new Date().toISOString()
       };
-      
+
       // Save to local state and localStorage so the user gets instant visual confirmation in their browser
       const updatedLocal = [created, ...localPending];
       setLocalPending(updatedLocal);
       localStorage.setItem('local_pending_testimonials', JSON.stringify(updatedLocal));
-      
+
       setSuccess(true);
     } catch (err) {
       console.error('Error submitting testimonial to Firebase:', err);
@@ -157,14 +154,14 @@ export default function TestimonialsPage() {
 
   return (
     <div className="relative min-h-screen bg-m3-surface overflow-hidden pt-32 pb-24 font-sans selection:bg-m3-primary selection:text-m3-on-primary">
-      
+
       {/* =========================================================================
           SHAPE-LED EXPRESSIVE BACKDROP SYSTEM
           Large Rounded Blobs, Drift Fields, and 2.5D Middle-layer assets
           ========================================================================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Deep soft purple gradient orb top-left */}
-        <motion.div 
+        <motion.div
           animate={{
             x: [0, 40, -20, 0],
             y: [0, -30, 20, 0],
@@ -179,7 +176,7 @@ export default function TestimonialsPage() {
         />
 
         {/* Ambient lavender soft-drifting clover shape right side */}
-        <motion.div 
+        <motion.div
           animate={{
             x: [0, -50, 30, 0],
             y: [0, 40, -30, 0],
@@ -195,7 +192,7 @@ export default function TestimonialsPage() {
         />
 
         {/* Dynamic lower color field in warm tint */}
-        <motion.div 
+        <motion.div
           animate={{
             x: [-20, 30, 0, -20],
             y: [10, -20, 15, 10],
@@ -220,7 +217,7 @@ export default function TestimonialsPage() {
         </svg>
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 z-10 relative pb-24 md:pb-36 lg:pb-48">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 z-10 relative">
 
         {/* =========================================================================
             1. HERO / HEADER SECTION
@@ -239,7 +236,7 @@ export default function TestimonialsPage() {
             </span>
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
@@ -248,7 +245,7 @@ export default function TestimonialsPage() {
             Trusted by people building <br /> real transformation.
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -267,13 +264,13 @@ export default function TestimonialsPage() {
             <div className="w-12 h-12 rounded-full border-4 border-m3-primary/30 border-t-m3-primary animate-spin" />
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start align-top"
           >
-            
+
             {/* INLINE CONTRIBUTOR CTA CARD - Render first inside gallery to encourage user participation */}
             <motion.div
               whileHover={{ y: -6, scale: 1.02 }}
@@ -285,7 +282,7 @@ export default function TestimonialsPage() {
                   Join in
                 </span>
               </div>
-              
+
               <div className="my-auto py-8">
                 <div className="w-16 h-16 rounded-full bg-m3-secondary-container flex items-center justify-center text-m3-primary mx-auto mb-6 transform scale-100 group-hover:scale-110 group-active:scale-95 transition-all duration-300 shadow-md">
                   <Plus className="w-8 h-8 stroke-[2.5]" />
@@ -309,7 +306,7 @@ export default function TestimonialsPage() {
               // Add a slight custom orientation tilt to mimic true editorial depth
               const tilts = ['rotate-1', '-rotate-1', 'rotate-0', 'rotate-2', '-rotate-2'];
               const rotation = tilts[index % tilts.length];
-              
+
               return (
                 <motion.div
                   key={item.id}
@@ -320,8 +317,8 @@ export default function TestimonialsPage() {
                   className={`
                     p-8 md:p-10 flex flex-col justify-between rounded-[40px] shadow-sm hover:shadow-xl transition-all duration-500 border relative overflow-hidden
                     ${rotation}
-                    ${isLocalPending 
-                      ? 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-300/40 text-m3-on-surface' 
+                    ${isLocalPending
+                      ? 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-300/40 text-m3-on-surface'
                       : index % 2 === 0
                         ? 'bg-[#6d55a7] text-white border-[#6d55a7]/20 shadow-[0_15px_30px_-5px_rgba(109,85,167,0.15)] shadow-m3-primary/10'
                         : 'bg-white text-m3-on-surface border-m3-outline/10'
@@ -333,13 +330,12 @@ export default function TestimonialsPage() {
 
                   <div>
                     <div className="flex justify-between items-start mb-6">
-                      <span className={`text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full ${
-                        isLocalPending 
-                          ? 'bg-amber-200 text-amber-800 font-semibold' 
-                          : index % 2 === 0 
-                            ? 'bg-white/10 text-white' 
+                      <span className={`text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full ${isLocalPending
+                          ? 'bg-amber-200 text-amber-800 font-semibold'
+                          : index % 2 === 0
+                            ? 'bg-white/10 text-white'
                             : 'bg-m3-secondary-container/40 text-m3-primary'
-                      }`}>
+                        }`}>
                         {isLocalPending ? 'Pending Moderation' : 'Client Review'}
                       </span>
                       <MessageSquare className={`w-5 h-5 ${index % 2 === 0 ? 'text-white/45' : 'text-m3-primary/30'}`} strokeWidth={1.5} />
@@ -364,27 +360,7 @@ export default function TestimonialsPage() {
 
           </motion.div>
         )}
-      </div>
 
-      {/* =========================================================================
-          2. CASE WORK SECTION
-          ========================================================================= */}
-      <div className="relative z-10">
-        <CaseWork />
-      </div>
-
-      {/* =========================================================================
-          3. BLOGS / LATEST INSIGHTS SECTION
-          ========================================================================= */}
-      <div className="relative z-10">
-        <LatestInsights />
-      </div>
-
-      {/* =========================================================================
-          4. NEWSLETTER SECTION (UNITED WITH BLOGS)
-          ========================================================================= */}
-      <div className="relative z-10">
-        <NewsletterSection />
       </div>
 
       {/* =========================================================================
@@ -394,7 +370,7 @@ export default function TestimonialsPage() {
       <AnimatePresence>
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            
+
             {/* Dark glass backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -412,7 +388,7 @@ export default function TestimonialsPage() {
               transition={{ type: "spring", damping: 25, stiffness: 350 }}
               className="relative w-full max-w-xl bg-[#fef7ff] dark:bg-[#141218] border border-m3-outline/20 rounded-[40px] shadow-2xl p-8 md:p-10 z-10 overflow-hidden text-m3-on-surface max-h-[90vh] overflow-y-auto"
             >
-              <button 
+              <button
                 onClick={handleCloseSuccess}
                 className="absolute top-6 right-6 w-11 h-11 rounded-full bg-m3-on-surface/5 hover:bg-m3-on-surface/15 flex items-center justify-center transition-colors cursor-pointer text-m3-on-surface"
                 aria-label="Close modal"
@@ -439,7 +415,7 @@ export default function TestimonialsPage() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      
+
                       {/* Name input */}
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-m3-on-surface/70 mb-2">
@@ -453,8 +429,8 @@ export default function TestimonialsPage() {
                           placeholder="Sarah Ahmed"
                           className={`
                             w-full px-5 py-3.5 rounded-2xl bg-m3-on-surface/5 border focus:outline-none transition-colors
-                            ${touched.name && !isNameValid 
-                              ? 'border-red-500/50 focus:border-red-500 bg-red-500/[0.02]' 
+                            ${touched.name && !isNameValid
+                              ? 'border-red-500/50 focus:border-red-500 bg-red-500/[0.02]'
                               : 'border-m3-outline/20 focus:border-m3-primary'
                             }
                           `}
@@ -479,8 +455,8 @@ export default function TestimonialsPage() {
                             placeholder="Nordic Growth Studio"
                             className={`
                               w-full px-5 py-3.5 rounded-2xl bg-m3-on-surface/5 border focus:outline-none transition-colors
-                              ${touched.company && !isCompanyValid 
-                                ? 'border-red-500/50 focus:border-red-500 bg-red-500/[0.02]' 
+                              ${touched.company && !isCompanyValid
+                                ? 'border-red-500/50 focus:border-red-500 bg-red-500/[0.02]'
                                 : 'border-m3-outline/20 focus:border-m3-primary'
                               }
                             `}
@@ -511,11 +487,10 @@ export default function TestimonialsPage() {
                           <label className="block text-xs font-bold uppercase tracking-wider text-m3-on-surface/70">
                             Testimonial <span className="text-m3-primary">*</span>
                           </label>
-                          <span className={`text-xs font-mono font-semibold ${
-                            testimonialText.length >= 120 && testimonialText.length <= 350
+                          <span className={`text-xs font-mono font-semibold ${testimonialText.length >= 120 && testimonialText.length <= 350
                               ? 'text-m3-primary'
                               : 'text-m3-on-surface/40'
-                          }`}>
+                            }`}>
                             {testimonialText.length} / 350 chars
                           </span>
                         </div>
@@ -527,8 +502,8 @@ export default function TestimonialsPage() {
                           placeholder="Abdullah brought clarity, structure, and momentum to a complex transformation initiative..."
                           className={`
                             w-full px-5 py-4 rounded-2xl bg-m3-on-surface/5 border focus:outline-none transition-colors resize-none
-                            ${touched.text && !isTextValid 
-                              ? 'border-red-500/50 focus:border-red-500 bg-red-500/[0.02]' 
+                            ${touched.text && !isTextValid
+                              ? 'border-red-500/50 focus:border-red-500 bg-red-500/[0.02]'
                               : 'border-m3-outline/20 focus:border-m3-primary'
                             }
                           `}
@@ -555,8 +530,8 @@ export default function TestimonialsPage() {
                           disabled={!isFormValid || submitting}
                           className={`
                             w-full py-4 rounded-full font-bold shadow-md hover:shadow-lg transition-all text-center select-none flex items-center justify-center gap-2
-                            ${isFormValid 
-                              ? 'bg-m3-primary text-m3-on-primary cursor-pointer' 
+                            ${isFormValid
+                              ? 'bg-m3-primary text-m3-on-primary cursor-pointer'
                               : 'bg-m3-on-surface/10 text-m3-on-surface/45 cursor-not-allowed'
                             }
                           `}
@@ -584,7 +559,7 @@ export default function TestimonialsPage() {
                     <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 mx-auto mb-6 shadow-md">
                       <Check className="w-8 h-8 stroke-[3]" />
                     </div>
-                    
+
                     <h3 className="text-3xl font-display font-bold text-m3-on-surface mb-3">
                       Thank you. Your perspective has been received.
                     </h3>
