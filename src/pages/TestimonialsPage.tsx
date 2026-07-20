@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plus, X, Check, MessageSquare, Quote, Sparkles } from 'lucide-react';
 import { STATIC_TESTIMONIALS, Testimonial, shuffleArray } from '../data/testimonials';
 import { getPublishedTestimonials, submitPublicTestimonial } from '../lib/firebase/cms';
+import CaseWork from '../components/CaseWork';
+import LatestInsights from '../components/LatestInsights';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -361,6 +363,14 @@ export default function TestimonialsPage() {
 
           </motion.div>
         )}
+
+        {/* =========================================================================
+            3. CASE WORK & BLOGS SECTIONS
+            ========================================================================= */}
+        <div className="-mx-6 md:-mx-12 lg:-mx-24 mt-24">
+          <CaseWork />
+          <LatestInsights />
+        </div>
 
       </div>
 
