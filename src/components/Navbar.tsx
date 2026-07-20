@@ -69,20 +69,17 @@ export default function Navbar() {
         >
 
           {/* ==========================================================
-              1. LEFT: TYPOGRAPHIC BRAND LOGO ("Syne" Font Typography)
+              1. LEFT: BRAND LOGO (Poster Logo Image ONLY - No bed/text)
              ========================================================== */}
           <Link 
             to="/" 
-            className="flex items-center px-5 py-2.5 sm:py-3 rounded-full bg-[#F6F2F9]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-md transition-all group cursor-pointer"
+            className="flex items-center group cursor-pointer transition-transform duration-300 hover:scale-105"
           >
-            <div className="flex flex-col text-left">
-              <span className="font-['Syne'] font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-[#1A102E] dark:text-white uppercase leading-none">
-                ABDULLAH MALIK
-              </span>
-              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.25em] text-[#6750A4] dark:text-[#D0BCFF] uppercase font-bold leading-none mt-1">
-                CONSULTANCY
-              </span>
-            </div>
+            <img 
+              src="/am-poster-logo-clean.png" 
+              alt="Abdullah Malik Consultancy Logo" 
+              className="h-12 sm:h-14 md:h-16 lg:h-18 w-auto object-contain rounded-xl shadow-md border border-white/10"
+            />
           </Link>
 
           {/* ==========================================================
