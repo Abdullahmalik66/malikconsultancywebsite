@@ -68,18 +68,26 @@ export default function Navbar() {
           id="main-nav"
         >
 
-          {/* ========================================================
-              LEFT: BRAND LOGO (Official Logo Image - Large & Prominent)
-             ======================================================== */}
+          {/* ==========================================================
+              LEFT: BRAND LOGO (New Teal Ribbon AM Monogram Logo)
+             ========================================================== */}
           <Link 
             to="/" 
-            className="flex items-center px-4 py-2 rounded-2xl bg-[#F4EFF7]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-sm hover:shadow-md transition-all group cursor-pointer"
+            className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-[#F4EFF7]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-sm hover:shadow-md transition-all group cursor-pointer"
           >
             <img 
-              src="/am-logo-cropped.png" 
-              alt="Abdullah Malik Consultancy" 
-              className="h-10 sm:h-11 md:h-12 lg:h-14 w-auto object-contain mix-blend-multiply dark:invert dark:brightness-200 transition-all"
+              src="/new-am-logo-transparent.png" 
+              alt="Abdullah Malik Logo" 
+              className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto object-contain transition-transform group-hover:scale-105"
             />
+            <div className="flex flex-col">
+              <span className="font-sans font-bold text-xs sm:text-sm tracking-wider text-[#1D1B20] dark:text-white uppercase leading-none">
+                ABDULLAH MALIK
+              </span>
+              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] text-[#009688] dark:text-[#00b2a1] uppercase font-semibold leading-tight mt-0.5">
+                CONSULTANCY
+              </span>
+            </div>
           </Link>
 
           {/* ========================================================
