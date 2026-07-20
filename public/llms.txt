@@ -6,13 +6,13 @@ Looking for the full website content in a single file? See our [Consolidated Mar
 
 ## Core Pages
 
-- [Abdullah Malik — AI Strategy & Growth Consultant](https://abdullahmalikconsultancy.web.app/): Abdullah Malik's consultancy hub covering AI strategy, growth architecture, and digital transformation advisory services.
-- [About Abdullah Malik](https://abdullahmalikconsultancy.web.app/about): Background, professional expertise, and consulting philosophy of Abdullah Malik as an independent AI and growth strategist.
-- [Case Work Portfolio](https://abdullahmalikconsultancy.web.app/case-work): Portfolio of executed client engagements with documented outcomes, pipeline metrics, and strategy execution results.
-- [Writings & Insights](https://abdullahmalikconsultancy.web.app/my-writings): Expert articles and insights on AI strategy, growth systems, digital transformation, and modern marketing practices.
+- [AI Strategy & Growth Consultant | Abdullah Malik](https://abdullahmalikconsultancy.web.app/): Independent AI strategy and growth consultant offering advisory in AI transformation, data activation, performance marketing, and AI capability building.
+- [About Abdullah Malik:  AI Strategy & Growth Consultant](https://abdullahmalikconsultancy.web.app/about): Professional background, consulting philosophy, and methodologies of Abdullah Malik, an independent AI strategy and growth consultant.
+- [AI Growth Consulting Case Studies | Abdullah Malik](https://abdullahmalikconsultancy.web.app/case-work): Portfolio of AI strategy and growth consulting case studies with documented methodologies and measurable business results.
+- [Writings & Insights on AI Strategy and Growth Architecture](https://abdullahmalikconsultancy.web.app/my-writings): Expert writings on AI strategy, growth architecture, and data activation by consultant Abdullah Malik.
 - [Contact Malik Consultancy](https://abdullahmalikconsultancy.web.app/reach-me): Project enquiry and contact page for Malik Consultancy strategic advisory and AI transformation engagements.
-- [Client Testimonials](https://abdullahmalikconsultancy.web.app/testimonials): Professional endorsements and client testimonials from collaborators across growth, AI, and consulting projects.
-- [My Story](https://abdullahmalikconsultancy.web.app/my-life-story): Personal background, career journey, and the philosophy driving Abdullah Malik's independent consultancy practice.
+- [Client Testimonials | AI Growth Consultant Abdullah Malik](https://abdullahmalikconsultancy.web.app/testimonials): Client testimonials and professional endorsements validating Abdullah Malik's AI strategy, data activation, and growth marketing consulting outcomes.
+- [Abdullah Malik: Growth Engineering & Advisory Background](https://abdullahmalikconsultancy.web.app/my-life-story): The professional background, career milestones, and growth engineering philosophy driving Abdullah Malik's independent AI advisory.
 
 ## Services
 

@@ -260,7 +260,7 @@ export default function MarketingSubServicesShowcase() {
       ) : (
         /* Desktop Pinned Scroll Layout */
         <div ref={containerRef} className="relative w-full h-[600vh] bg-[#FAF7F2]">
-          <div className="sticky top-0 h-screen w-full flex items-start pt-[12vh] justify-center overflow-hidden">
+          <div className="sticky top-0 h-[100svh] min-h-[100svh] md:h-screen w-full flex items-start pt-[12vh] justify-center overflow-hidden">
             
             <div className="w-full max-w-[1750px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-center relative">
               

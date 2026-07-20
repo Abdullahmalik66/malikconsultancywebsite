@@ -73,10 +73,10 @@ export default function CaseWorkPage() {
   return (
     <div className="min-h-screen bg-[#F8F7FA]">
       {/* Hero Section - Matching Main Page Styling */}
-      <div ref={containerRef} className="relative h-[300vh]">
+      <div ref={containerRef} className="relative h-[300vh] bg-[#F8F7FA] dark:bg-[#16151A]">
         <motion.div
           style={{ backgroundColor: bgColor }}
-          className="sticky top-0 h-screen w-full flex overflow-hidden transition-colors duration-700"
+          className="sticky top-0 h-[100svh] min-h-[100svh] md:h-screen w-full flex overflow-hidden transition-colors duration-700"
         >
           {/* Subtle texture/mesh for depth */}
           <div className="absolute inset-0 opacity-20 pointer-events-none">

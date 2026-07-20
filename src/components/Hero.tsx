@@ -47,9 +47,12 @@ export default function Hero() {
   };
 
   return (
-    <div className="relative min-h-[100svh] md:min-h-[150vh] bg-[#1A102E] flex items-start overflow-hidden pt-36 md:pt-[55vh] pb-16 md:pb-32">
+    <div 
+      className="relative min-h-[100svh] md:min-h-[150vh] bg-[#1A102E] flex items-start overflow-hidden pt-36 md:pt-[55vh] pb-16 md:pb-32"
+      style={{ backgroundColor: '#1A102E' }}
+    >
       {/* Subtle mesh background */}
-      <div className="absolute inset-0 opacity-15 pointer-events-none">
+      <div className="absolute inset-0 opacity-15 pointer-events-none dark-overlay-mobile">
         <div className="absolute top-[10%] left-[10%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-[20%] right-[10%] w-[60%] h-[60%] bg-black/20 rounded-full blur-[140px]" />
       </div>

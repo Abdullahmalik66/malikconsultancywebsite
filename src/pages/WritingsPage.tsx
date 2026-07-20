@@ -118,10 +118,10 @@ export default function WritingsPage() {
   return (
     <div className="bg-[#F8F7FA] min-h-screen">
       {/* 300vh Parallax Hero Section */}
-      <div ref={heroRef} className="relative h-[300vh]">
+      <div ref={heroRef} className="relative h-[300vh] bg-[#F8F7FA] dark:bg-[#16151A]">
         <motion.div
           style={{ backgroundColor: bgColor }}
-          className="sticky top-0 h-screen w-full flex overflow-hidden transition-colors duration-700"
+          className="sticky top-0 h-[100svh] min-h-[100svh] md:h-screen w-full flex overflow-hidden transition-colors duration-700"
         >
           <div className="absolute inset-0 opacity-10 pointer-events-none">
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.1),transparent_70%)]" />

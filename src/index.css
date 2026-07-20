@@ -47,8 +47,87 @@ html.dark {
 }
 
 @layer base {
+  html {
+    background-color: #0b0b12;
+    color-scheme: light dark;
+  }
+
   body {
+    background-color: #0b0b12;
     @apply bg-m3-surface text-m3-on-surface antialiased selection:bg-m3-primary selection:text-m3-on-primary transition-colors duration-300 overflow-x-hidden;
+    min-height: 100%;
+  }
+
+  #root,
+  main {
+    background-color: var(--m3-surface);
+    min-height: 100%;
+  }
+}
+
+/* ==========================================================
+   MOBILE BACKGROUND, LAYER & VIEWPORT STABILITY SYSTEM
+   ========================================================== */
+
+/* Solid Background Fallbacks for Dark Sections & Containers */
+.bg-\[\#1A102E\],
+.bg-\[\#1a102e\],
+.section-dark-purple {
+  background-color: #1A102E !important;
+}
+
+.bg-\[\#000114\],
+.section-dark-cosmos {
+  background-color: #000114 !important;
+}
+
+.bg-\[\#03120E\],
+.section-dark-emerald {
+  background-color: #03120E !important;
+}
+
+.bg-\[\#18051E\],
+.section-dark-plum {
+  background-color: #18051E !important;
+}
+
+.bg-\[\#1A0F03\],
+.section-dark-amber {
+  background-color: #1A0F03 !important;
+}
+
+.bg-\[\#16151A\] {
+  background-color: #16151A !important;
+}
+
+.bg-\[\#141218\] {
+  background-color: #141218 !important;
+}
+
+.bg-\[\#1D1B20\] {
+  background-color: #1D1B20 !important;
+}
+
+.bg-\[\#070604\] {
+  background-color: #070604 !important;
+}
+
+/* Mobile Specific Overlays & Contrast Fixes (Screen <= 768px) */
+@media (max-width: 768px) {
+  /* Prevent dark overlay collapse and guarantee readable mobile text contrast */
+  .dark-overlay-mobile {
+    opacity: 0.35 !important;
+  }
+
+  .section-dark-mobile p,
+  .section-dark-mobile .body-text,
+  .section-dark-mobile .meta-text {
+    color: rgba(255, 255, 255, 0.88) !important;
+  }
+
+  /* Safe Area padding for mobile header controls */
+  #main-nav {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
   }
 }
 

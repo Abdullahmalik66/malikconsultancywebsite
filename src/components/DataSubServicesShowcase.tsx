@@ -257,7 +257,7 @@ export default function DataSubServicesShowcase() {
       ) : (
         /* Desktop Pinned Scroll Layout: Wide cards that occupy the full width of the container. No right progress dots */
         <div ref={containerRef} className="relative w-full h-[600vh] bg-[#FAF8F3]">
-          <div className="sticky top-0 h-screen w-full flex items-start pt-[12vh] justify-center overflow-hidden">
+          <div className="sticky top-0 h-[100svh] min-h-[100svh] md:h-screen w-full flex items-start pt-[12vh] justify-center overflow-hidden">
             
             <div className="w-full max-w-[1750px] mx-auto px-6 md:px-12 lg:px-24 flex items-center justify-center relative">
               

@@ -153,7 +153,7 @@ export default function TestimonialsPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-m3-surface overflow-hidden pt-32 pb-24 font-sans selection:bg-m3-primary selection:text-m3-on-primary">
+    <div className="relative min-h-[100svh] bg-m3-surface overflow-hidden pt-32 pb-24 font-sans selection:bg-m3-primary selection:text-m3-on-primary">
 
       {/* =========================================================================
           SHAPE-LED EXPRESSIVE BACKDROP SYSTEM

@@ -74,9 +74,12 @@ export default function ModernMarketingPage() {
 
       {/* Hero Section - Deep warm bronze/brown layered gradient */}
       <section 
-        className="relative min-h-[100svh] md:min-h-[120vh] flex items-start overflow-hidden pt-36 md:pt-[55vh] pb-16 md:pb-32"
-        style={{ background: 'linear-gradient(135deg, #24170F 0%, #7A4E2D 45%, #3B2416 100%)' }}
-        aria-label="Modern Marketing & Growth Introduction"
+        className="relative min-h-[100svh] md:min-h-[120vh] bg-[#18051E] flex items-start overflow-hidden pt-36 md:pt-[55vh] pb-16 md:pb-32"
+        style={{ 
+          backgroundColor: '#18051E',
+          backgroundImage: 'linear-gradient(135deg, #18051E 0%, #290833 45%, #3C0A4B 100%)' 
+        }}
+        aria-label="Modern Marketing Introduction"
       >
         {/* Soft background light wash overlay */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">

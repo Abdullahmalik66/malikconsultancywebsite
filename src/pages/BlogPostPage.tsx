@@ -181,7 +181,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-m3-surface text-m3-on-surface transition-colors duration-300">
+    <div className="min-h-[100svh] bg-m3-surface text-m3-on-surface transition-colors duration-300">
       <Helmet>
         <title>{blog.title} | Artery Insights</title>
         <meta name="description" content={blog.excerpt} />
