@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import CaseWork from '../components/CaseWork';
 import { Writing } from '../types';
 import { getPublishedContent } from '../lib/firebase/cms';
+import { defaultBlogPosts } from '../data/blogData';
 
 export default function WritingsPage() {
   const navigate = useNavigate();
@@ -28,10 +29,17 @@ export default function WritingsPage() {
     const fetchWritings = async () => {
       try {
         const published = await getPublishedContent();
-        const blogsOnly = published.filter(item => item.contentType === 'blog');
+        const cmsBlogs = published.filter(item => item.contentType === 'blog');
         
+        const combined = [...cmsBlogs];
+        defaultBlogPosts.forEach(fallback => {
+          if (!combined.some(c => c.slug === fallback.slug || c.id === fallback.id)) {
+            combined.push(fallback);
+          }
+        });
+
         // Sort blogs so that the latest published ones are shown first
-        const sortedBlogs = [...blogsOnly].sort((a, b) => {
+        const sortedBlogs = [...combined].sort((a, b) => {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
         
@@ -45,7 +53,7 @@ export default function WritingsPage() {
           date: new Date(item.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
           imageUrl: item.headerImage || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop',
           category: (item.category as 'Blog' | 'News' | 'Strategy') || 'Blog',
-          author: item.authorName || 'Anonymous',
+          author: item.authorName || 'Abdullah Malik',
           badgeText: item.badgeText || '',
           tags: item.tags || []
         }));

@@ -8,6 +8,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { Writing } from '../types';
 import { getPublishedContent, getCommentsByBlogId, saveComment, BlogComment } from '../lib/firebase/cms';
+import { defaultBlogPosts } from '../data/blogData';
 import { LinkedCardsSidebar } from '../components/cms/CardRenderer';
 
 // Add the content field to the type if it doesn't exist in our base interface
@@ -30,10 +31,17 @@ export default function BlogPostPage() {
     const findBlog = async () => {
       setLoading(true);
       
-      // Try the backend for user-published writings
       try {
         const published = await getPublishedContent();
-        const userBlog = published.find(w => w.contentType === 'blog' && (w.slug === id || w.id === id));
+        const cmsBlogs = published.filter(w => w.contentType === 'blog');
+        const combined = [...cmsBlogs];
+        defaultBlogPosts.forEach(fallback => {
+          if (!combined.some(c => c.slug === fallback.slug || c.id === fallback.id)) {
+            combined.push(fallback);
+          }
+        });
+
+        const userBlog = combined.find(w => w.slug === id || w.id === id);
         
         if (userBlog) {
           setBlog({
@@ -45,7 +53,7 @@ export default function BlogPostPage() {
             date: new Date(userBlog.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
             imageUrl: userBlog.headerImage || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop',
             category: (userBlog.category as 'Blog' | 'News' | 'Strategy') || 'Blog',
-            author: userBlog.authorName || 'Anonymous',
+            author: userBlog.authorName || 'Abdullah Malik',
             authorBio: userBlog.authorBio,
             authorImage: userBlog.authorImage || undefined,
             tags: userBlog.tags,
