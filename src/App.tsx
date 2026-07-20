@@ -66,7 +66,7 @@ function ScrollToTop() {
 
 function AppContent() {
   const location = useLocation();
-  const isCleanLayout = location.pathname.startsWith('/admin') || location.pathname === '/reach-me' || location.pathname === '/my-life-story';
+  const isCleanLayout = location.pathname.startsWith('/admin') || location.pathname === '/reach-me' || location.pathname === '/my-life-story' || location.pathname === '/my-life-playground';
 
   return (
     <main className="relative min-h-screen bg-m3-surface transition-colors duration-300">
@@ -78,6 +78,7 @@ function AppContent() {
         <Route path="/my-writings" element={<WritingsPage />} />
         <Route path="/writings/:id" element={<BlogPostPage />} />
         <Route path="/my-life-story" element={<MyLifeStoryPage />} />
+        <Route path="/my-life-playground" element={<MyLifeStoryPage />} />
         <Route path="/services/ai-transformation" element={<AITransformationPage />} />
         <Route path="/services/data-activation-intelligence" element={<DataActivationPage />} />
         <Route path="/services/modern-marketing-growth" element={<ModernMarketingPage />} />
