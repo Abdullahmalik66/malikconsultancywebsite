@@ -69,16 +69,16 @@ export default function Navbar() {
         >
 
           {/* ==========================================================
-              1. LEFT: BRAND LOGO (Poster Logo Image - Much Bigger)
+              1. LEFT: BRAND LOGO (Stacked Serif Logo Image)
              ========================================================== */}
           <Link 
             to="/" 
-            className="flex items-center group cursor-pointer transition-transform duration-300 hover:scale-105"
+            className="flex items-center px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-[#F6F2F9]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-md transition-all group cursor-pointer"
           >
             <img 
-              src="/am-poster-logo-clean.png" 
+              src="/am-serif-logo-transparent.png" 
               alt="Abdullah Malik Consultancy Logo" 
-              className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain rounded-2xl shadow-2xl border border-white/20"
+              className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto object-contain mix-blend-multiply dark:invert dark:brightness-200 transition-transform group-hover:scale-105"
             />
           </Link>
 
