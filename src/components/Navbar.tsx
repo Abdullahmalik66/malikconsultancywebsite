@@ -83,9 +83,11 @@ export default function Navbar() {
           </Link>
 
           {/* ==========================================================
-              2. MIDDLE 1: MY LIFE PLAYGROUND (#E9FF32 -> Hover #C6B3D1)
+              2. RIGHT NAVIGATION GROUP (Playground + Main Nav Capsule tightly linked)
              ========================================================== */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center gap-3">
+            
+            {/* My Life Playground Tab */}
             <Link to="/my-life-playground">
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -100,12 +102,8 @@ export default function Navbar() {
                 <span>My Life Playground</span>
               </motion.button>
             </Link>
-          </div>
 
-          {/* ==========================================================
-              3. MAIN NAVIGATION CAPSULE (Tabs Hover: #C6B3D1)
-             ========================================================== */}
-          <div className="hidden lg:flex items-center">
+            {/* Main Navigation Capsule */}
             <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-[#F6F2F9]/95 dark:bg-[#1D1B20]/95 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.06)] text-m3-on-surface">
               
               {mainNavItems.map((item) => {
