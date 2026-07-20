@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
-import { ChevronDown, Menu, X, Terminal } from 'lucide-react';
+import { ChevronDown, Menu, X, Terminal, Send } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const mainNavItems = [
@@ -178,14 +178,15 @@ export default function Navbar() {
               <div className="ml-1 pl-1 border-l border-black/10 dark:border-white/15">
                 <Link to="/reach-me">
                   <button
-                    className={`px-6 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-[#1A102E] text-white hover:bg-[#E9FF32] hover:text-[#1A102E] shadow-md cursor-pointer ${
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-[#1A102E] text-white hover:bg-[#E9FF32] hover:text-[#1A102E] shadow-md cursor-pointer ${
                       location.pathname === '/reach-me'
                         ? 'bg-[#E9FF32] text-[#1A102E] font-extrabold'
                         : ''
                     }`}
                     id="reach-me-btn"
                   >
-                    Reach me
+                    <span>Reach me</span>
+                    <Send className="w-4 h-4" />
                   </button>
                 </Link>
               </div>
@@ -317,10 +318,11 @@ export default function Navbar() {
               <div className="mt-8">
                 <Link
                   to="/reach-me"
-                  className="block w-full text-center py-4 bg-[#1A102E] text-white hover:bg-[#E9FF32] hover:text-[#1A102E] font-extrabold text-lg rounded-full shadow-lg transition-colors"
+                  className="flex items-center justify-center gap-2.5 w-full text-center py-4 bg-[#1A102E] text-white hover:bg-[#E9FF32] hover:text-[#1A102E] font-extrabold text-lg rounded-full shadow-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Reach me
+                  <span>Reach me</span>
+                  <Send className="w-5 h-5" />
                 </Link>
               </div>
 
