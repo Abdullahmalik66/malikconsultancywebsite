@@ -88,7 +88,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             
             {/* My Life Playground Tab */}
-            <Link to="/my-life-playground">
+            <Link to="/my-life-story">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -199,7 +199,7 @@ export default function Navbar() {
              ========================================================== */}
           <div className="flex lg:hidden items-center gap-2">
             {/* Compact Playground button on mobile */}
-            <Link to="/my-life-playground">
+            <Link to="/my-life-story">
               <button className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#E9FF32] text-[#1A102E] hover:bg-[#C6B3D1] text-xs sm:text-sm font-bold shadow-xs transition-colors">
                 <Terminal className="w-4 h-4 text-[#1A102E]" />
                 <span className="hidden sm:inline">Playground</span>
@@ -241,7 +241,7 @@ export default function Navbar() {
               {/* Highlight Card: My Life Playground */}
               <div className="mb-6">
                 <Link
-                  to="/my-life-playground"
+                  to="/my-life-story"
                   className="flex items-center justify-between p-4.5 rounded-2xl bg-[#E9FF32] text-[#1A102E] shadow-md font-bold text-base hover:bg-[#C6B3D1] transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
