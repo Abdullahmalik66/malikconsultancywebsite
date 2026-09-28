@@ -3,7 +3,8 @@ export type LeadSourceType =
   | 'ai-transformation'
   | 'data-activation'
   | 'modern-marketing-growth'
-  | 'ai-maturity-capability';
+  | 'ai-maturity-capability'
+  | 'newsletter';
 
 export type LeadStatus =
   | 'new'

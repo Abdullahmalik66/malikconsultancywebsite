@@ -2,11 +2,14 @@ import {
   LeadSourceType,
   LeadStatus,
   LeadPriority,
-  DeliveryStatus
+  DeliveryStatus,
+  LeadRecord
 } from "./leadTypes";
 
 export function formatSourceLabel(source: LeadSourceType): string {
   switch (source) {
+    case "newsletter":
+      return "Subscription";
     case "reach-me":
       return "Reach Me";
     case "ai-transformation":
@@ -19,6 +22,25 @@ export function formatSourceLabel(source: LeadSourceType): string {
       return "AI Maturity";
     default:
       return source;
+  }
+}
+
+export function getSourceBadgeClasses(source: LeadSourceType): string {
+  switch (source) {
+    case "newsletter":
+      return "bg-[#6d55a7]/10 text-[#6d55a7] dark:bg-[#6d55a7]/25 dark:text-[#E8DEF8] border-[#6d55a7]/30 font-semibold";
+    case "reach-me":
+      return "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800";
+    case "ai-transformation":
+      return "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200 dark:border-purple-800";
+    case "data-activation":
+      return "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+    case "modern-marketing-growth":
+      return "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 dark:border-amber-800";
+    case "ai-maturity-capability":
+      return "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 dark:border-blue-800";
+    default:
+      return "bg-m3-surface/60 border-m3-outline/10 text-m3-on-surface/80";
   }
 }
 
@@ -123,4 +145,80 @@ export function formatDateShort(isoString: string): string {
   } catch (e) {
     return isoString;
   }
+}
+
+/**
+ * Generates and triggers download of a CSV file containing lead records.
+ * Includes UTF-8 BOM so Excel and Numbers correctly decode accents and formatting.
+ */
+export function exportLeadsToCSV(leads: LeadRecord[], filenamePrefix = "malik_consultancy_leads"): void {
+  const headers = [
+    "Lead ID",
+    "Received Date",
+    "Lead Type / Source",
+    "Full Name",
+    "Email Address",
+    "Company",
+    "Job Title / Role",
+    "Phone",
+    "Primary Interest",
+    "Priority",
+    "Status",
+    "Email Delivery Status",
+    "Source Page",
+    "Source Page Title",
+    "Executive / AI Summary",
+    "Stated Needs",
+    "Stated Blockers",
+    "Recommended Service",
+    "Recommended Next Step",
+    "Questionnaire Responses",
+    "Free-Text Message",
+    "Internal Admin Notes",
+    "Tags"
+  ];
+
+  const escapeCSV = (val: any): string => {
+    if (val === null || val === undefined) return '""';
+    const str = String(val).replace(/"/g, '""');
+    return `"${str}"`;
+  };
+
+  const rows = leads.map(l => [
+    escapeCSV(l.id),
+    escapeCSV(l.createdAt),
+    escapeCSV(formatSourceLabel(l.submissionType)),
+    escapeCSV(l.name),
+    escapeCSV(l.email),
+    escapeCSV(l.company || ""),
+    escapeCSV(l.jobTitle || ""),
+    escapeCSV(l.phone || ""),
+    escapeCSV(l.primaryInterest || ""),
+    escapeCSV((l.leadPriority || "medium").toUpperCase()),
+    escapeCSV(l.status),
+    escapeCSV(l.emailDelivery?.status || "pending"),
+    escapeCSV(l.sourcePage || ""),
+    escapeCSV(l.sourcePageTitle || ""),
+    escapeCSV(l.aiSummary || ""),
+    escapeCSV((l.identifiedNeeds || []).join("; ")),
+    escapeCSV((l.identifiedBlockers || []).join("; ")),
+    escapeCSV(l.recommendedService || ""),
+    escapeCSV(l.recommendedNextStep || ""),
+    escapeCSV((l.answers || []).map(a => `${a.question}: ${a.answer}`).join(" | ")),
+    escapeCSV(l.message || ""),
+    escapeCSV(l.adminNotes || ""),
+    escapeCSV((l.tags || []).join(", "))
+  ]);
+
+  const csvContent = "\uFEFF" + [headers.map(h => `"${h}"`).join(","), ...rows.map(r => r.join(","))].join("\r\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const timestamp = new Date().toISOString().slice(0, 10);
+  link.setAttribute("href", url);
+  link.setAttribute("download", `${filenamePrefix}_${timestamp}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, Filter, X, RotateCcw } from "lucide-react";
+import { Search, Filter, X, RotateCcw, Download } from "lucide-react";
 import { LeadSourceType, LeadStatus, LeadPriority, DeliveryStatus } from "./leadTypes";
 
 interface LeadFiltersProps {
@@ -17,6 +17,7 @@ interface LeadFiltersProps {
   onUnreadOnlyToggle: () => void;
   onReset: () => void;
   hasActiveFilters: boolean;
+  onExportCSV?: () => void;
 }
 
 export const LeadFilters: React.FC<LeadFiltersProps> = ({
@@ -33,7 +34,8 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
   unreadOnly,
   onUnreadOnlyToggle,
   onReset,
-  hasActiveFilters
+  hasActiveFilters,
+  onExportCSV
 }) => {
   return (
     <div className="bg-white/80 dark:bg-[#1d1b20]/80 border border-m3-outline/10 p-4 md:p-5 rounded-[24px] shadow-xs space-y-4">
@@ -71,6 +73,17 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
           Unread Only
         </button>
 
+        {onExportCSV && (
+          <button
+            onClick={onExportCSV}
+            className="px-4 py-2.5 rounded-full text-xs font-mono uppercase tracking-wider font-semibold transition-all cursor-pointer border bg-m3-surface/30 dark:bg-m3-surface/10 text-m3-on-surface/80 border-m3-outline/15 hover:border-m3-primary hover:text-m3-primary flex items-center justify-center gap-1.5"
+            title="Download CSV export of leads"
+          >
+            <Download className="w-3.5 h-3.5 text-m3-primary" />
+            <span>Export CSV</span>
+          </button>
+        )}
+
         {hasActiveFilters && (
           <button
             onClick={onReset}
@@ -92,6 +105,7 @@ export const LeadFilters: React.FC<LeadFiltersProps> = ({
           className="w-full px-3 py-2 rounded-xl border border-m3-outline/15 bg-m3-surface/30 dark:bg-[#25232a] text-xs font-mono text-m3-on-surface focus:outline-none focus:border-m3-primary transition-all cursor-pointer"
         >
           <option value="">All Sources</option>
+          <option value="newsletter">Subscription (Newsletter)</option>
           <option value="reach-me">Reach Me</option>
           <option value="ai-transformation">AI Transformation</option>
           <option value="data-activation">Data Activation</option>

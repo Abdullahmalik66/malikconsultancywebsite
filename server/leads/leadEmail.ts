@@ -14,6 +14,8 @@ export function getEmailSubject(lead: LeadRecord): string {
       return `New Growth Systems Lead | ${entity}`;
     case "ai-maturity-capability":
       return `New AI Maturity Lead | ${entity}`;
+    case "newsletter":
+      return `New Newsletter Subscriber | ${lead.email}`;
     case "reach-me":
     default:
       return `New Reach Me Enquiry | ${entity}`;

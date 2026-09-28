@@ -44,7 +44,9 @@
     },
     "leads": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      "$leadId": {
+        ".write": "(auth != null) || (newData.hasChildren(['email', 'submissionType']) && !data.exists())"
+      }
     }
   }
 }

@@ -127,12 +127,6 @@ async function startServer() {
     }
   });
 
-    } catch (error) {
-      console.error("POST /api/submit-reach-me error:", error);
-      res.status(500).json({ error: "Failed to process submission", details: error instanceof Error ? error.message : String(error) });
-    }
-  });
-
   // --- SEO/GEO WORKSPACE CACHING AND ROUTING INTEGRATION ---
   const seoCache: Record<string, { html: string; expiry: number }> = {};
   const CACHE_TTL = 60000; // 1 minute route cache

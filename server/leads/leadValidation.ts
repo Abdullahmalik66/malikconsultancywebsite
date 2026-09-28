@@ -6,7 +6,8 @@ const ALLOWED_SUBMISSION_TYPES: LeadSourceType[] = [
   "ai-transformation",
   "data-activation",
   "modern-marketing-growth",
-  "ai-maturity-capability"
+  "ai-maturity-capability",
+  "newsletter"
 ];
 
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
@@ -68,20 +69,22 @@ export function validateLeadSubmission(
   }
 
   // 3. Name validation
-  const rawName = typeof rawBody.name === "string" ? rawBody.name.trim() : "";
-  if (!rawName || rawName.length < 2 || rawName.length > 120) {
+  let rawName = typeof rawBody.name === "string" ? rawBody.name.trim() : "";
+  if (submissionType === "newsletter" && !rawName) {
+    rawName = "Newsletter Subscriber";
+  } else if (!rawName || rawName.length < 2 || rawName.length > 120) {
     errors.push("Full name is required and must be between 2 and 120 characters.");
   }
 
   // 4. Email validation
   const rawEmail = typeof rawBody.email === "string" ? rawBody.email.trim().toLowerCase() : "";
   if (!rawEmail || !EMAIL_REGEX.test(rawEmail) || rawEmail.length > 150) {
-    errors.push("A valid work email address is required.");
+    errors.push("A valid email address is required.");
   }
 
   // 5. Consent validation
-  const contactConsent = rawBody.consent?.contactConsent === true;
-  const privacyAccepted = rawBody.consent?.privacyAccepted === true;
+  const contactConsent = submissionType === "newsletter" ? true : rawBody.consent?.contactConsent === true;
+  const privacyAccepted = submissionType === "newsletter" ? true : rawBody.consent?.privacyAccepted === true;
   if (!contactConsent && !privacyAccepted) {
     errors.push("Please acknowledge the privacy notice and consent to proceed.");
   }

@@ -197,6 +197,82 @@ leadRouter.get("/admin/leads", requireAdminAuth, async (req: Request, res: Respo
 });
 
 /**
+ * GET /api/admin/leads-export.csv
+ * Stream CSV export of all leads.
+ */
+leadRouter.get("/admin/leads-export.csv", requireAdminAuth, async (req: Request, res: Response) => {
+  try {
+    const leads = await getAllLeads();
+    const headers = [
+      "Lead ID",
+      "Received Date",
+      "Lead Type / Source",
+      "Full Name",
+      "Email Address",
+      "Company",
+      "Job Title / Role",
+      "Phone",
+      "Primary Interest",
+      "Priority",
+      "Status",
+      "Email Delivery Status",
+      "Source Page",
+      "Source Page Title",
+      "Executive / AI Summary",
+      "Stated Needs",
+      "Stated Blockers",
+      "Recommended Service",
+      "Recommended Next Step",
+      "Questionnaire Responses",
+      "Free-Text Message",
+      "Internal Admin Notes",
+      "Tags"
+    ];
+
+    const escapeCSV = (val: any): string => {
+      if (val === null || val === undefined) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
+
+    const rows = leads.map(l => [
+      escapeCSV(l.id),
+      escapeCSV(l.createdAt),
+      escapeCSV(l.submissionType === "newsletter" ? "Subscription" : l.submissionType),
+      escapeCSV(l.name),
+      escapeCSV(l.email),
+      escapeCSV(l.company || ""),
+      escapeCSV(l.jobTitle || ""),
+      escapeCSV(l.phone || ""),
+      escapeCSV(l.primaryInterest || ""),
+      escapeCSV((l.leadPriority || "medium").toUpperCase()),
+      escapeCSV(l.status),
+      escapeCSV(l.emailDelivery?.status || "pending"),
+      escapeCSV(l.sourcePage || ""),
+      escapeCSV(l.sourcePageTitle || ""),
+      escapeCSV(l.aiSummary || ""),
+      escapeCSV((l.identifiedNeeds || []).join("; ")),
+      escapeCSV((l.identifiedBlockers || []).join("; ")),
+      escapeCSV(l.recommendedService || ""),
+      escapeCSV(l.recommendedNextStep || ""),
+      escapeCSV((l.answers || []).map(a => `${a.question}: ${a.answer}`).join(" | ")),
+      escapeCSV(l.message || ""),
+      escapeCSV(l.adminNotes || ""),
+      escapeCSV((l.tags || []).join(", "))
+    ]);
+
+    const csvContent = "\uFEFF" + [headers.map(h => `"${h}"`).join(","), ...rows.map(r => r.join(","))].join("\r\n");
+
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="malik_consultancy_leads_${new Date().toISOString().slice(0, 10)}.csv"`);
+    res.send(csvContent);
+  } catch (err) {
+    console.error("[LeadRoutes] GET /api/admin/leads-export.csv error:", err);
+    res.status(500).json({ error: "Failed to export leads CSV." });
+  }
+});
+
+/**
  * GET /api/admin/leads/stats
  * Get overview metrics for the admin lead dashboard.
  */
@@ -216,7 +292,8 @@ leadRouter.get("/admin/leads-stats", requireAdminAuth, async (req: Request, res:
         "ai-transformation": leads.filter(l => l.submissionType === "ai-transformation").length,
         "data-activation": leads.filter(l => l.submissionType === "data-activation").length,
         "modern-marketing-growth": leads.filter(l => l.submissionType === "modern-marketing-growth").length,
-        "ai-maturity-capability": leads.filter(l => l.submissionType === "ai-maturity-capability").length
+        "ai-maturity-capability": leads.filter(l => l.submissionType === "ai-maturity-capability").length,
+        "newsletter": leads.filter(l => l.submissionType === "newsletter").length
       },
       byStatus: {
         "new": leads.filter(l => l.status === "new").length,

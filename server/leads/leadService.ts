@@ -186,10 +186,12 @@ export async function processLeadSubmission(
   }
 
   // 7. Truthful success response to visitor
-  const isQuestionnaire = payload.submissionType !== "reach-me";
-  const successMessage = isQuestionnaire
-    ? "Thank you. Your context has been received. I will review the information and follow up if a conversation would be useful."
-    : "Thank you for reaching out. Your message has been received.";
+  let successMessage = "Thank you for reaching out. Your message has been received.";
+  if (payload.submissionType === "newsletter") {
+    successMessage = "Thank you for subscribing to weekly insights.";
+  } else if (payload.submissionType !== "reach-me") {
+    successMessage = "Thank you. Your context has been received. I will review the information and follow up if a conversation would be useful.";
+  }
 
   return {
     statusCode: 200,

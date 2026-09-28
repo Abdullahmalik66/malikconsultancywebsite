@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Linkedin, Instagram, Github, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Wordmark } from '../brand/Logo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,9 +13,13 @@ export default function Footer() {
         {/* Left Side: Branding & Info */}
         <div className="space-y-8">
           <div className="space-y-2">
-            <h2 className="text-4xl font-display font-bold text-[#EAFF00] tracking-tight uppercase">
-              ABDULLAH MALIK
-            </h2>
+            {/* Brand mark ("The Bracket Mark") — same lockup as the navbar, in a
+                fixed neon-on-brand-purple pairing since this section's
+                background never scrolls/changes, plus a white bracket accent
+                for stronger contrast against the purple footer. */}
+            <span className="inline-flex text-[#EAFF00]">
+              <Wordmark tagline="// CONSULTANCY" accentColor="#ffffff" className="text-3xl sm:text-4xl" />
+            </span>
             <p className="text-white/80 text-sm leading-relaxed max-w-sm">
               Helping high-growth brands and startups engineer performance engines that scale through data-driven precision and AI-powered automation.
             </p>

@@ -21,6 +21,7 @@ import { LeadOverview } from "./LeadOverview";
 import { LeadFilters } from "./LeadFilters";
 import { LeadTable } from "./LeadTable";
 import { LeadDetail } from "./LeadDetail";
+import { exportLeadsToCSV } from "./leadUtils";
 import {
   Inbox,
   Filter,
@@ -29,10 +30,12 @@ import {
   FileQuestion,
   MessageSquare,
   TrendingUp,
-  Archive
+  Archive,
+  Mail,
+  Download
 } from "lucide-react";
 
-type SubTab = "all" | "questionnaires" | "reach-me" | "follow-up" | "archived";
+type SubTab = "all" | "questionnaires" | "reach-me" | "newsletter" | "follow-up" | "archived";
 
 export const LeadInbox: React.FC = () => {
   const { currentUser } = useAuth();
@@ -70,6 +73,8 @@ export const LeadInbox: React.FC = () => {
 
       if (activeTab === "reach-me") {
         tabSubmissionType = "reach-me";
+      } else if (activeTab === "newsletter") {
+        tabSubmissionType = "newsletter";
       } else if (activeTab === "questionnaires") {
         // Exclude reach-me handled below
       } else if (activeTab === "follow-up") {
@@ -94,7 +99,9 @@ export const LeadInbox: React.FC = () => {
 
       // Filter questionnaires tab
       if (activeTab === "questionnaires") {
-        resultLeads = resultLeads.filter(l => l.submissionType !== "reach-me");
+        resultLeads = resultLeads.filter(l => l.submissionType !== "reach-me" && l.submissionType !== "newsletter");
+      } else if (activeTab === "newsletter") {
+        resultLeads = resultLeads.filter(l => l.submissionType === "newsletter");
       } else if (activeTab === "all" && !statusFilter) {
         // Exclude archived by default on "all" unless requested
         resultLeads = resultLeads.filter(l => l.status !== "archived");
@@ -222,14 +229,26 @@ export const LeadInbox: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => loadData()}
-          disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-m3-outline/15 hover:bg-m3-surface-container text-xs font-mono uppercase tracking-wider text-m3-on-surface transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-          <span>Refresh Leads</span>
-        </button>
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          <button
+            onClick={() => exportLeadsToCSV(leads)}
+            disabled={leads.length === 0}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-m3-outline/20 hover:border-m3-primary hover:text-m3-primary bg-white dark:bg-[#25232a] text-xs font-mono uppercase tracking-wider text-m3-on-surface transition-all cursor-pointer disabled:opacity-40"
+            title="Download CSV export of leads"
+          >
+            <Download className="w-3.5 h-3.5 text-m3-primary" />
+            <span>Export CSV</span>
+          </button>
+
+          <button
+            onClick={() => loadData()}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-m3-outline/15 hover:bg-m3-surface-container text-xs font-mono uppercase tracking-wider text-m3-on-surface transition-all cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            <span>Refresh Leads</span>
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -297,6 +316,18 @@ export const LeadInbox: React.FC = () => {
         </button>
 
         <button
+          onClick={() => setActiveTab("newsletter")}
+          className={`px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeTab === "newsletter"
+              ? "bg-m3-surface-container-high text-m3-on-surface shadow-xs border border-m3-outline/10"
+              : "text-m3-on-surface/50 hover:bg-m3-surface-container"
+          }`}
+        >
+          <Mail className="w-3.5 h-3.5" />
+          <span>Newsletter ({stats?.bySource?.newsletter || 0})</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab("follow-up")}
           className={`px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
             activeTab === "follow-up"
@@ -337,6 +368,7 @@ export const LeadInbox: React.FC = () => {
         onUnreadOnlyToggle={() => setUnreadOnly(!unreadOnly)}
         onReset={handleResetFilters}
         hasActiveFilters={hasActiveFilters}
+        onExportCSV={() => exportLeadsToCSV(leads)}
       />
 
       {/* Leads Table */}

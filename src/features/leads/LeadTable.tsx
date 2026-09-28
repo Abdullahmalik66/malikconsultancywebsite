@@ -7,7 +7,8 @@ import {
   AlertCircle,
   CheckCircle2,
   Clock,
-  Sparkles
+  Sparkles,
+  Download
 } from "lucide-react";
 import { LeadRecord, LeadPriority, LeadStatus } from "./leadTypes";
 import {
@@ -16,6 +17,8 @@ import {
   getStatusBadgeClasses,
   getPriorityBadgeClasses,
   getDeliveryBadgeClasses,
+  getSourceBadgeClasses,
+  exportLeadsToCSV,
   formatDateShort,
   formatDateTime
 } from "./leadUtils";
@@ -209,7 +212,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({
 
                   {/* Origin Source */}
                   <td className="py-4 px-4 hidden lg:table-cell whitespace-nowrap">
-                    <span className="inline-block text-[11px] font-mono px-2 py-0.5 rounded-md bg-m3-surface/60 border border-m3-outline/10 text-m3-on-surface/80">
+                    <span className={`inline-block text-[11px] font-mono px-2.5 py-0.5 rounded-full border ${getSourceBadgeClasses(lead.submissionType)}`}>
                       {formatSourceLabel(lead.submissionType)}
                     </span>
                   </td>
@@ -267,12 +270,23 @@ export const LeadTable: React.FC<LeadTableProps> = ({
         </table>
       </div>
 
-      {/* Pagination Footer */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between px-6 py-3.5 border-t border-m3-outline/10 bg-m3-surface/20 text-xs font-mono">
+      {/* Table Footer with Export & Pagination */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-3.5 border-t border-m3-outline/10 bg-m3-surface/20 text-xs font-mono">
+        <div className="flex items-center gap-3">
           <span className="text-m3-on-surface/60">
-            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, sortedLeads.length)} of {sortedLeads.length} leads
+            {sortedLeads.length} lead{sortedLeads.length === 1 ? '' : 's'} recorded
           </span>
+          <button
+            onClick={() => exportLeadsToCSV(sortedLeads)}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-m3-outline/20 hover:border-m3-primary hover:text-m3-primary transition-all text-[11px] uppercase font-bold cursor-pointer bg-white dark:bg-[#1d1b20]"
+            title="Download CSV export"
+          >
+            <Download className="w-3.5 h-3.5 text-m3-primary" />
+            <span>Export CSV</span>
+          </button>
+        </div>
+
+        {totalPages > 1 && (
           <div className="flex items-center gap-1.5">
             <button
               disabled={page <= 1}
@@ -292,8 +306,8 @@ export const LeadTable: React.FC<LeadTableProps> = ({
               Next
             </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

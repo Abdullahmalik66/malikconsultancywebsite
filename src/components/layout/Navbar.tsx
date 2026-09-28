@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { ChevronDown, Menu, X, Terminal, Send } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import Logo from '../brand/Logo';
 
 const mainNavItems = [
   {
@@ -59,7 +60,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4 md:px-6 pointer-events-none">
+      <div className="fixed top-6 sm:top-7 md:top-8 left-0 right-0 z-50 flex justify-center px-4 md:px-6 pointer-events-none">
         <motion.nav 
           initial={{ y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -69,16 +70,21 @@ export default function Navbar() {
         >
 
           {/* ==========================================================
-              1. LEFT: BRAND LOGO (Stacked Serif Logo Image)
+              1. LEFT: BRAND LOGO ("The Bracket Mark")
+              [ ABDULLAH_MALIK ] set in a geometric monospace face — a
+              direct nod to the AI/software craft at the centre of the
+              practice. Switches between a dark-backdrop and light-backdrop
+              colour set depending on what's actually behind it, and the
+              underscore blinks like a live terminal cursor.
              ========================================================== */}
-          <Link 
-            to="/" 
-            className="flex items-center px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-white/95 backdrop-blur-xl border border-black/10 shadow-[0_4px_20px_rgba(0,0,0,0.12)] hover:shadow-md transition-all group cursor-pointer z-50"
+          <Link
+            to="/"
+            className="inline-flex items-center py-2 group cursor-pointer z-50"
+            aria-label="Abdullah Malik Consultancy — Home"
           >
-            <img 
-              src="/am-serif-logo-transparent.png" 
-              alt="Abdullah Malik Consultancy Logo" 
-              className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto object-contain mix-blend-multiply transition-transform group-hover:scale-105"
+            <Logo
+              tone="auto"
+              className="text-base sm:text-xl md:text-2xl lg:text-3xl transition-transform duration-300 group-hover:scale-[1.03]"
             />
           </Link>
 

@@ -6,6 +6,10 @@
   /* NOTE: "Space Grotesk" is not loaded anywhere, so font-mono resolves to the system
      monospace stack. Kept as-is to preserve the current rendered appearance. */
   --font-mono: "Space Grotesk", monospace;
+  /* Dedicated (and actually loaded, via index.html) monospace face for the brand
+     mark's "[ ABDULLAH_MALIK ]" bracket lockup — kept separate from --font-mono
+     above so loading it can't change the retro-terminal look used elsewhere. */
+  --font-brand-mono: "JetBrains Mono", ui-monospace, monospace;
 
   /* Brand palette (most-used literal colours in the codebase). Prefer these tokens
      (e.g. bg-ink, text-neon) over arbitrary values in new code. */
@@ -139,6 +143,27 @@ html.dark .blog-content h4 {
   scrollbar-width: none;
 }
 
+/* ==========================================
+   Brand mark: blinking terminal cursor
+   Used for the underscore in "[ ABDULLAH_MALIK ]" so it reads as a live
+   terminal cursor rather than a static underscore character.
+   ========================================== */
+@keyframes brand-cursor-blink {
+  0%, 50% { opacity: 1; }
+  50.001%, 100% { opacity: 0; }
+}
+
+.brand-cursor-blink {
+  animation: brand-cursor-blink 1s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-cursor-blink {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* Custom scrollbar for better feel */
 ::-webkit-scrollbar {
   width: 8px;
@@ -260,6 +285,88 @@ html.dark .blog-content h4 {
   .animate-orbit-cw-very-slow,
   .animate-orbit-ccw-very-slow,
   .animate-marquee {
+    animation: none !important;
+  }
+}
+/* ═══════════════════════════════════════════════════════════════════
+   REACH ME — "Dreamscape Horizon" ambient skyscape
+   Layered parallax clouds (far / mid / near = pseudo-3D depth),
+   breathing sun halo, rising light motes, slow sky tone crossfade.
+   All transforms are GPU-composited for a perfectly smooth, calm feel.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Cloud crossing the whole viewport; negative delays pre-populate the sky */
+@keyframes rm-cloud-drift {
+  from { transform: translate3d(-42vw, 0, 0); }
+  to   { transform: translate3d(112vw, 0, 0); }
+}
+.rm-cloud-drift {
+  animation: rm-cloud-drift linear infinite;
+  will-change: transform;
+}
+
+/* Gentle vertical breathing bob, layered under the drift */
+@keyframes rm-cloud-bob {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -16px, 0); }
+}
+.rm-cloud-bob { animation: rm-cloud-bob ease-in-out infinite; }
+
+/* Cumulus silhouette sculpted from one pill + box-shadow puffs */
+.rm-cloud-shape {
+  width: 280px;
+  height: 74px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.82));
+  box-shadow:
+    34px -14px 0  10px rgba(255, 255, 255, 0.96),
+    72px -38px 0   8px rgba(255, 255, 255, 0.95),
+    128px -22px 0 16px rgba(255, 255, 255, 0.93),
+    182px -34px 0   4px rgba(255, 255, 255, 0.90),
+    224px -10px 0  10px rgba(255, 255, 255, 0.88);
+}
+
+/* Sun halo breathing — a slow, meditative pulse */
+@keyframes rm-sun-breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.55; }
+  50%      { transform: scale(1.14); opacity: 0.85; }
+}
+.rm-sun { animation: rm-sun-breathe 9s ease-in-out infinite; will-change: transform, opacity; }
+
+/* Sun rays shimmering — an oversized conic fan swaying almost imperceptibly */
+@keyframes rm-rays-sway {
+  0%, 100% { transform: rotate(-4deg); opacity: 0.5; }
+  50%      { transform: rotate(4deg);  opacity: 0.8; }
+}
+.rm-rays { animation: rm-rays-sway 26s ease-in-out infinite; will-change: transform, opacity; }
+
+/* Light motes — dust caught in morning light, rising with a soft sway */
+@keyframes rm-mote-float {
+  0%   { transform: translate3d(0, 0, 0);            opacity: 0; }
+  12%  { opacity: 0.8; }
+  55%  { transform: translate3d(26px, -30vh, 0); }
+  85%  { opacity: 0.45; }
+  100% { transform: translate3d(-14px, -58vh, 0);    opacity: 0; }
+}
+.rm-mote {
+  animation: rm-mote-float linear infinite;
+  will-change: transform, opacity;
+}
+
+/* Sky tone crossfade — dawn-blue to soft-lavender warmth, barely perceptible */
+@keyframes rm-sky-shift {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 1; }
+}
+.rm-sky-shift { animation: rm-sky-shift 44s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-cloud-drift,
+  .rm-cloud-bob,
+  .rm-sun,
+  .rm-rays,
+  .rm-mote,
+  .rm-sky-shift {
     animation: none !important;
   }
 }
