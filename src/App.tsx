@@ -1,60 +1,34 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ValueStatement from './components/ValueStatement';
-import WorkedWithSection from './components/WorkedWithSection';
-import ServicesTabs from './components/ServicesTabs';
-import CaseWork from './components/CaseWork';
-import LatestInsights from './components/LatestInsights';
-import StaggerTestimonials from './components/StaggerTestimonials';
-import Footer from './components/Footer';
-import NewsletterSection from './components/NewsletterSection';
-import CaseWorkPage from './pages/CaseWorkPage';
-import WritingsPage from './pages/WritingsPage';
-import BlogEditorPage from './pages/BlogEditorPage';
-import CaseStudyPage from './pages/CaseStudyPage';
-import AboutPage from './pages/AboutPage';
-import AITransformationPage from './pages/AITransformationPage';
-import DataActivationPage from './pages/DataActivationPage';
-import ModernMarketingPage from './pages/ModernMarketingPage';
-import AIMaturityPage from './pages/AIMaturityPage';
-import MyLifeStoryPage from './pages/MyLifeStoryPage';
-import BlogPostPage from './pages/BlogPostPage';
-import ReachMePage from './pages/ReachMePage';
-import TestimonialsPage from './pages/TestimonialsPage';
-import AdminLoginPage from './pages/AdminLoginPage';
-import AdminPage from './pages/AdminPage';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { AuthProvider } from './lib/firebase/AuthContext';
-import { ThemeProvider } from './lib/ThemeProvider';
 import { HelmetProvider } from 'react-helmet-async';
-import SEORenderer from './components/seo/SEORenderer';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import NewsletterSection from '@/components/layout/NewsletterSection';
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { AuthProvider } from '@/providers/AuthContext';
+import { ThemeProvider } from '@/providers/ThemeProvider';
+import SEORenderer from '@/features/seo/SEORenderer';
+import HomePage from '@/pages/HomePage';
 
+// Route-level code splitting: only the home page ships in the entry chunk.
+const CaseWorkPage = lazy(() => import('@/pages/CaseWorkPage'));
+const WritingsPage = lazy(() => import('@/pages/WritingsPage'));
+const BlogPostPage = lazy(() => import('@/pages/BlogPostPage'));
+const BlogEditorPage = lazy(() => import('@/pages/BlogEditorPage'));
+const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'));
+const AboutPage = lazy(() => import('@/pages/AboutPage'));
+const MyLifeStoryPage = lazy(() => import('@/pages/MyLifeStoryPage'));
+const ReachMePage = lazy(() => import('@/pages/ReachMePage'));
+const TestimonialsPage = lazy(() => import('@/pages/TestimonialsPage'));
+const AdminLoginPage = lazy(() => import('@/pages/AdminLoginPage'));
+const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const AITransformationPage = lazy(() => import('@/pages/services/AITransformationPage'));
+const DataActivationPage = lazy(() => import('@/pages/services/DataActivationPage'));
+const ModernMarketingPage = lazy(() => import('@/pages/services/ModernMarketingPage'));
+const AIMaturityPage = lazy(() => import('@/pages/services/AIMaturityPage'));
 
-function HomePage() {
-  return (
-    <>
-      <Hero />
-      <ValueStatement />
-      <WorkedWithSection />
-      <ServicesTabs />
-      <CaseWork />
-      <LatestInsights />
-      <StaggerTestimonials />
-    </>
-  );
-}
+/** Routes that render their own full-screen chrome (no Navbar / Newsletter / Footer). */
+const CLEAN_LAYOUT_PATHS = new Set(['/reach-me', '/my-life-story', '/my-life-playground']);
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -65,40 +39,41 @@ function ScrollToTop() {
 }
 
 function AppContent() {
-  const location = useLocation();
-  const isCleanLayout = location.pathname.startsWith('/admin') || location.pathname === '/reach-me' || location.pathname === '/my-life-story';
+  const { pathname } = useLocation();
+  const isCleanLayout = pathname.startsWith('/admin') || CLEAN_LAYOUT_PATHS.has(pathname);
 
   return (
     <main className="relative min-h-screen bg-m3-surface transition-colors duration-300">
       <SEORenderer />
       {!isCleanLayout && <Navbar />}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/case-work" element={<CaseWorkPage />} />
-        <Route path="/my-writings" element={<WritingsPage />} />
-        <Route path="/writings/:id" element={<BlogPostPage />} />
-        <Route path="/my-life-story" element={<MyLifeStoryPage />} />
-        <Route path="/services/ai-transformation" element={<AITransformationPage />} />
-        <Route path="/services/data-activation-intelligence" element={<DataActivationPage />} />
-        <Route path="/services/modern-marketing-growth" element={<ModernMarketingPage />} />
-        <Route path="/services/ai-maturity-capability-building" element={<AIMaturityPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/create-insight" element={<BlogEditorPage />} />
-        <Route path="/reach-me" element={<ReachMePage />} />
-        <Route path="/testimonials" element={<TestimonialsPage />} />
-        {/* Admin routes */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Dynamic Case Study Route */}
-        <Route path="/case-study/:slug" element={<CaseStudyPage />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/case-work" element={<CaseWorkPage />} />
+          <Route path="/my-writings" element={<WritingsPage />} />
+          <Route path="/writings/:id" element={<BlogPostPage />} />
+          <Route path="/my-life-story" element={<MyLifeStoryPage />} />
+          <Route path="/my-life-playground" element={<MyLifeStoryPage />} />
+          <Route path="/services/ai-transformation" element={<AITransformationPage />} />
+          <Route path="/services/data-activation-intelligence" element={<DataActivationPage />} />
+          <Route path="/services/modern-marketing-growth" element={<ModernMarketingPage />} />
+          <Route path="/services/ai-maturity-capability-building" element={<AIMaturityPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/create-insight" element={<BlogEditorPage />} />
+          <Route path="/reach-me" element={<ReachMePage />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/case-study/:slug" element={<CaseStudyPage />} />
+        </Routes>
+      </Suspense>
       {!isCleanLayout && <NewsletterSection />}
       {!isCleanLayout && <Footer />}
     </main>
@@ -119,7 +94,3 @@ export default function App() {
     </HelmetProvider>
   );
 }
-
-
-
-

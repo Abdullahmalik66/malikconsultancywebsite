@@ -11,8 +11,8 @@ import {
   Code as CodeIcon, Terminal, Superscript, Subscript, Link as LinkIcon, Palette,
   Table as TableIcon, ChevronDown
 } from 'lucide-react';
-import { CustomElement, CustomText } from '../../slate';
-import { uploadImage } from '../../lib/firebase/cms';
+import { CustomElement, CustomText } from '@/types/slate';
+import { uploadImage } from '@/services/firebase/cms';
 
 const HOTKEYS: Record<string, string> = {
   'mod+b': 'bold',

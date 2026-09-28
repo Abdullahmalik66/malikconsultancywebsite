@@ -14,7 +14,7 @@ import {
   getClientShowcase2Settings,
   saveClientShowcase2Settings,
   ClientShowcase2LogoItem
-} from "../../lib/firebase/cms";
+} from "@/services/firebase/cms";
 import { Plus, Trash2, Edit2, Upload, ArrowUp, ArrowDown, ShieldAlert, Settings, ChevronDown, ChevronUp } from "lucide-react";
 
 type SubTab = "showcase1" | "showcase2";

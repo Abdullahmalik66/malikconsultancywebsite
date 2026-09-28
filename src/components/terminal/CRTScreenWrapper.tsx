@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, VolumeX, Maximize2, Minimize2, Tv, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { terminalAudio } from '../../lib/terminalAudio';
+import { terminalAudio } from '@/utils/terminalAudio';
 
 interface CRTScreenWrapperProps {
   children: React.ReactNode;

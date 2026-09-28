@@ -7,15 +7,15 @@ import {
   HelpCircle, Image as ImageIcon
 } from "lucide-react";
 import { ref as dbRef, set } from "firebase/database";
-import { db } from "../../lib/firebase/db";
+import { db } from "@/services/firebase/db";
 import { 
   getSEOConfig, savePageSEO, saveIntegrationsConfig, 
   saveOrganisationConfig, saveSiteControlsConfig, saveTemplateConfig,
   PageSEOConfig, PageSEOData, PageGEOData, PageSocialData, PageTechnicalData,
   IntegrationsConfig, OrganisationConfig, SiteControlsConfig, TemplateConfig,
   sanitizeKey, initializeSeoDefaults
-} from "../../lib/firebase/seo";
-import { getAllContent, ContentItem, uploadImage } from "../../lib/firebase/cms";
+} from "@/features/seo/seoService";
+import { getAllContent, ContentItem, uploadImage } from "@/services/firebase/cms";
 
 type WorkspaceTab = 'overview' | 'pages' | 'integrations' | 'controls' | 'templates' | 'issues';
 type PageSubTab = 'seo' | 'geo' | 'social' | 'technical';

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
-import ExecutiveLayout from '../components/ExecutiveLayout';
+import { getPublishedContent, ContentItem } from '@/services/firebase/cms';
+import ExecutiveLayout from '@/components/layout/ExecutiveLayout';
 import { motion } from 'motion/react';
 
 export default function CaseStudyPage() {
@@ -74,7 +74,7 @@ export default function CaseStudyPage() {
       linkedCardIds={study.linkedCardIds}
       authorName={study.authorName || 'Abdullah Malik'}
       authorBio={study.authorBio || 'Driving AI Transformation ┊ Agentic AI Use Case Pioneer ┊ Leadership in Scalable Innovation'}
-      authorImage={study.authorImage || '/images/472164386_10170748401095387_7067836675242530090_n.jpg'}
+      authorImage={study.authorImage || '/images/abdullah-malik-portrait.webp'}
     />
   );
 }

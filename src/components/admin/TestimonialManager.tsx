@@ -5,13 +5,13 @@ import {
   MessageSquare, Search, Calendar, User, Building, Archive, Info, 
   AlertCircle, ChevronRight, Save, Image as ImageIcon
 } from 'lucide-react';
-import { useAuth } from '../../lib/firebase/AuthContext';
+import { useAuth } from '@/providers/AuthContext';
 import { 
   getAllTestimonials, getTestimonialSubmissions, saveTestimonial, 
   deleteTestimonial, deleteTestimonialSubmission, uploadImage,
   TestimonialItem, TestimonialStatus
-} from '../../lib/firebase/cms';
-import { STATIC_TESTIMONIALS } from '../../data/testimonials';
+} from '@/services/firebase/cms';
+import { STATIC_TESTIMONIALS } from '@/data/testimonials';
 
 export default function TestimonialManager() {
   const { currentUser } = useAuth();

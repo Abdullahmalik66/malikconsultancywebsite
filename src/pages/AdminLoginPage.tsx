@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
-import { useAuth } from "../lib/firebase/AuthContext";
+import { useAuth } from "@/providers/AuthContext";
 import { motion } from "motion/react";
 import { Lock, Mail, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
 

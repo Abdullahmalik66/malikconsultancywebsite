@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { terminalAudio } from '../../lib/terminalAudio';
+import { terminalAudio } from '@/utils/terminalAudio';
 
 interface OriginStoryTerminalProps {
   onBackToMenu: () => void;

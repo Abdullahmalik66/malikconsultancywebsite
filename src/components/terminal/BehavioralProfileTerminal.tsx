@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useTypewriter } from './useTypewriter';
 import { TerminalLine } from './TerminalLine';
 import { useTerminalScroll } from './useTerminalScroll';
-import { terminalAudio } from '../../lib/terminalAudio';
+import { terminalAudio } from '@/utils/terminalAudio';
 import { BEHAVIORAL_FACTORS, FactorData, AspectData } from './behavioralProfileData';
 
 interface BehavioralProfileTerminalProps {

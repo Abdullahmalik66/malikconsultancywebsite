@@ -1,22 +1,25 @@
 import React, { useState } from "react";
-import { useAuth } from "../lib/firebase/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/providers/AuthContext";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { LogOut, ShieldCheck, Database, FolderGit2, Cpu, Settings, FileText, Plus, Layout, Globe } from "lucide-react";
-import ContentList from "../components/admin/ContentList";
-import AdminContentEditor from "../components/admin/AdminContentEditor";
-import CardBuilder from "../components/admin/CardBuilder";
-import ClientShowcaseManager from "../components/admin/ClientShowcaseManager";
-import SeoWorkspace from "../components/admin/SeoWorkspace";
-import { ContentItem } from "../lib/firebase/cms";
+import { LogOut, ShieldCheck, Database, FolderGit2, Cpu, Settings, FileText, Plus, Layout, Globe, Inbox } from "lucide-react";
+import ContentList from "@/components/admin/ContentList";
+import AdminContentEditor from "@/components/admin/AdminContentEditor";
+import CardBuilder from "@/components/admin/CardBuilder";
+import ClientShowcaseManager from "@/components/admin/ClientShowcaseManager";
+import SeoWorkspace from "@/components/admin/SeoWorkspace";
+import { LeadInbox } from "@/features/leads/LeadInbox";
+import { ContentItem } from "@/services/firebase/cms";
 
-type Tab = 'dashboard' | 'content' | 'editor' | 'cards' | 'showcase' | 'seo';
+type Tab = 'dashboard' | 'leads' | 'content' | 'editor' | 'cards' | 'showcase' | 'seo';
 
 export default function AdminPage() {
   const { currentUser, signOutUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const initialTab: Tab = (searchParams.get('lead') || searchParams.get('tab') === 'leads') ? 'leads' : 'dashboard';
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
   const [editingItem, setEditingItem] = useState<ContentItem | null>(null);
 
   const handleSignOut = async () => {
@@ -93,6 +96,14 @@ export default function AdminPage() {
               }`}
             >
               Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('leads')}
+              className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${
+                activeTab === 'leads' ? 'bg-m3-surface-container-high text-m3-on-surface shadow-sm border border-m3-outline/10' : 'text-m3-on-surface/50 hover:bg-m3-surface-container'
+              }`}
+            >
+              <Inbox className="w-4 h-4" /> Leads
             </button>
             <button
               onClick={() => setActiveTab('content')}
@@ -185,11 +196,45 @@ export default function AdminPage() {
                       <span className="font-display font-medium text-sm text-m3-on-surface">Card System</span>
                     </div>
                     <p className="text-xs text-m3-on-surface/50 leading-relaxed">
-                      Card rendering engine is under construction.
+                      Card rendering engine is active.
+                    </p>
+                  </div>
+
+                  <div 
+                    onClick={() => setActiveTab('leads')}
+                    className="bg-m3-primary/5 hover:bg-m3-primary/10 border border-m3-primary/20 p-5 rounded-2xl flex flex-col justify-between h-36 cursor-pointer transition-all col-span-1 md:col-span-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 bg-m3-primary text-m3-on-primary rounded-xl shadow-xs">
+                          <Inbox className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <span className="font-display font-medium text-sm text-m3-on-surface block">Consultancy Lead Engine</span>
+                          <span className="text-xs text-m3-on-surface/60 font-sans">Realtime inbound lead capture & triage</span>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono uppercase tracking-wider text-m3-primary font-bold">
+                        Open Leads &rarr;
+                      </span>
+                    </div>
+                    <p className="text-xs text-m3-on-surface/60 leading-relaxed">
+                      Captures submissions across Reach Me and all service questionnaires with server validation, Gemini AI qualification, and automated email notifications.
                     </p>
                   </div>
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'leads' && (
+            <motion.div
+              key="leads"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+            >
+              <LeadInbox />
             </motion.div>
           )}
 

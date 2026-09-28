@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Send, Sparkles, AlertCircle } from 'lucide-react';
+import { submitReachMeLead } from '@/services/leads/leadApi';
 
 interface QuestionConfig {
   id: string;
@@ -504,38 +505,32 @@ export default function ReachMePage() {
     
     // Map custom branch responses nicely
     const mappedBranchResponses = selectedBranch.map((q) => ({
+      questionId: `reach_me_${q.id}`,
       question: q.question,
       answer: answers[q.id] || '',
-    }));
+    })).filter(a => a.answer.trim().length > 0);
 
-    const payload = {
+    const result = await submitReachMeLead({
       name: answers['name'],
-      role: answers['role'],
-      company: answers['company'],
-      serviceArea: activeService,
-      branchAnswers: mappedBranchResponses,
       email: answers['email'],
-      additionalNote: answers['additionalNote'] || '',
-    };
+      company: answers['company'],
+      jobTitle: answers['role'],
+      primaryInterest: activeService,
+      message: answers['additionalNote'] || '',
+      answers: mappedBranchResponses,
+      consent: {
+        contactConsent: true,
+        privacyAccepted: true,
+      },
+    });
 
-    try {
-      const response = await fetch('/api/submit-reach-me', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+    setIsSubmitting(false);
 
-      if (!response.ok) {
-        throw new Error('Connection error processing server submission.');
-      }
-
-      // Success
+    if (result.success) {
       setIsSuccess(true);
-    } catch (err) {
-      console.error('Error submitting Reach Me flow:', err);
-      setErrorText('Failed to reach server. Please check your network and try again.');
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      console.error('Error submitting Reach Me flow:', result.error);
+      setErrorText(result.message || 'Failed to submit. Please check your network and try again.');
     }
   };
 

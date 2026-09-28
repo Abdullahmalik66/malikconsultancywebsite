@@ -4,7 +4,7 @@ import {
   Plus, X, Image as ImageIcon, ChevronLeft, Check, Quote, Save, Link2, GripVertical
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { saveContent, generateSlug, uploadImage, getAllCards, getAllContent, getAllTestimonials, ContentItem, ContentStatus, CardItem } from '../../lib/firebase/cms';
+import { saveContent, generateSlug, uploadImage, getAllCards, getAllContent, getAllTestimonials, ContentItem, ContentStatus, CardItem } from '@/services/firebase/cms';
 import SlateEditor from './SlateEditor';
 
 interface AdminContentEditorProps {

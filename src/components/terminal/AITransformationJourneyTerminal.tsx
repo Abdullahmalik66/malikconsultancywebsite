@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { terminalAudio } from '../../lib/terminalAudio';
+import { terminalAudio } from '@/utils/terminalAudio';
 import { TerminalLine } from './TerminalLine';
 import { useTypewriter } from './useTypewriter';
 import { useTerminalScroll } from './useTerminalScroll';

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { terminalAudio } from '../../lib/terminalAudio';
+import { terminalAudio } from '@/utils/terminalAudio';
 
 /**
  * Custom hook to simulate retro typewriter rendering of text lines sequentially.

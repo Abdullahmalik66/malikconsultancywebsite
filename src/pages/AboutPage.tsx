@@ -1,5 +1,5 @@
 import React from 'react';
-import ExecutiveLayout from '../components/ExecutiveLayout';
+import ExecutiveLayout from '@/components/layout/ExecutiveLayout';
 
 export default function AboutPage() {
   return (

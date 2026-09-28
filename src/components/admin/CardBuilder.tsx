@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { getAllCards, saveCard, getPublishedContent, getPublishedTestimonials, CardItem, ContentItem, deleteCard, uploadImage } from '../../lib/firebase/cms';
+import { getAllCards, saveCard, getPublishedContent, getPublishedTestimonials, CardItem, ContentItem, deleteCard, uploadImage } from '@/services/firebase/cms';
 import {
   Plus, Trash2, Layout, Image as ImageIcon, Save, Check, X,
   Upload, Link, Sparkles, Quote, ArrowRight, Edit2, Eye,
   EyeOff, Layers, FileText, FolderGit2, Info, Moon, Sun, ArrowUpDown
 } from 'lucide-react';
 
-import { getDeterministicFormatting } from '../../lib/caseStudyHelpers';
-import { AnimatedBackground } from '../cms/AnimatedBackground';
+import { getDeterministicFormatting } from '@/utils/caseStudyHelpers';
+import { AnimatedBackground } from '@/components/cards/AnimatedBackground';
 
 type ExtendedCardType = 'standard' | 'hero' | 'minimal' | 'media_showcase' | 'quote' | 'compact' | 'case_study' | 'dual_content' | 'custom' | 'case_study_solid';
 

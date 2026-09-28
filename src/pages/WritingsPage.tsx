@@ -2,9 +2,9 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { ChevronLeft, Plus, Search, Tag as TagIcon, X, SlidersHorizontal } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import CaseWork from '../components/CaseWork';
-import { Writing } from '../types';
-import { getPublishedContent } from '../lib/firebase/cms';
+import CaseWork from '@/components/sections/CaseWork';
+import { Writing } from '@/types';
+import { getPublishedContent } from '@/services/firebase/cms';
 
 export default function WritingsPage() {
   const navigate = useNavigate();
@@ -438,7 +438,7 @@ function WritingCard({ writing }: { writing: Writing; key?: string | number }) {
     >
       {/* Image Container - CURVY EDGES as requested */}
       <div className="relative aspect-[16/10] overflow-hidden rounded-[48px] mb-8 bg-gray-100">
-        <img
+        <img loading="lazy" decoding="async"
           src={writing.imageUrl}
           alt={writing.title}
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"

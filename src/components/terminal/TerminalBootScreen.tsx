@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { terminalAudio } from '../../lib/terminalAudio';
+import { terminalAudio } from '@/utils/terminalAudio';
 
 interface TerminalBootScreenProps {
   onComplete: () => void;

@@ -6,9 +6,9 @@ import {
   Linkedin, Facebook, Copy, Check, Send
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Writing } from '../types';
-import { getPublishedContent, getCommentsByBlogId, saveComment, BlogComment } from '../lib/firebase/cms';
-import { LinkedCardsSidebar } from '../components/cms/CardRenderer';
+import { Writing } from '@/types';
+import { getPublishedContent, getCommentsByBlogId, saveComment, BlogComment } from '@/services/firebase/cms';
+import { LinkedCardsSidebar } from '@/components/cards/CardRenderer';
 
 // Add the content field to the type if it doesn't exist in our base interface
 interface BlogDetail extends Writing {
@@ -461,7 +461,7 @@ export default function BlogPostPage() {
               <div className="bg-m3-surface-container p-10 rounded-[48px] border border-m3-outline/10">
                 <div className="flex flex-col items-center text-center">
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-6 bg-m3-primary/10 border-2 border-m3-primary/20">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={blog.authorImage || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"}
                       alt={blog.author}
                       className="w-full h-full object-cover"

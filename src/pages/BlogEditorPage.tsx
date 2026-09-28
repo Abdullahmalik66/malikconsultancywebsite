@@ -12,8 +12,8 @@ import {
   Link2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { saveContent, generateSlug, uploadImage } from '../lib/firebase/cms';
-import SlateEditor from '../components/admin/SlateEditor';
+import { saveContent, generateSlug, uploadImage } from '@/services/firebase/cms';
+import SlateEditor from '@/components/admin/SlateEditor';
 
 export default function BlogEditorPage() {
   const navigate = useNavigate();

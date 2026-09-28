@@ -9,3 +9,12 @@ coverage/
 logocustomer/
 .firebase/
 .npm-cache/
+reach_me_submissions.json
+leads_backup.json
+
+# Design source material (not a web asset)
+BannerImages*/
+
+# Editor configs
+.vscode/
+.vscode_backup/

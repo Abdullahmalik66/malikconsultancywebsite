@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { CRTScreenWrapper } from '../components/terminal/CRTScreenWrapper';
-import { TerminalBootScreen } from '../components/terminal/TerminalBootScreen';
-import { TerminalIntroScreen } from '../components/terminal/TerminalIntroScreen';
-import { TerminalSystemExplorer } from '../components/terminal/TerminalSystemExplorer';
+import { CRTScreenWrapper } from '@/components/terminal/CRTScreenWrapper';
+import { TerminalBootScreen } from '@/components/terminal/TerminalBootScreen';
+import { TerminalIntroScreen } from '@/components/terminal/TerminalIntroScreen';
+import { TerminalSystemExplorer } from '@/components/terminal/TerminalSystemExplorer';
 
 export default function MyLifeStoryPage() {
   const [screenIndex, setScreenIndex] = useState<1 | 2 | 3>(1);

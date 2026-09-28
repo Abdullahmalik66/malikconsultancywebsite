@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, X, Check, MessageSquare, Quote, Sparkles } from 'lucide-react';
-import { STATIC_TESTIMONIALS, Testimonial, shuffleArray } from '../data/testimonials';
-import { getPublishedTestimonials, submitPublicTestimonial } from '../lib/firebase/cms';
+import { STATIC_TESTIMONIALS, Testimonial, shuffleArray } from '@/data/testimonials';
+import { getPublishedTestimonials, submitPublicTestimonial } from '@/services/firebase/cms';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);

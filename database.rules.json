@@ -41,6 +41,10 @@
     "seo": {
       ".read": true,
       ".write": "auth != null"
+    },
+    "leads": {
+      ".read": "auth != null",
+      ".write": "auth != null"
     }
   }
 }

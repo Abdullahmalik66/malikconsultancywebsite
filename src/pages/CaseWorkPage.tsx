@@ -2,11 +2,11 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { getPublishedContent, ContentItem } from '../lib/firebase/cms';
-import { getDeterministicFormatting } from '../lib/caseStudyHelpers';
-import ClientShowcase2 from '../components/ClientShowcase2';
-import LatestInsights from '../components/LatestInsights';
-import StaggerTestimonials from '../components/StaggerTestimonials';
+import { getPublishedContent, ContentItem } from '@/services/firebase/cms';
+import { getDeterministicFormatting } from '@/utils/caseStudyHelpers';
+import ClientShowcase2 from '@/components/sections/ClientShowcase2';
+import LatestInsights from '@/components/sections/LatestInsights';
+import StaggerTestimonials from '@/components/sections/StaggerTestimonials';
 
 export default function CaseWorkPage() {
   const navigate = useNavigate();

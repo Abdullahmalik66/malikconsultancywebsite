@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { getAllContent, updateContentStatus, deleteContent, ContentItem, ContentStatus } from '../../lib/firebase/cms';
+import { getAllContent, updateContentStatus, deleteContent, ContentItem, ContentStatus } from '@/services/firebase/cms';
 import { Check, X, Edit, Eye, Filter, Loader2, UploadCloud, Trash2, FileText, Briefcase, Plus, MessageSquare } from 'lucide-react';
-import { useAuth } from '../../lib/firebase/AuthContext';
+import { useAuth } from '@/providers/AuthContext';
 import TestimonialManager from './TestimonialManager';
 
 interface ContentListProps {
