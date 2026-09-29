@@ -1,0 +1,33 @@
+# Codebase Memory MCP Indexing & Ignore Configuration
+
+# Dependencies & Build Artifacts
+node_modules/
+dist/
+build/
+coverage/
+.firebase/
+.npm-cache/
+
+# Runtime Logs & Caches
+*.log
+*.tmp
+.DS_Store
+
+# Large Binary & Media Archives
+BannerImages*/
+logocustomer/
+public/banners/
+public/images/
+public/*.webp
+public/*.png
+public/*.ico
+public/*.jpg
+
+# Backups & Private Dumps
+reach_me_submissions.json
+leads_backup.json
+*.backup.*
+
+# Temporary / Session Caches
+temp/
+screenshots/

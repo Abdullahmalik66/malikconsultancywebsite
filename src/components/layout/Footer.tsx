@@ -86,9 +86,14 @@ export default function Footer() {
 
       <div className="max-w-[1600px] mx-auto px-6 pt-12 flex flex-col md:flex-row justify-between items-center gap-8 mb-12 text-xs font-black uppercase tracking-[0.2em] text-white/40">
         <p>© {currentYear} Abdullah Malik / Independent Expert</p>
-        <div className="flex gap-8">
+        <div className="flex flex-wrap items-center gap-8">
+          <Link to="/intelligence-layer" className="hover:text-[#EAFF00] text-white/80 transition-colors flex items-center gap-1.5 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00F0FF] animate-pulse" />
+            The Intelligence Layer
+          </Link>
           <Link to="#" className="hover:text-white transition-colors">Privacy Policy</Link>
           <Link to="#" className="hover:text-white transition-colors">Terms of Service</Link>
+          <Link to="#" className="hover:text-white transition-colors">Cookies</Link>
         </div>
       </div>
 

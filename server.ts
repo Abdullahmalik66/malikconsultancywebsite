@@ -428,6 +428,12 @@ Return JSON with EXACTLY these fields:
       capabilities: ["Personal narrative and career timeline", "Philosophical foundations of consulting approach", "Cross-cultural and cross-market experience"],
       outcomes: ["Deeper trust and authentic connection", "Understanding of the consultant's motivations", "Context for long-term advisory relationships"]
     },
+    intelligence_layer: {
+      summary: "The Intelligence Layer: An interactive visual exploration of how modern enterprises engineer living intelligence systems, transforming raw operational signals into structured knowledge, persistent memory, and autonomous action.",
+      purpose: "Demonstrate enterprise intelligence systems architecture, showcasing how memory graphs, multi-agent swarms, deterministic safety boundaries, and causal reasoning produce enduring strategic advantage.",
+      capabilities: ["Cognitive architecture & knowledge graph engineering", "Persistent memory systems for autonomous agents", "Multi-agent swarm coordination and policy evaluation", "Deterministic fail-safes and enterprise AI governance", "Causal path tracing and explainable decision loops"],
+      outcomes: ["Clear understanding of connected enterprise intelligence", "Strategic differentiation between raw LLM models and proprietary memory systems", "Actionable blueprint for production AI transformation"]
+    },
     "services_ai-transformation": {
       summary: "Strategic advisory service focused on designing and implementing end-to-end AI transformation roadmaps for organisations ready to move from experimentation to production-grade AI systems.",
       purpose: "Help organisations develop a structured, governed, and executable AI strategy that aligns with business objectives and scales with organisational maturity.",
@@ -491,6 +497,7 @@ Return JSON with EXACTLY these fields:
         "/testimonials": { id: "testimonials", title: "Client Testimonials", type: "pages" },
         "/my-life-story": { id: "my_life_story", title: "My Story", type: "pages" },
         "/my-life-playground": { id: "my_life_story", title: "My Story", type: "pages" },
+        "/intelligence-layer": { id: "intelligence_layer", title: "The Intelligence Layer — Enterprise Cognitive Architecture", type: "pages" },
         "/services/ai-transformation": { id: "services_ai-transformation", title: "AI Transformation Strategy", type: "services" },
         "/services/data-activation-intelligence": { id: "services_data-activation-intelligence", title: "Data Activation & Intelligence", type: "services" },
         "/services/modern-marketing-growth": { id: "services_modern-marketing-growth", title: "Modern Marketing & Growth", type: "services" },
@@ -607,6 +614,7 @@ Return JSON with EXACTLY these fields:
       { path: '/reach-me', pageType: 'reach_me', priority: '0.7', changefreq: 'monthly' },
       { path: '/testimonials', pageType: 'testimonials', priority: '0.7', changefreq: 'weekly' },
       { path: '/my-life-story', pageType: 'my_life_story', priority: '0.6', changefreq: 'monthly' },
+      { path: '/intelligence-layer', pageType: 'custom', priority: '0.9', changefreq: 'weekly' },
       { path: '/services/ai-transformation', pageType: 'service', priority: '0.9', changefreq: 'weekly' },
       { path: '/services/data-activation-intelligence', pageType: 'service', priority: '0.9', changefreq: 'weekly' },
       { path: '/services/modern-marketing-growth', pageType: 'service', priority: '0.9', changefreq: 'weekly' },
@@ -713,6 +721,7 @@ Return JSON with EXACTLY these fields:
       reach_me: "Project enquiry and contact page for Malik Consultancy strategic advisory and AI transformation engagements.",
       testimonials: "Professional endorsements and client testimonials from collaborators across growth, AI, and consulting projects.",
       my_life_story: "Personal background, career journey, and the philosophy driving Abdullah Malik's independent consultancy practice.",
+      intelligence_layer: "The Intelligence Layer: interactive 3D visualization of enterprise cognitive systems, knowledge graphs, persistent memory, and autonomous action.",
       "services_ai-transformation": "Strategic advisory on AI roadmap design, model governance, workflow automation, and production AI system scaling.",
       "services_data-activation-intelligence": "End-to-end data structuring, predictive analytics pipeline design, and business intelligence capability building.",
       "services_modern-marketing-growth": "Omnichannel growth model design, conversion funnel optimisation, and performance marketing architecture.",
@@ -736,7 +745,8 @@ Return JSON with EXACTLY these fields:
       { path: '/my-writings', pageId: 'my_writings', category: 'Core Pages', defaultTitle: 'Writings & Insights' },
       { path: '/reach-me', pageId: 'reach_me', category: 'Core Pages', defaultTitle: 'Contact Malik Consultancy' },
       { path: '/testimonials', pageId: 'testimonials', category: 'Core Pages', defaultTitle: 'Client Testimonials' },
-      { path: '/my-life-story', pageId: 'my_life_story', category: 'Core Pages', defaultTitle: 'My Story' }
+      { path: '/my-life-story', pageId: 'my_life_story', category: 'Core Pages', defaultTitle: 'My Story' },
+      { path: '/intelligence-layer', pageId: 'intelligence_layer', category: 'Core Pages', defaultTitle: 'The Intelligence Layer' }
     ];
     
     for (const page of staticPages) {

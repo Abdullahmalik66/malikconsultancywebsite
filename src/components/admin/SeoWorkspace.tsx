@@ -152,7 +152,7 @@ export default function SeoWorkspace() {
     if (pageId === 'homepage') {
       pType = 'homepage';
       path = '/';
-    } else if (['about', 'case_work', 'my_writings', 'reach_me', 'testimonials', 'my_life_story'].includes(pageId)) {
+    } else if (['about', 'case_work', 'my_writings', 'reach_me', 'testimonials', 'my_life_story', 'intelligence_layer'].includes(pageId)) {
       pType = pageId as PageSEOConfig['pageType'];
       path = `/${pageId.replace(/_/g, '-')}`;
     } else if (pageId.startsWith('services_')) {
@@ -1237,7 +1237,8 @@ export default function SeoWorkspace() {
                         { id: 'my_writings', path: '/my-writings', label: 'Writings Hub' },
                         { id: 'reach_me', path: '/reach-me', label: 'Contact/Reach Me' },
                         { id: 'testimonials', path: '/testimonials', label: 'Testimonials' },
-                        { id: 'my_life_story', path: '/my-life-story', label: 'My Story' }
+                        { id: 'my_life_story', path: '/my-life-story', label: 'My Story' },
+                        { id: 'intelligence_layer', path: '/intelligence-layer', label: 'The Intelligence Layer' }
                       ].map(p => (
                         <button
                           key={p.id}

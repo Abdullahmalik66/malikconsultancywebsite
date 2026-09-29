@@ -26,9 +26,10 @@ const AITransformationPage = lazy(() => import('@/pages/services/AITransformatio
 const DataActivationPage = lazy(() => import('@/pages/services/DataActivationPage'));
 const ModernMarketingPage = lazy(() => import('@/pages/services/ModernMarketingPage'));
 const AIMaturityPage = lazy(() => import('@/pages/services/AIMaturityPage'));
+const IntelligenceLayerPage = lazy(() => import('@/pages/IntelligenceLayerPage'));
 
 /** Routes that render their own full-screen chrome (no Navbar / Newsletter / Footer). */
-const CLEAN_LAYOUT_PATHS = new Set(['/reach-me', '/my-life-story', '/my-life-playground']);
+const CLEAN_LAYOUT_PATHS = new Set(['/reach-me', '/my-life-story', '/my-life-playground', '/intelligence-layer']);
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -58,6 +59,7 @@ function AppContent() {
           <Route path="/services/data-activation-intelligence" element={<DataActivationPage />} />
           <Route path="/services/modern-marketing-growth" element={<ModernMarketingPage />} />
           <Route path="/services/ai-maturity-capability-building" element={<AIMaturityPage />} />
+          <Route path="/intelligence-layer" element={<IntelligenceLayerPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/create-insight" element={<BlogEditorPage />} />
           <Route path="/reach-me" element={<ReachMePage />} />
@@ -74,7 +76,7 @@ function AppContent() {
           <Route path="/case-study/:slug" element={<CaseStudyPage />} />
         </Routes>
       </Suspense>
-      {!isCleanLayout && <NewsletterSection />}
+      {!isCleanLayout && pathname !== '/intelligence-layer' && <NewsletterSection />}
       {!isCleanLayout && <Footer />}
     </main>
   );

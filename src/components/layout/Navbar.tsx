@@ -83,7 +83,7 @@ export default function Navbar() {
             aria-label="Abdullah Malik Consultancy — Home"
           >
             <Logo
-              tone="auto"
+              tone={location.pathname === '/intelligence-layer' ? 'white' : 'auto'}
               className="text-base sm:text-xl md:text-2xl lg:text-3xl transition-transform duration-300 group-hover:scale-[1.03]"
             />
           </Link>

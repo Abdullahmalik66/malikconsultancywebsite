@@ -14,6 +14,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
     "@types/nodemailer": "^8.0.1",
+    "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^5.0.4",
     "dotenv": "^17.2.3",
     "escape-html": "^1.0.3",
@@ -33,6 +34,7 @@
     "slate-dom": "^0.124.1",
     "slate-history": "^0.113.1",
     "slate-react": "^0.124.2",
+    "three": "^0.186.1",
     "vite": "^6.2.0"
   },
   "devDependencies": {

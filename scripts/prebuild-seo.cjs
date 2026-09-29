@@ -176,6 +176,21 @@ const CANONICAL_PAGE_FALLBACKS = {
       "Accelerated AI team hiring and onboarding",
       "Clear blueprint for organization-wide AI literacy"
     ]
+  },
+  intelligence_layer: {
+    summary: "The Intelligence Layer is an interactive 3D WebGL knowledge graph of the Abdullah Malik Consultancy platform, mapping 1,309 AST nodes, relationships, and architecture subsystems.",
+    purpose: "Provide a real-time visual and structural inspection of the consultancy platform's codebase memory, data structures, and architectural relationships.",
+    capabilities: [
+      "Interactive 3D WebGL AST knowledge graph",
+      "Dynamic filtering by node entity types and call edges",
+      "Live symbol and file search",
+      "Subsystem architecture exploration"
+    ],
+    outcomes: [
+      "Transparent visibility into enterprise AI architecture",
+      "Direct structural inspection of platform data systems",
+      "Demonstrated engineering rigor and durable system design"
+    ]
   }
 };
 
@@ -190,7 +205,8 @@ const CANONICAL_DESCRIPTIONS = {
   "services_ai-transformation": "Strategic advisory on AI roadmap design, model governance, workflow automation, and production AI system scaling.",
   "services_data-activation-intelligence": "End-to-end data structuring, predictive analytics pipeline design, and business intelligence capability building.",
   "services_modern-marketing-growth": "Omnichannel growth model design, conversion funnel optimisation, and performance marketing architecture.",
-  "services_ai-maturity-capability-building": "AI maturity assessment, team upskilling programmes, and engineering standards for sustainable AI adoption."
+  "services_ai-maturity-capability-building": "AI maturity assessment, team upskilling programmes, and engineering standards for sustainable AI adoption.",
+  intelligence_layer: "Interactive 3D knowledge graph mapping the website's data structures, AST entities, and architecture subsystems."
 };
 
 async function generateMarkdownForRoute(pathname, config, published) {
@@ -214,7 +230,8 @@ async function generateMarkdownForRoute(pathname, config, published) {
       "/services/ai-transformation": { id: "services_ai-transformation", title: "AI Transformation Strategy", type: "services" },
       "/services/data-activation-intelligence": { id: "services_data-activation-intelligence", title: "Data Activation & Intelligence", type: "services" },
       "/services/modern-marketing-growth": { id: "services_modern-marketing-growth", title: "Modern Marketing & Growth", type: "services" },
-      "/services/ai-maturity-capability-building": { id: "services_ai-maturity-capability-building", title: "AI Maturity & Capability Building", type: "services" }
+      "/services/ai-maturity-capability-building": { id: "services_ai-maturity-capability-building", title: "AI Maturity & Capability Building", type: "services" },
+      "/intelligence-layer": { id: "intelligence_layer", title: "The Intelligence Layer — Codebase Memory Graph", type: "pages" }
     };
 
     const matchedStatic = staticRoutes[matchPath];
@@ -319,7 +336,8 @@ async function run() {
       "/services/ai-transformation",
       "/services/data-activation-intelligence",
       "/services/modern-marketing-growth",
-      "/services/ai-maturity-capability-building"
+      "/services/ai-maturity-capability-building",
+      "/intelligence-layer"
     ];
 
     // 1. Generate robots.txt
@@ -352,7 +370,8 @@ async function run() {
       { path: '/my-writings', pageId: 'my_writings', defaultTitle: 'Writings & Insights' },
       { path: '/reach-me', pageId: 'reach_me', defaultTitle: 'Contact Malik Consultancy' },
       { path: '/testimonials', pageId: 'testimonials', defaultTitle: 'Client Testimonials' },
-      { path: '/my-life-story', pageId: 'my_life_story', defaultTitle: 'My Story' }
+      { path: '/my-life-story', pageId: 'my_life_story', defaultTitle: 'My Story' },
+      { path: '/intelligence-layer', pageId: 'intelligence_layer', defaultTitle: 'The Intelligence Layer — Codebase Memory Graph' }
     ];
     for (const page of staticPages) {
       const pageSEO = config.pages?.[page.pageId];

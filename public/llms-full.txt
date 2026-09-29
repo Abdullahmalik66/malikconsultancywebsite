@@ -353,3 +353,33 @@ Detail the AI Capability Building service, enabling companies to build in-house 
 - Canonical: [https://abdullahmalikconsultancy.web.app/services/ai-maturity-capability-building](https://abdullahmalikconsultancy.web.app/services/ai-maturity-capability-building)
 - Publisher: [Abdullah Malik](https://abdullahmalikconsultancy.web.app)
 
+
+---
+# PAGE: /intelligence-layer
+
+# The Intelligence Layer — Codebase Memory Graph
+
+> The Intelligence Layer is an interactive 3D WebGL knowledge graph of the Abdullah Malik Consultancy platform, mapping 1,309 AST nodes, relationships, and architecture subsystems.
+
+## Purpose
+
+Provide a real-time visual and structural inspection of the consultancy platform's codebase memory, data structures, and architectural relationships.
+
+## Key Content / Capabilities
+
+- Interactive 3D WebGL AST knowledge graph
+- Dynamic filtering by node entity types and call edges
+- Live symbol and file search
+- Subsystem architecture exploration
+
+## Outcomes / Value
+
+- Transparent visibility into enterprise AI architecture
+- Direct structural inspection of platform data systems
+- Demonstrated engineering rigor and durable system design
+
+## References
+
+- Canonical: [https://abdullahmalikconsultancy.web.app/intelligence-layer](https://abdullahmalikconsultancy.web.app/intelligence-layer)
+- Publisher: [Abdullah Malik](https://abdullahmalikconsultancy.web.app)
+

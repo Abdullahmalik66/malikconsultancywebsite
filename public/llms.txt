@@ -13,6 +13,7 @@ Looking for the full website content in a single file? See our [Consolidated Mar
 - [Contact Malik Consultancy](https://abdullahmalikconsultancy.web.app/reach-me): Project enquiry and contact page for Malik Consultancy strategic advisory and AI transformation engagements.
 - [Client Testimonials | AI Growth Consultant Abdullah Malik](https://abdullahmalikconsultancy.web.app/testimonials): Client testimonials and professional endorsements validating Abdullah Malik's AI strategy, data activation, and growth marketing consulting outcomes.
 - [Abdullah Malik: Growth Engineering & Advisory Background](https://abdullahmalikconsultancy.web.app/my-life-story): The professional background, career milestones, and growth engineering philosophy driving Abdullah Malik's independent AI advisory.
+- [The Intelligence Layer — Codebase Memory Graph](https://abdullahmalikconsultancy.web.app/intelligence-layer): Interactive 3D knowledge graph mapping the website's data structures, AST entities, and architecture subsystems.
 
 ## Services
 

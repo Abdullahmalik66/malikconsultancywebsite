@@ -284,6 +284,9 @@ export const resolveRoute = async (pathname: string): Promise<ResolvedRoute> => 
   if (normalizedPath === '/my-life-story' || normalizedPath === '/my-life-playground') {
     return { pageId: 'my_life_story', pageType: 'my_life_story' };
   }
+  if (normalizedPath === '/intelligence-layer') {
+    return { pageId: 'intelligence_layer', pageType: 'about' };
+  }
 
   // 2. Check service paths
   if (normalizedPath.startsWith('/services/')) {
